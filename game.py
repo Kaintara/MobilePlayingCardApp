@@ -26,6 +26,7 @@ class Threes(Game):
         threes.bottom_hands = [[],[]]
         threes.top_hands = [[],[]]
         threes.played_cards = []
+        threes.another = False
 
     def distribute_cards(threes):
         Hands = [threes.hands,threes.bottom_hands,threes.top_hands]
@@ -93,12 +94,24 @@ class Threes(Game):
             return True
         return False
 
-    def end_game(threes):
-        print("Called end game")
+    def end_game(threes,savedata):
+        pass
+       # savedata.save()
+       # reward = threes.get_reward(shop)
+       # Dialog = Reward_Dialog(reward)
+       # Dialog.open()
 
-    def next_vaild_player(threes):
-        print("called nvp")
-        return 1
+    def next_vaild_player(threes,player,savedata):
+        if threes.is_game_over():
+            threes.end_game(savedata)
+        else:
+            if threes.another == True:
+                threes.another = False
+                return player
+            if player == 1:
+                return 0
+            else:
+                return 1
     
     def apply_move(threes,player,move):
         if not move:
@@ -108,7 +121,7 @@ class Threes(Game):
             else:
                 threes.turn = threes.next_vaild_player()
                 return
-        print("Applying move:", move)
+        
         threes.state["history"].append(move)
         if threes.played_cards:
             Top_card = threes.played_cards[-1]
@@ -144,6 +157,7 @@ class Threes(Game):
             if four == True or move[1][0] == '1':
                 threes.discard_pile += threes.played_cards
                 threes.played_cards = []
+                threes.another = True
             if threes.shuffled_deck and threes.hands[player] and len(threes.hands[player]) < 3:
                 while len(threes.hands[player]) != 3 or threes.shuffled_deck:
                     card = threes.shuffled_deck.pop()
@@ -155,6 +169,9 @@ class Threes(Game):
         elif move[2] == "pickup":
             threes.hands[player] += threes.played_cards[:-1]
             threes.played_cards = []
+
+    def unlocked_achievements(threes,savedata):
+        pass
 
     def get_reward(threes,shop):
         shop.coin_count += (threes.difficulty[0]*5)
@@ -173,6 +190,7 @@ class Threes(Game):
 
 rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,
 '5': 5,'4': 4,'3': 3,'2': 15}
+
 state = {'name' : "threes",
         'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
         'shuffled_deck' : [],
@@ -183,28 +201,223 @@ state = {'name' : "threes",
         'selected_card' : '',
         'turn' : 0,
         'time_elapsed' : 0,
-        'difficulty' : (0,"Easy"),
+        'difficulty' : (-1,""),
         'winner' : None,
         'bottom_hands' : [[],[]],
         'top_hands' : [[],[]],
         'played_cards' : [],
         'history': []}
 
+class Rummy(Game):
+    def __init__(rummy, name, rank_order, state):
+        super().__init__(name, rank_order, state)
+        rummy.value_map = rank_order
 
+    def distribute_cards(rummy):
+        Start = 0 + rummy.turn
+        End = 15 + rummy.turn
+        Hands = rummy.hands
+        for i in range(Start,End):
+            if (i % 2) == 0:
+                card = rummy.shuffled_deck.pop()
+                Hands[0].append(card)
+            else:
+                card = rummy.shuffled_deck.pop()
+                Hands[1].append(card)
 
-threes = Threes("threes",rank_order,state)
-Hands = [threes.hands,threes.bottom_hands,threes.top_hands]
-threes.played_cards = ['5H','5D']
-threes.hands = [['JS', 'KD', 'KS'], ['QH', 'JH', '3D']]
-threes.apply_move(0,(0, 'KS', 'play'))
-print(threes.state["history"])
-print(threes.get_valid_moves(1))
-threes.apply_move(1,(1, ['KS'], 'pickup'))
-print(threes.state["history"])
-print(threes.hands)
+    def find_run(rummy,cards):
+        runs = []
+        if len(cards) >= 3:
+            previous_value = rummy.rank_order[cards[0][0]]
+            run_length = 0
+            starting_index = ''
+            for card in cards:
+                value = rummy.rank_order[card[0]]
+                if run_length == 0:
+                        starting_index = cards.index(card)
+                if value == previous_value:
+                    run_length += 1
+                elif value == (previous_value + 1):
+                    run_length += 1
+                    previous_value = value
+                else:
+                    run_length = 1
+                    starting_index = cards.index(card)
+                    previous_value = value
+                if run_length == 3:
+                    runs.append((3,starting_index))
+                elif run_length == 4:
+                    del runs[-1]
+                    runs.append((4,starting_index))
+            if runs:
+                run_cards = []
+                for run in runs:
+                    run_cards += cards[run[1]:(run[0]+run[1])]
+                return run_cards
+        
+    def find_set(rummy,cards):
+        sets = []
+        if len(cards) >= 3:
+            set_length = 0
+            starting_index = 0
+            previous_rank = cards[0][0]
+            for card in cards:
+                if card[0] == previous_rank:
+                    set_length += 1
+                    previous_rank = card[0]
+                else:
+                    set_length = 1
+                    starting_index = cards.index(card)
+                    previous_rank = card[0]
+                if set_length == 3:
+                    sets.append((3,starting_index))
+                elif set_length == 4:
+                    del sets[-1]
+                    sets.append((4,starting_index))
+            if sets:
+                set_cards = []
+                for set in sets:
+                    set_cards += cards[set[1]:(set[0]+set[1])]
+                return set_cards
 
-print(threes.is_game_over())
-threes.hands = [[],[]]
-threes.top_hands = [[],[]]
-threes.bottom_hands = [['2H','3S'],[]]
-print(threes.is_game_over())
+    def sort_cards(rummy,player):
+        Sorted_hand = []
+        Runs = []
+        Sets = []
+        Temp_hand = rummy.hands[player][:]
+        Temp_hand.sort(key=(lambda a : rummy.rank_order[a[0]]))
+        Hearts = []
+        Clubs = []
+        Spades = []
+        Diamonds = []
+        for card in Temp_hand:
+            if card.endswith('H'):
+               Hearts.append(card)
+            elif card.endswith('C'):
+               Clubs.append(card)
+            elif card.endswith('S'):
+               Spades.append(card)
+            elif card.endswith('D'):
+               Diamonds.append(card)
+        Suits = [Hearts,Clubs,Clubs,Diamonds]
+        for suit in Suits:
+            if rummy.find_run(suit):
+                Runs = rummy.find_run(suit)
+                Sorted_hand += Runs
+                for card in Runs:
+                    Temp_hand.remove(card)
+        if rummy.find_set(Temp_hand):
+            Sets = rummy.find_run(Temp_hand)
+            Sorted_hand += Sets
+            for card in Sets:
+                Temp_hand.remove(card)
+        if not Temp_hand:
+            return "GameOver"
+        else:
+            Temp_hand.sort(key=(lambda a : rummy.rank_order[a[0]]))
+            Sorted_hand += Temp_hand
+            rummy.hands[player] = Sorted_hand
+            return None
+
+    def get_valid_moves(rummy,player):
+        Moves = []
+        Hand_len = len(rummy.hands[player])
+        if Hand_len == 7:
+            if rummy.shuffled_deck:
+                Moves.append((player,"deck","draw"))
+            if rummy.discard_pile:
+                Moves.append((player,rummy.discard_pile[-1],"draw"))
+            return Moves
+        else:
+            for card in rummy.hands[player]:
+                Moves.append((player,card,"discard"))
+            return Moves
+    
+    def is_game_over(rummy):
+        if rummy.sort_cards(1) == 'GameOver':
+            rummy.winner = 1
+            return True
+        elif rummy.sort_cards(0) == 'GameOver':
+            rummy.winner = 0
+            return True
+        return False
+
+    def end_game(rummy,savedata):
+        pass
+       # savedata.save()
+       # reward = threes.get_reward(shop)
+       # Dialog = Reward_Dialog(reward)
+       # Dialog.open()
+
+    def next_vaild_player(rummy,player,savedata):
+        if rummy.is_game_over():
+            rummy.end_game(savedata)
+        else:
+            if rummy.state['history'][-1][0] == player and rummy.state['history'][-1][2] == 'draw':
+                return player
+            else:
+                if player == 1:
+                    return 0
+                else:
+                    return 1
+        
+    def apply_move(rummy,player,move):
+        if not move:
+            if rummy.is_game_over():
+                rummy.end_game()
+                return
+            else:
+                rummy.turn = rummy.next_vaild_player(player,'savedata')
+                return
+        rummy.state["history"].append(move)
+        if move[2] == "draw":
+            if move[1] == "deck":
+                Top_card = rummy.shuffled_deck.pop()
+                rummy.hands[player].append(Top_card)
+            else:
+                Top_card = rummy.discard_pile.pop()
+                rummy.hands[player].append(Top_card)
+        elif move[2] == "discard":
+            rummy.discard_pile.append(move[1])
+            rummy.hands[player].remove(move[1])
+
+    def unlocked_achievements(threes,savedata):
+        pass
+
+    def get_reward(threes,shop):
+        shop.coin_count += (threes.difficulty[0]*5)
+        amount_earned += threes.difficulty[0]*5
+        Unlocked_achievement = threes.unlocked_achievements()
+        if Unlocked_achievement:
+            shop.coin_count += 5*len(Unlocked_achievement)
+            amount_earned += 5*len(Unlocked_achievement)
+        if threes.winner == 0:
+            shop.coin_count += (30 + threes.difficulty[0]*5)
+            amount_earned += (30 + threes.difficulty[0]*5)
+        else:
+            shop.coin_count += 10
+            amount_earned += 10
+        return (amount_earned, Unlocked_achievement)
+    
+state = {'name' : "rummy",
+        'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
+        'shuffled_deck' : [],
+        'value_map' : {'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,
+'5': 5,'4': 4,'3': 3,'2': 2},
+        'hands' : [[],[]],
+        'discard_pile' : [],
+        'selected_card' : '',
+        'turn' : 0,
+        'time_elapsed' : 0,
+        'difficulty' : (-1,""),
+        'winner' : None,
+        'history': []}
+
+rummy = Rummy("rummy",{'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,
+'5': 5,'4': 4,'3': 3,'2': 2},state)
+
+rummy.shuffle_cards()
+rummy.turn = 0
+rummy.distribute_cards()
+print(rummy.hands)
+rummy.apply_move(0,[])
