@@ -187,6 +187,21 @@ class Threes(Game):
             shop.coin_count += 10
             amount_earned += 10
         return (amount_earned, Unlocked_achievement)
+    
+    def update_game_state(threes):
+        threes.state['selected_card'] = threes.selected_card
+        threes.state['shuffled_deck'] = threes.shuffled_deck
+        threes.state['hands'] = threes.hands
+        threes.state['bottom_hands'] = threes.bottom_hands
+        threes.state['top_hands'] = threes.top_hands
+        threes.state['played_cards'] = threes.played_cards  
+        threes.state['discard_pile'] = threes.discard_pile
+        threes.state['another'] = threes.another
+        threes.state['turn'] = threes.turn
+        threes.state['time_elapsed'] = threes.time_elapsed
+        threes.state['difficulty'] = threes.difficulty
+        threes.state['winner'] = threes.winner
+        threes.state['history'] = threes.state['history']
 
 rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,
 '5': 5,'4': 4,'3': 3,'2': 15}
@@ -205,8 +220,11 @@ state = {'name' : "threes",
         'winner' : None,
         'bottom_hands' : [[],[]],
         'top_hands' : [[],[]],
+        'another' : False,
         'played_cards' : [],
         'history': []}
+
+threes = Threes("threes",rank_order,state)
 
 class Rummy(Game):
     def __init__(rummy, name, rank_order, state):
@@ -550,12 +568,25 @@ state = {'name' : "memory",
         'winner' : None,
         'history': []}
 
-memory = Memory("memory", rank_order, state)
-print(memory.state['history'])
-memory.shuffle_cards()
-print(memory.shuffled_deck)
-memory.distribute_cards()
-print(memory.card_array)
-print(memory.is_game_over())
-memory.card_array = [[]]
-print(memory.is_game_over())
+
+
+threes.shuffle_cards()
+threes.distribute_cards()
+public_cards = []
+if threes['hands'][1]:
+    for x in threes['hands'][1]:
+        public_cards.append(x)
+if threes['top_hands'][0]:
+    public_cards.append(threes['top_hands'][0])
+
+
+
+if threes['top_hands'][1]:
+    public_cards.append(threes['top_hands'][1])
+if threes['top_hands'][0]:
+    public_cards.append(threes['top_hands'][0])
+if threes['discard_pile']:
+    public_cards.append(threes['discard_pile'])
+if threes['played_cards']:
+    public_cards.append(threes['played_cards'])
+print(public_cards)
