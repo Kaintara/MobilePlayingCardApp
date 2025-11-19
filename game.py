@@ -14,6 +14,7 @@ class Game:
         game.time_elapsed = 0
         game.difficulty = (0,"Easy")
         game.winner = None
+        game.history = {}
 
     def shuffle_cards(game):
         shuffled_deck = game.deck[:]
@@ -141,6 +142,10 @@ class Threes(Game):
                     return
         elif move[2] == "play":
             threes.played_cards.append(move[1])
+            Hands = [threes.hands[player],threes.bottom_hands[player],threes.top_hands[player]]
+            for cards in Hands:
+                if move[1] in cards:
+                    cards.remove(move[1])
             four = False
             if len(threes.played_cards) > 3:
                 for i in range(1,5):
@@ -158,14 +163,12 @@ class Threes(Game):
                 threes.discard_pile += threes.played_cards
                 threes.played_cards = []
                 threes.another = True
-            if threes.shuffled_deck and threes.hands[player] and len(threes.hands[player]) < 3:
-                while len(threes.hands[player]) != 3 or threes.shuffled_deck:
-                    card = threes.shuffled_deck.pop()
-                    threes.hands[player].append(card)
-            Hands = [threes.hands[player],threes.bottom_hands[player],threes.top_hands[player]]
-            for cards in Hands:
-                if move[1] in cards:
-                    cards.remove(move[1])
+            if threes.shuffled_deck and threes.hands[player]:
+                while threes.shuffled_deck:
+                    while len(threes.hands[player]) < 3:
+                        card = threes.shuffled_deck.pop()
+                        threes.hands[player].append(card)
+                    break
         elif move[2] == "pickup":
             threes.hands[player] += threes.played_cards[:-1]
             threes.played_cards = []
@@ -425,6 +428,17 @@ class Rummy(Game):
             amount_earned += 10
         return (amount_earned, Unlocked_achievement)
     
+    def update_game_state(rummy):
+        rummy.state['shuffled_deck'] = rummy.shuffled_deck
+        rummy.state['hands'] = rummy.hands
+        rummy.state['discard_pile'] = rummy.discard_pile
+        rummy.state['selected_card'] = rummy.selected_card
+        rummy.state['turn'] = rummy.turn
+        rummy.state['time_elapsed'] = rummy.time_elapsed
+        rummy.state['difficulty'] = rummy.difficulty
+        rummy.state['winner'] = rummy.winner
+        rummy.state['history'] = rummy.history
+    
 state = {'name' : "rummy",
         'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
         'shuffled_deck' : [],
@@ -554,6 +568,19 @@ class Memory(Game):
             amount_earned += 10
         return (amount_earned, Unlocked_achievement)
     
+    def update_game_state(memory):
+        memory.state['shuffled_deck'] = memory.shuffled_deck
+        memory.state['hands'] = memory.hands
+        memory.state['first_selected_card'] = memory.first_selected_card
+        memory.state['second_selected_card'] = memory.second_selected_card
+        memory.state['selected_first_card'] = memory.selected_first_card
+        memory.state['card_array'] = memory.card_array
+        memory.state['turn'] = memory.turn
+        memory.state['time_elapsed'] = memory.time_elapsed
+        memory.state['difficulty'] = memory.difficulty
+        memory.state['winner'] = memory.winner
+        memory.state['history'] = memory.history
+    
 state = {'name' : "memory",
         'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
         'shuffled_deck' : [],
@@ -572,21 +599,7 @@ state = {'name' : "memory",
 
 threes.shuffle_cards()
 threes.distribute_cards()
-public_cards = []
-if threes['hands'][1]:
-    for x in threes['hands'][1]:
-        public_cards.append(x)
-if threes['top_hands'][0]:
-    public_cards.append(threes['top_hands'][0])
-
-
-
-if threes['top_hands'][1]:
-    public_cards.append(threes['top_hands'][1])
-if threes['top_hands'][0]:
-    public_cards.append(threes['top_hands'][0])
-if threes['discard_pile']:
-    public_cards.append(threes['discard_pile'])
-if threes['played_cards']:
-    public_cards.append(threes['played_cards'])
-print(public_cards)
+print(threes.hands)
+threes.apply_move(0,random.choice(threes.get_valid_moves(0)))
+threes.apply_move(1,random.choice(threes.get_valid_moves(1)))
+print(threes.hands)
