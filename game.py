@@ -322,15 +322,17 @@ class Rummy(Game):
     def get_valid_moves(rummy,player):
         Moves = []
         Hand_len = len(rummy.hands[player])
-        if Hand_len == 7:
+        if Hand_len == 7 and len(rummy.state['history']) > 1:
             if rummy.shuffled_deck:
                 Moves.append((player,"deck","draw"))
             if rummy.discard_pile:
                 Moves.append((player,rummy.discard_pile[-1],"draw"))
             return Moves
-        else:
+        elif Hand_len == 8:
             for card in rummy.hands[player]:
                 Moves.append((player,card,"discard"))
+            return Moves
+        else:
             return Moves
     
     def is_game_over(rummy):
@@ -353,8 +355,14 @@ class Rummy(Game):
         if rummy.is_game_over():
             rummy.end_game(savedata)
         else:
-            if rummy.state['history'][-1][0] == player and rummy.state['history'][-1][2] == 'draw':
-                return player
+            if rummy.state['history']:
+                if rummy.state['history'][-1][0] == player and rummy.state['history'][-1][2] == 'draw':
+                    return player
+                else:
+                    if player == 1:
+                        return 0
+                    else:
+                        return 1
             else:
                 if player == 1:
                     return 0
@@ -381,19 +389,19 @@ class Rummy(Game):
             rummy.discard_pile.append(move[1])
             rummy.hands[player].remove(move[1])
 
-    def unlocked_achievements(threes,savedata):
+    def unlocked_achievements(rummy,savedata):
         pass
 
-    def get_reward(threes,shop):
-        shop.coin_count += (threes.difficulty[0]*5)
-        amount_earned += threes.difficulty[0]*5
-        Unlocked_achievement = threes.unlocked_achievements()
+    def get_reward(rummy,shop):
+        shop.coin_count += (rummy.difficulty[0]*5)
+        amount_earned += rummy.difficulty[0]*5
+        Unlocked_achievement = rummy.unlocked_achievements()
         if Unlocked_achievement:
             shop.coin_count += 5*len(Unlocked_achievement)
             amount_earned += 5*len(Unlocked_achievement)
-        if threes.winner == 0:
-            shop.coin_count += (30 + threes.difficulty[0]*5)
-            amount_earned += (30 + threes.difficulty[0]*5)
+        if rummy.winner == 0:
+            shop.coin_count += (30 + rummy.difficulty[0]*5)
+            amount_earned += (30 + rummy.difficulty[0]*5)
         else:
             shop.coin_count += 10
             amount_earned += 10
@@ -420,4 +428,8 @@ rummy.shuffle_cards()
 rummy.turn = 0
 rummy.distribute_cards()
 print(rummy.hands)
-rummy.apply_move(0,[])
+
+
+rummy.apply_move(0,random.choice(rummy.get_valid_moves(0)))
+rummy.apply_move(0,rummy.get_valid_moves(0))
+print(rummy.next_vaild_player(rummy.turn,'savedata'))
