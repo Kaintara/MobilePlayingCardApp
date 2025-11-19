@@ -13,7 +13,7 @@ class Node:
         self.value = 0.0
 
     def tried_all_moves(self):
-        return self.untried_moves is not None and len(self.untried_moves) == 0
+        return self.all_moves is not None and len(self.all_moves) == 0
     
     def best_child(self,c_param=1.41):
         choices = []
@@ -31,10 +31,10 @@ class Node:
     
     def simulations(self,state,game_env):
         s = copy.deepcopy(state)
-        moves = game_env.get_legal_moves(s)
+        moves = game_env.get_vaild_moves(s)
         if not moves:
             return
         move = random.choice(moves)
-        s = game_env.apply_move(s,move)
+        s = game_env.apply_moves(s,move)
         return s
 

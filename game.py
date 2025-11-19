@@ -50,7 +50,7 @@ class Threes(Game):
         if threes.hands[player]:
             Hand = threes.hands[player]
         elif threes.top_hands[player]:
-            Hand = threes.hands[player]
+            Hand = threes.top_hands[player]
         else:
             Hand = threes.bottom_hands[player]
             for card in Hand:
@@ -170,7 +170,9 @@ class Threes(Game):
                         threes.hands[player].append(card)
                     break
         elif move[2] == "pickup":
-            threes.hands[player] += threes.played_cards[:-1]
+            if threes.played_cards:
+                for card in threes.played_cards:
+                    threes.hands[player].append(card)
             threes.played_cards = []
 
     def unlocked_achievements(threes,savedata):
@@ -594,12 +596,3 @@ state = {'name' : "memory",
         'difficulty' : (-1,""),
         'winner' : None,
         'history': []}
-
-
-
-threes.shuffle_cards()
-threes.distribute_cards()
-print(threes.hands)
-threes.apply_move(0,random.choice(threes.get_valid_moves(0)))
-threes.apply_move(1,random.choice(threes.get_valid_moves(1)))
-print(threes.hands)
