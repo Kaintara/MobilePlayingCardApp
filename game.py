@@ -424,12 +424,138 @@ state = {'name' : "rummy",
 rummy = Rummy("rummy",{'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,
 '5': 5,'4': 4,'3': 3,'2': 2},state)
 
-rummy.shuffle_cards()
-rummy.turn = 0
-rummy.distribute_cards()
-print(rummy.hands)
 
+class Memory(Game):
+    def __init__(memory, name, rank_order, state):
+        super().__init__(name, rank_order, state)
+        memory.state = state
+        memory.deck = ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH","BJ","RJ"]
+        memory.first_selected_card = ('y','x','card')
+        memory.second_selected_card = ('y','x','card')
+        memory.selected_first_card = False
+        memory.card_array = [['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','','']]
 
-rummy.apply_move(0,random.choice(rummy.get_valid_moves(0)))
-rummy.apply_move(0,rummy.get_valid_moves(0))
-print(rummy.next_vaild_player(rummy.turn,'savedata'))
+    def distribute_cards(memory):
+        for y in range(0,9):
+            for x in range(0,6):
+                card = memory.shuffled_deck.pop()
+                memory.card_array[y][x] = card
+
+    def get_valid_moves(memory,player):
+        Moves = []
+        for y, row in enumerate(memory.card_array):
+            for x, card in enumerate(row):
+                if card:
+                    Moves.append((player,(y,x,card),"pick"))
+        return Moves
+    
+    def is_game_over(memory):
+        for y,row in enumerate(memory.card_array):
+            for x,card in enumerate(row):
+                if card:
+                    return False
+        if len(memory.hands[1]) > len(memory.hands[0]):
+            memory.winner = 1
+        else:
+            memory.winner = 0
+        return True
+
+    def end_game(memory,savedata):
+        pass
+       # savedata.save()
+       # reward = threes.get_reward(shop)
+       # Dialog = Reward_Dialog(reward)
+       # Dialog.open()
+
+    def next_vaild_player(memory,player,savedata):
+        if memory.is_game_over():
+            memory.end_game(savedata)
+        else:
+            if memory.state['history']:
+                if memory.state['history'][-1][3] == "Matched":
+                    return player
+                else:
+                    if player == 1:
+                        return 0
+                    else:
+                        return 1
+            else:
+                if player == 1:
+                    return 0
+                else:
+                    return 1
+        
+    def apply_move(memory,player,move):
+        if not move:
+            if memory.is_game_over():
+                memory.end_game()
+                return
+            else:
+                memory.turn = memory.next_vaild_player(player,'savedata')
+                return
+        memory.state["history"].append(move)
+        if memory.selected_first_card == False:
+            memory.first_selected_card = move[1]
+            memory.selected_first_card = True
+        else:
+            memory.second_selected_card = move[1]
+            memory.selected_first_card = False
+            first = memory.first_selected_card
+            second = memory.second_selected_card
+            if first[2][0] == second[2][0]:
+                suit1 = first[2][1]
+                suit2 = second[2][1]
+                if (suit1 in ['D','H'] and suit2 in ['D','H']) or (suit1 in ['C','S'] and suit2 in ['C','S']):
+                    memory.card_array[first[0]][first[1]] = None
+                    memory.card_array[second[0]][second[1]] = None
+                    memory.state["history"].append((player,first,second,"Matched"))
+                    memory.hands[player].append(first[2])
+                    memory.hands[player].append(second[2])
+                else:
+                    memory.state["history"].append((player,first,second,"Missed"))
+                memory.first_selected_card = ('y','x','card')
+                memory.second_selected_card = ('y','x','card')
+            else:
+                memory.state["history"].append((player,(memory.first_selected_card,memory.second_selected_card),"NotMatched"))
+
+    def unlocked_achievements(rummy,savedata):
+        pass
+
+    def get_reward(rummy,shop):
+        shop.coin_count += (rummy.difficulty[0]*5)
+        amount_earned += rummy.difficulty[0]*5
+        Unlocked_achievement = rummy.unlocked_achievements()
+        if Unlocked_achievement:
+            shop.coin_count += 5*len(Unlocked_achievement)
+            amount_earned += 5*len(Unlocked_achievement)
+        if rummy.winner == 0:
+            shop.coin_count += (30 + rummy.difficulty[0]*5)
+            amount_earned += (30 + rummy.difficulty[0]*5)
+        else:
+            shop.coin_count += 10
+            amount_earned += 10
+        return (amount_earned, Unlocked_achievement)
+    
+state = {'name' : "memory",
+        'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
+        'shuffled_deck' : [],
+        'hands' : [[],[]],
+        'first_selected_card' : ('y','x','card'),
+        'second_selected_card' : ('y','x','card'),
+        'selected_first_card' : False,
+        'card_array' : [['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','','']],
+        'turn' : 0,
+        'time_elapsed' : 0,
+        'difficulty' : (-1,""),
+        'winner' : None,
+        'history': []}
+
+memory = Memory("memory", rank_order, state)
+print(memory.state['history'])
+memory.shuffle_cards()
+print(memory.shuffled_deck)
+memory.distribute_cards()
+print(memory.card_array)
+print(memory.is_game_over())
+memory.card_array = [[]]
+print(memory.is_game_over())
