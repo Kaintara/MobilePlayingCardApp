@@ -44,7 +44,8 @@ class Threes(Game):
         threes.hands[0].sort(key=(lambda a : threes.rank_order[a[0]]))
         threes.hands[1].sort(key=(lambda a : threes.rank_order[a[0]]))
 
-    def get_valid_moves(threes,player):
+    def get_valid_moves(threes):
+        player = threes.turn
         Moves = []
         Valid_Cards = []
         if threes.hands[player]:
@@ -57,20 +58,20 @@ class Threes(Game):
                 Moves.append((player,card,"try"))
             return Moves
         if threes.played_cards:
-            Moves.append((player,threes.played_cards,"pickup"))
+            Moves.append((player,threes.played_cards[:],"pickup"))
             Top_card = threes.played_cards[-1]
             if Top_card[0] == '2':
                 for card in Hand:
                     Moves.append((player,card,"play"))
                     return Moves
+            temp_hand = Hand[:] + [Top_card]
+            temp_hand.sort(key=lambda a: threes.rank_order[a[0]])
             for card in Hand:
-                if Top_card[0] == card[0]:
-                    Valid_Cards.append(Top_card)
-                    break
-            Hand.append(Top_card)
-            threes.sort_cards()
-            Index = Hand.index(Top_card) + 1
-            Valid_Cards += Hand[Index:]
+                if card[0] == Top_card[0]:
+                    Valid_Cards.append(card)
+            idx = temp_hand.index(Top_card) + 1
+            if idx < len(temp_hand):
+                Valid_Cards += temp_hand[idx:]
             for card in Valid_Cards:
                 Moves.append((player,card,"play"))
         else:
@@ -131,15 +132,13 @@ class Threes(Game):
             Top_card = '2H'
         if move[2] == "try":
             if Top_card[0] == '2':
-                threes.played_cards.append(move[1])
-                threes.bottom_hands[player].remove(move[1])
+                threes.apply_move((player,move[1],"play"))
             else:
                 Card_rank = threes.rank_order[move[1][0]]
                 if Card_rank >= threes.rank_order[Top_card[0]]:
-                    threes.played_cards.append(move[1])
-                    threes.bottom_hands[player].remove(move[1])
+                    threes.apply_move((player,move[1],"play"))
                 else:
-                    threes.apply_move(player,(player,threes.played_cards,"pickup"))
+                    threes.apply_move((player,threes.played_cards,"pickup"))
                     return
         elif move[2] == "play":
             threes.played_cards.append(move[1])
@@ -173,7 +172,8 @@ class Threes(Game):
         elif move[2] == "pickup":
             if threes.played_cards:
                 for card in threes.played_cards:
-                    threes.hands[player].append(card)
+                    if card not in threes.hands[player]:
+                        threes.hands[player].append(card)
             threes.played_cards = []
 
     def unlocked_achievements(threes,savedata):
@@ -209,6 +209,38 @@ class Threes(Game):
         threes.state['winner'] = threes.winner
         threes.state['history'] = threes.state['history']
 
+    def test_run(threes):
+        threes.shuffle_cards()
+        threes.distribute_cards()
+        threes.turn = 0
+        while not threes.is_game_over():
+            moves = threes.get_valid_moves()
+            # No moves at all – skip or break the game
+            if not moves:
+                threes.turn = threes.next_vaild_player(threes.turn, 'save')
+                print("No valid moves – skipping turn")
+                continue
+            # Filter moves
+            play_moves = [m for m in moves if m[2] != "pickup"]
+            pickup_moves = [m for m in moves if m[2] == "pickup"]
+            # Decide which move to apply
+            if play_moves:
+                # Choose the first non-pickup move
+                chosen_move = play_moves[0]
+            else:
+                # Only pickup available
+                chosen_move = pickup_moves[0]
+            # Apply the chosen move
+            threes.apply_move(chosen_move)
+            #print("HANDS:", threes.hands)
+            #print("HISTORY:", threes.state['history'])
+            #print("DECK:", threes.shuffled_deck)
+            threes.update_game_state()
+            print(threes.state)
+            threes.turn = threes.next_vaild_player(threes.turn, 'save')
+            input()
+        print("game over")
+
 rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,
 '5': 5,'4': 4,'3': 3,'2': 15}
 
@@ -230,7 +262,9 @@ state = {'name' : "threes",
         'played_cards' : [],
         'history': []}
 
+
 threes = Threes("threes",rank_order,state)
+threes.test_run()
 threes.shuffle_cards()
 threes.distribute_cards()
 threes.apply_move(random.choice(threes.get_valid_moves(0)))

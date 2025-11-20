@@ -29,12 +29,14 @@ class Node:
             return None
         return self.children[choices.index(max(choices))]
     
-    def simulations(self,state,game_env):
+    def simulations(self,state,game_env,max_depth=200):
         s = copy.deepcopy(state)
-        moves = game_env.get_vaild_moves(s)
-        if not moves:
-            return
-        move = random.choice(moves)
-        s = game_env.apply_moves(s,move)
+        depth = 0
+        while not game_env.is_terminal(s) and depth < max_depth:
+            moves = game_env.get_vaild_moves(s)
+            if not moves:
+                break
+            move = random.choice(moves)
+            s = game_env.apply_moves(s, move)  # apply_moves returns a NEW state
+            depth += 1
         return s
-

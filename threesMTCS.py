@@ -62,7 +62,8 @@ class GameEnvironment:
         state['hands'][1].sort(key=(lambda a : rank_order[a[0]]))
     
     def get_vaild_moves(env,state):
-        player = 1 - state['turn']
+        rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 15}
+        player = state['turn']
         Moves = []
         Valid_Cards = []
         if state['hands'][player]:
@@ -75,7 +76,7 @@ class GameEnvironment:
                 Moves.append((player,card,"try"))
             return Moves
         if state['played_cards']:
-            Moves.append((player,state['played_cards'],"pickup"))
+            Moves.append((player,list(state['played_cards']),"pickup"))
             Top_card = state['played_cards'][-1]
             if Top_card[0] == '2':
                 for card in Hand:
@@ -85,10 +86,14 @@ class GameEnvironment:
                 if Top_card[0] == card[0]:
                     Valid_Cards.append(Top_card)
                     break
-            Hand.append(Top_card)
-            env.sort_cards(state)
-            Index = Hand.index(Top_card) + 1
-            Valid_Cards += Hand[Index:]
+            temp_hand = Hand[:] + [Top_card]
+            temp_hand.sort(key=lambda a: rank_order[a[0]])
+            for card in Hand:
+                if card[0] == Top_card[0]:
+                    Valid_Cards.append(card)
+            idx = temp_hand.index(Top_card) + 1
+            if idx < len(temp_hand):
+                Valid_Cards += temp_hand[idx:]
             for card in Valid_Cards:
                 Moves.append((player,card,"play"))
         else:
@@ -96,9 +101,20 @@ class GameEnvironment:
                 Moves.append((player,card,"play"))
         return Moves
     
-    def apply_moves(env,state,move):
+    def apply_moves(env,og_state,move):
+        state = copy.deepcopy(og_state)
+        if not move:
+            if env.is_terminal(state):
+                return state
+            state['turn'] = env.next_valid_player(state)
+            return state
         rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 15}
-        state["history"].append(move)
+        payload = move[1]
+        if isinstance(payload, list):
+            payload_for_history = list(payload)
+        else:
+            payload_for_history = payload
+        state["history"].append((move[0], payload_for_history, move[2]))
         player = move[0]
         if state["played_cards"]:
             Top_card = state["played_cards"][-1]
@@ -106,15 +122,13 @@ class GameEnvironment:
             Top_card = '2H'
         if move[2] == "try":
             if Top_card[0] == '2':
-                state["played_cards"].append(move[1])
-                state["bottom_hands"][player].remove(move[1])
+                env.apply_moves(state, (player,move[1],"play"))
             else:
                 Card_rank = rank_order[move[1][0]]
                 if Card_rank >= rank_order[Top_card[0]]:
-                    state["played_cards"].append(move[1])
-                    state["bottom_hands"][player].remove(move[1])
+                    env.apply_moves(state, (player,move[1],"play"))
                 else:
-                    env.apply_moves(state, (player, state["played_cards"], "pickup"))
+                    env.apply_moves(state, (player, list(state["played_cards"]), "pickup"))
                     return
         elif move[2] == "play":
             state["played_cards"].append(move[1])
@@ -146,20 +160,28 @@ class GameEnvironment:
                         state['hands'][player].append(card)
                     break
         elif move[2] == "pickup":
-            if state["played_cards"]:
-                for card in state["played_cards"]:
-                    state['hands'][player].append(card)
-            state["played_cards"] = []
-        if not state.get('another', False):
-            state['turn'] = 1 - state['turn']
+             if state["played_cards"]:
+                snapshot = list(state["played_cards"])
+                for card in snapshot:
+                    if card not in state['hands'][player]:
+                        state['hands'][player].append(card)
+             state["played_cards"] = []
+        if env.is_terminal(state):
+            return state
         else:
-            state['another'] = False
+            if state['another'] == True:
+                state['another'] = False
+            if state['turn'] == 1:
+                state['turn'] = 0
+            else:
+                state['turn'] = 1
         return state
     
     def get_reward(env,state):
         rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 15}
         Hand = []
         Bot_Hand = []
+        player = 1
         for i in range(0,2):
             if state['hands'][i]:
                 Hand = state['hands'][i]
@@ -169,52 +191,78 @@ class GameEnvironment:
                 Hand = state['bottom_hands'][i]
             if i == 1:
                 Bot_Hand = Hand
+        if env.is_terminal(state):
+            return 1000 if env.winner(state) == player else -1000
         reward = 0
-        difference = (len(Hand) - len(Bot_Hand)) * 2
-        card_value = max([rank_order[card[0]] for card in Bot_Hand])
-        card_difference = min([rank_order[card[0]] for card in Bot_Hand]) - max([rank_order[card[0]] for card in Hand])
-        if len(Bot_Hand) < 3:
+        reward -= len(Bot_Hand) * 4
+        if state['history'] and state['history'][-1][2] == "pickup":
+            reward -= 20
+        if len(state['played_cards']) == 0 and state['history']:
+            if state['history'][-1][2] == "play":
+                reward += 12
+        if state.get('another', False):
             reward += 5
-        return reward + difference + card_value + card_difference
+        reward = 0
+        difference = (len(Hand)-3) * 2
+        card_difference = min([rank_order[card[0]] for card in Bot_Hand]) - max([rank_order[card[0]] for card in Bot_Hand])
+        return reward + difference + card_difference
 
     def is_terminal(env,state):
         for player in [0, 1]:
             if (not state['hands'][player] and not state['top_hands'][player] and not state['bottom_hands'][player]):
+                if not state['bottom_hands'][0]:
+                    state['winner'] = 0
+                else:
+                    state['winner'] = 1
                 return True
         return False
+    
+    def next_valid_player(env,state):
+        if env.is_terminal(state):
+            return
+        else:
+            if state['another'] == True:
+                state['another'] = False
+                return state['turn']
+            if state['turn'] == 1:
+                return 0
+            else:
+                return 1
 
 genv = GameEnvironment()
-state = {'name': 'threes', 'deck': ['AD', '2D', '3D', '4D', '5D', '6D', '7D', '8D', '9D', '1D', 'JD', 'QD', 'KD', 'AS', '2S', '3S', '4S', '5S', '6S', '7S', '8S', '9S', '1S', 'JS', 'QS', 'KS', 'AC', '2C', '3C', '4C', '5C', '6C', '7C', '8C', '9C', '1C', 'JC', 'QC', 'KC', 'AH', '2H', '3H', '4H', '5H', '6H', '7H', '8H', '9H', '1H', 'JH', 'QH', 'KH'], 'shuffled_deck': ['3D', '7C', '2S', 'KD', 'QH', '2D', 'AC', '1D', '1C', 'JC', '9S', '6D', '9C', '6C', '5D', 'AD', 'QD', 'KS', '5S', '1H', '4C', '8S', 'JH', '8C', '4S', 'JD', 'AH', '5C', '7H', '4D', 'JS', '9D'], 'rank_order': {'A': 14, 'K': 13, 'Q': 12, 'J': 11, '1': 16, '9': 9, '8': 8, '7': 7, '6': 6, '5': 5, '4': 4, '3': 3, '2': 15}, 'hands': [['6H', 'QS', '7S'], ['5H', '8D', 'QC']], 'discard_pile': [], 'selected_card': '', 'turn': 0, 'time_elapsed': 0, 'difficulty': (0, 'Easy'), 'winner': None, 'bottom_hands': [['7D', '6S', '4H'], ['KC', '1S', 'AS']], 'top_hands': [['9H', 'KH', '2C'], ['8H', '3H', '3S']], 'another': False, 'played_cards': ['QC', '2H', '3C'], 'history': [(0, 'QC', 'play'), (1, '2H', 'play'), (0, '3C', 'play')]}
+state = {'name': 'threes', 'deck': ['AD', '2D', '3D', '4D', '5D', '6D', '7D', '8D', '9D', '1D', 'JD', 'QD', 'KD', 'AS', '2S', '3S', '4S', '5S', '6S', '7S', '8S', '9S', '1S', 'JS', 'QS', 'KS', 'AC', '2C', '3C', '4C', '5C', '6C', '7C', '8C', '9C', '1C', 'JC', 'QC', 'KC', 'AH', '2H', '3H', '4H', '5H', '6H', '7H', '8H', '9H', '1H', 'JH', 'QH', 'KH'], 'shuffled_deck': ['4C', 'AD', '8D', 'AS', '7C', 'KC', '2S', '7D', 'QH', '3C', '5S', 'AC', '6H', '8C', '5H', '4D', '1C', '9D', '1S', 'QS', 'KD', 'QD', '6D', '5D', 'JC', '9C', '3D', '4H', '9H', 'JD'], 'rank_order': {'A': 14, 'K': 13, 'Q': 12, 'J': 11, '1': 16, '9': 9, '8': 8, '7': 7, '6': 6, '5': 5, '4': 4, '3': 3, '2': 15}, 'hands': [['7H', 'JS', 'KH'], ['1D', '7S', '8H']], 'discard_pile': [], 'selected_card': '', 'turn': 0, 'time_elapsed': 0, 'difficulty': (0, 'Easy'), 'winner': None, 'bottom_hands': [['2C', '3H', '8S'], ['1H', '2D', 'AH']], 'top_hands': [['5C', '6C', '6S'], ['JH', '4S', '3S']], 'another': False, 'played_cards': ['QC', 'KS', '2H', '9S'], 'history': [(0, 'KS', 'play'), (1, 'KH', 'play'), (0, ['KS', 'KH'], 'pickup'), (1, 'QC', 'play'), (0, 'KS', 'play'), (1, '2H', 'play'), (0, '9S', 'play')]}
+
 print(genv.determinization(state))
 print(genv.get_reward(genv.determinization(state)))
 
-def one_level_mtcs(root_state,game_env,iterations):
+def mtcs(root_state,game_env,iterations):
     det_root = game_env.determinization(root_state)
+    det_root['turn'] = 1
     root_node = Node(det_root,None,None)
     root_node.all_moves = game_env.get_vaild_moves(root_node.state)
+    root_node.children = []
     for move in root_node.all_moves:
-        child_state = game_env.apply_moves(det_root, move)
+        child_state = game_env.apply_moves(root_node.state, move)
         child_node = Node(child_state, root_node, move)
         root_node.children.append(child_node)
         child_node.all_moves = []
+    if not root_node.children:
+        return None
     for _ in range(iterations):
+            print(_)
             child = random.choice(root_node.children)
             if not child:
                 continue
             sim_state = copy.deepcopy(child.state)
-            final_state = child.simulations(sim_state,game_env) #Error is here! Test the Node classes first then come back to this.
+            final_state = child.simulations(sim_state,game_env) 
+            if final_state is None:
+                continue
             reward = game_env.get_reward(final_state)
-            print("Reward:", reward)
-            print("Move:", child.previous_move)
-            print("Final State:", final_state)
-            if not reward:
-                child.value += 0
-            else:
-                child.value += reward
+            child.value += (reward or 0)
             child.visits += 1
     best = root_node.best_child(1.4)
     if best is None:
         return None
     return best.previous_move
 
-print(one_level_mtcs(state,genv,30))
+print(one_level_mtcs(state,genv,150))
