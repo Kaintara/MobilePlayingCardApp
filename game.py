@@ -14,7 +14,6 @@ class Game:
         game.time_elapsed = 0
         game.difficulty = (0,"Easy")
         game.winner = None
-        game.history = {}
 
     def shuffle_cards(game):
         shuffled_deck = game.deck[:]
@@ -207,7 +206,6 @@ class Threes(Game):
         threes.state['time_elapsed'] = threes.time_elapsed
         threes.state['difficulty'] = threes.difficulty
         threes.state['winner'] = threes.winner
-        threes.state['history'] = threes.state['history']
 
     def test_run(threes):
         threes.shuffle_cards()
@@ -262,16 +260,6 @@ state = {'name' : "threes",
         'played_cards' : [],
         'history': []}
 
-
-threes = Threes("threes",rank_order,state)
-threes.test_run()
-threes.shuffle_cards()
-threes.distribute_cards()
-threes.apply_move(random.choice(threes.get_valid_moves(0)))
-threes.apply_move(random.choice(threes.get_valid_moves(1)))
-threes.apply_move(random.choice(threes.get_valid_moves(0)))
-threes.update_game_state()
-print(threes.state)
 
 class Rummy(Game):
     def __init__(rummy, name, rank_order, state):
@@ -372,7 +360,7 @@ class Rummy(Game):
                 for card in Runs:
                     Temp_hand.remove(card)
         if rummy.find_set(Temp_hand):
-            Sets = rummy.find_run(Temp_hand)
+            Sets = rummy.find_set(Temp_hand)
             Sorted_hand += Sets
             for card in Sets:
                 Temp_hand.remove(card)
@@ -387,7 +375,7 @@ class Rummy(Game):
     def get_valid_moves(rummy,player):
         Moves = []
         Hand_len = len(rummy.hands[player])
-        if Hand_len == 7 and len(rummy.state['history']) > 1:
+        if Hand_len == 7:
             if rummy.shuffled_deck:
                 Moves.append((player,"deck","draw"))
             if rummy.discard_pile:
@@ -434,7 +422,8 @@ class Rummy(Game):
                 else:
                     return 1
         
-    def apply_move(rummy,player,move):
+    def apply_move(rummy,move):
+        player = rummy.turn
         if not move:
             if rummy.is_game_over():
                 rummy.end_game()
@@ -442,7 +431,7 @@ class Rummy(Game):
             else:
                 rummy.turn = rummy.next_vaild_player(player,'savedata')
                 return
-        rummy.state["history"].append(move)
+        rummy.state['history'].append(move)
         if move[2] == "draw":
             if move[1] == "deck":
                 Top_card = rummy.shuffled_deck.pop()
@@ -453,6 +442,7 @@ class Rummy(Game):
         elif move[2] == "discard":
             rummy.discard_pile.append(move[1])
             rummy.hands[player].remove(move[1])
+            rummy.turn = 1 - rummy.turn
 
     def unlocked_achievements(rummy,savedata):
         pass
@@ -481,7 +471,6 @@ class Rummy(Game):
         rummy.state['time_elapsed'] = rummy.time_elapsed
         rummy.state['difficulty'] = rummy.difficulty
         rummy.state['winner'] = rummy.winner
-        rummy.state['history'] = rummy.history
     
 state = {'name' : "rummy",
         'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
@@ -499,6 +488,20 @@ state = {'name' : "rummy",
 
 rummy = Rummy("rummy",{'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,
 '5': 5,'4': 4,'3': 3,'2': 2},state)
+
+
+rummy.shuffle_cards()
+rummy.distribute_cards()
+rummy.apply_move(random.choice(rummy.get_valid_moves(rummy.turn)))
+print(rummy.turn)
+rummy.apply_move(random.choice(rummy.get_valid_moves(rummy.turn)))
+print(rummy.turn)
+rummy.apply_move(random.choice(rummy.get_valid_moves(rummy.turn)))
+rummy.apply_move(random.choice(rummy.get_valid_moves(rummy.turn)))
+rummy.apply_move(random.choice(rummy.get_valid_moves(rummy.turn)))
+rummy.apply_move(random.choice(rummy.get_valid_moves(rummy.turn)))
+rummy.update_game_state()
+print(rummy.state)
 
 
 class Memory(Game):

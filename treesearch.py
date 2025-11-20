@@ -37,6 +37,37 @@ class Node:
             if not moves:
                 break
             move = random.choice(moves)
-            s = game_env.apply_moves(s, move)  # apply_moves returns a NEW state
+            s = game_env.apply_moves(s, move)
             depth += 1
         return s
+    
+def mtcs(root_state,game_env,iterations):
+    det_root = game_env.determinization(root_state)
+    det_root['turn'] = 1
+    root_node = Node(det_root,None,None)
+    root_node.all_moves = game_env.get_vaild_moves(root_node.state)
+    root_node.children = []
+    for move in root_node.all_moves:
+        child_state = game_env.apply_moves(root_node.state, move)
+        child_node = Node(child_state, root_node, move)
+        root_node.children.append(child_node)
+        child_node.all_moves = []
+    if not root_node.children:
+        return None
+    for _ in range(iterations):
+            child = random.choice(root_node.children)
+            if not child:
+                continue
+            sim_state = copy.deepcopy(child.state)
+            final_state = child.simulations(sim_state,game_env) 
+            if final_state is None:
+                continue
+            reward = game_env.get_reward(final_state)
+            print('Move:',child.previous_move)
+            print('Reward',reward)
+            child.value += (reward or 0)
+            child.visits += 1
+    best = root_node.best_child(1.4)
+    if best is None:
+        return None
+    return best.previous_move

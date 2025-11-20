@@ -1,7 +1,5 @@
-import math
 import copy
-import random
-from treesearch import Node
+from treesearch import mtcs
 
 class GameEnvironment:
     def __init__(env):
@@ -192,7 +190,7 @@ class GameEnvironment:
             if i == 1:
                 Bot_Hand = Hand
         if env.is_terminal(state):
-            return 1000 if env.winner(state) == player else -1000
+            return 1000 if state['winner'] == player else -1000
         reward = 0
         reward -= len(Bot_Hand) * 4
         if state['history'] and state['history'][-1][2] == "pickup":
@@ -202,7 +200,6 @@ class GameEnvironment:
                 reward += 12
         if state.get('another', False):
             reward += 5
-        reward = 0
         difference = (len(Hand)-3) * 2
         card_difference = min([rank_order[card[0]] for card in Bot_Hand]) - max([rank_order[card[0]] for card in Bot_Hand])
         return reward + difference + card_difference
@@ -235,34 +232,4 @@ state = {'name': 'threes', 'deck': ['AD', '2D', '3D', '4D', '5D', '6D', '7D', '8
 print(genv.determinization(state))
 print(genv.get_reward(genv.determinization(state)))
 
-def mtcs(root_state,game_env,iterations):
-    det_root = game_env.determinization(root_state)
-    det_root['turn'] = 1
-    root_node = Node(det_root,None,None)
-    root_node.all_moves = game_env.get_vaild_moves(root_node.state)
-    root_node.children = []
-    for move in root_node.all_moves:
-        child_state = game_env.apply_moves(root_node.state, move)
-        child_node = Node(child_state, root_node, move)
-        root_node.children.append(child_node)
-        child_node.all_moves = []
-    if not root_node.children:
-        return None
-    for _ in range(iterations):
-            print(_)
-            child = random.choice(root_node.children)
-            if not child:
-                continue
-            sim_state = copy.deepcopy(child.state)
-            final_state = child.simulations(sim_state,game_env) 
-            if final_state is None:
-                continue
-            reward = game_env.get_reward(final_state)
-            child.value += (reward or 0)
-            child.visits += 1
-    best = root_node.best_child(1.4)
-    if best is None:
-        return None
-    return best.previous_move
-
-print(one_level_mtcs(state,genv,150))
+print(mtcs(state,genv,100))
