@@ -489,21 +489,6 @@ state = {'name' : "rummy",
 rummy = Rummy("rummy",{'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,
 '5': 5,'4': 4,'3': 3,'2': 2},state)
 
-
-rummy.shuffle_cards()
-rummy.distribute_cards()
-rummy.apply_move(random.choice(rummy.get_valid_moves(rummy.turn)))
-print(rummy.turn)
-rummy.apply_move(random.choice(rummy.get_valid_moves(rummy.turn)))
-print(rummy.turn)
-rummy.apply_move(random.choice(rummy.get_valid_moves(rummy.turn)))
-rummy.apply_move(random.choice(rummy.get_valid_moves(rummy.turn)))
-rummy.apply_move(random.choice(rummy.get_valid_moves(rummy.turn)))
-rummy.apply_move(random.choice(rummy.get_valid_moves(rummy.turn)))
-rummy.update_game_state()
-print(rummy.state)
-
-
 class Memory(Game):
     def __init__(memory, name, rank_order, state):
         super().__init__(name, rank_order, state)
@@ -525,7 +510,7 @@ class Memory(Game):
         for y, row in enumerate(memory.card_array):
             for x, card in enumerate(row):
                 if card:
-                    Moves.append((player,(y,x,card),"pick"))
+                    Moves.append(("pick",player,(y,x,card)))
         return Moves
     
     def is_game_over(memory):
@@ -551,7 +536,7 @@ class Memory(Game):
             memory.end_game(savedata)
         else:
             if memory.state['history']:
-                if memory.state['history'][-1][3] == "Matched":
+                if memory.state['history'][-1][0] == "Matched":
                     return player
                 else:
                     if player == 1:
@@ -564,7 +549,8 @@ class Memory(Game):
                 else:
                     return 1
         
-    def apply_move(memory,player,move):
+    def apply_move(memory,move):
+        player = memory.turn
         if not move:
             if memory.is_game_over():
                 memory.end_game()
@@ -574,10 +560,10 @@ class Memory(Game):
                 return
         memory.state["history"].append(move)
         if memory.selected_first_card == False:
-            memory.first_selected_card = move[1]
+            memory.first_selected_card = move[2]
             memory.selected_first_card = True
         else:
-            memory.second_selected_card = move[1]
+            memory.second_selected_card = move[2]
             memory.selected_first_card = False
             first = memory.first_selected_card
             second = memory.second_selected_card
@@ -587,15 +573,13 @@ class Memory(Game):
                 if (suit1 in ['D','H'] and suit2 in ['D','H']) or (suit1 in ['C','S'] and suit2 in ['C','S']):
                     memory.card_array[first[0]][first[1]] = None
                     memory.card_array[second[0]][second[1]] = None
-                    memory.state["history"].append((player,first,second,"Matched"))
+                    memory.state["history"].append(("Matched",player,first,second))
                     memory.hands[player].append(first[2])
                     memory.hands[player].append(second[2])
-                else:
-                    memory.state["history"].append((player,first,second,"Missed"))
                 memory.first_selected_card = ('y','x','card')
                 memory.second_selected_card = ('y','x','card')
             else:
-                memory.state["history"].append((player,(memory.first_selected_card,memory.second_selected_card),"NotMatched"))
+                memory.state["history"].append(("Missed",player,first,second))
 
     def unlocked_achievements(rummy,savedata):
         pass
@@ -626,7 +610,6 @@ class Memory(Game):
         memory.state['time_elapsed'] = memory.time_elapsed
         memory.state['difficulty'] = memory.difficulty
         memory.state['winner'] = memory.winner
-        memory.state['history'] = memory.history
     
 state = {'name' : "memory",
         'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
@@ -641,3 +624,15 @@ state = {'name' : "memory",
         'difficulty' : (-1,""),
         'winner' : None,
         'history': []}
+
+memory = Memory('memory','rank',state)
+memory.shuffle_cards()
+memory.distribute_cards()
+memory.apply_move(random.choice(memory.get_valid_moves(0)))
+memory.apply_move(random.choice(memory.get_valid_moves(0)))
+memory.apply_move(random.choice(memory.get_valid_moves(1)))
+memory.apply_move(random.choice(memory.get_valid_moves(1)))
+memory.apply_move(random.choice(memory.get_valid_moves(0)))
+memory.apply_move(random.choice(memory.get_valid_moves(0)))
+memory.update_game_state()
+print(memory.state)
