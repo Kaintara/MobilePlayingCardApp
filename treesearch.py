@@ -37,4 +37,3 @@ class Node:
         move = random.choice(moves)
         s = game_env.apply_moves(s,move)
         return s
-

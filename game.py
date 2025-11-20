@@ -114,7 +114,8 @@ class Threes(Game):
             else:
                 return 1
     
-    def apply_move(threes,player,move):
+    def apply_move(threes,move):
+        player = move[0]
         if not move:
             if threes.is_game_over():
                 threes.end_game()
@@ -138,7 +139,7 @@ class Threes(Game):
                     threes.played_cards.append(move[1])
                     threes.bottom_hands[player].remove(move[1])
                 else:
-                    threes.apply_move(player,(player,threes.played_cards,"pickup"))
+                    threes.apply_move((player,threes.played_cards,"pickup"))
                     return
         elif move[2] == "play":
             threes.played_cards.append(move[1])
@@ -230,6 +231,20 @@ state = {'name' : "threes",
         'history': []}
 
 threes = Threes("threes",rank_order,state)
+
+threes.shuffle_cards()
+threes.distribute_cards()
+threes.update_game_state()
+print(threes.state)
+threes.apply_move(random.choice(threes.get_valid_moves(0)))
+threes.update_game_state()
+print(threes.state)
+threes.apply_move(random.choice(threes.get_valid_moves(1)))
+threes.update_game_state()
+print(threes.state)
+threes.apply_move(random.choice(threes.get_valid_moves(0)))
+threes.update_game_state()
+print(threes.state)
 
 class Rummy(Game):
     def __init__(rummy, name, rank_order, state):
