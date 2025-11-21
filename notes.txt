@@ -1,2 +1,8 @@
-Ask Chat about the get_reward method for memory okie!
-Get Chat to give you a good test state to see if matches can actually be made¬
+imperative that you fix the turns!!
+
+This is just a TO DO list lol
+
+Highest Pirority:
+-  write up about the shop and theme class method! Very important to do.
+- Make some card themes!! Ask Chat for ideas if stuck - probably make a default one -  get images from online and edit them to look clean
+- 
