@@ -570,16 +570,20 @@ class Memory(Game):
             if first[2][0] == second[2][0]:
                 suit1 = first[2][1]
                 suit2 = second[2][1]
-                if (suit1 in ['D','H'] and suit2 in ['D','H']) or (suit1 in ['C','S'] and suit2 in ['C','S']):
+                is_joker_pair = (first[2] in ('BJ','RJ') and second[2] in ('BJ','RJ'))
+                same_color = (suit1 in ['D','H'] and suit2 in ['D','H']) or (suit1 in ['C','S'] and suit2 in ['C','S'])
+                if is_joker_pair or same_color:
                     memory.card_array[first[0]][first[1]] = None
                     memory.card_array[second[0]][second[1]] = None
                     memory.state["history"].append(("Matched",player,first,second))
                     memory.hands[player].append(first[2])
                     memory.hands[player].append(second[2])
-                memory.first_selected_card = ('y','x','card')
-                memory.second_selected_card = ('y','x','card')
+                else:
+                    memory.state["history"].append(("Missed",player,first,second))
             else:
-                memory.state["history"].append(("Missed",player,first,second))
+                    memory.state["history"].append(("Missed",player,first,second))
+            memory.first_selected_card = ('y','x','card')
+            memory.second_selected_card = ('y','x','card')
 
     def unlocked_achievements(rummy,savedata):
         pass
