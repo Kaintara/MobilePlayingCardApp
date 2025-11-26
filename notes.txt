@@ -1,8 +1,10 @@
-imperative that you fix the turns!!
 
 This is just a TO DO list lol
 
 Highest Pirority:
--  write up about the shop and theme class method! Very important to do.
-- Make some card themes!! Ask Chat for ideas if stuck - probably make a default one -  get images from online and edit them to look clean
+-  Find the SaveData Class so you can finish up all the game classes and write the section reviews.
+- Get Chat to generate the dictionary for the SaveData.alldata attribute 
+- Finish writing the algortims from SaveData class
+- Finish writing the algortims for the get reward fucntions
+imperative that you fix the turns!!
 - 
