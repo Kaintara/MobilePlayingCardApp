@@ -37,6 +37,7 @@ class Node:
             if not moves:
                 break
             move = random.choice(moves)
+            print(move)
             s = game_env.apply_moves(s, move)
             depth += 1
         return s

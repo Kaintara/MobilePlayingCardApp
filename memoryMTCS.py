@@ -46,7 +46,7 @@ class GameEnvironment:
         Moves = []
         for y, row in enumerate(state['card_array']):
             for x, card in enumerate(row):
-                if card:
+                if card and card != 'Blank':
                     Moves.append(("pick",player,(y,x,card)))
         return Moves
     
@@ -139,6 +139,7 @@ class GameEnvironment:
             state['winner'] = 1
         else:
             state['winner'] = 0
+        return True
     
     def next_valid_player(env,state):
         player = state['turn'] 
@@ -149,7 +150,64 @@ class GameEnvironment:
 
 genv = GameEnvironment()
 
-state = {'name': 'memory', 'deck': ['AD', '2D', '3D', '4D', '5D', '6D', '7D', '8D', '9D', '1D', 'JD', 'QD', 'KD', 'AS', '2S', '3S', '4S', '5S', '6S', '7S', '8S', '9S', '1S', 'JS', 'QS', 'KS', 'AC', '2C', '3C', '4C', '5C', '6C', '7C', '8C', '9C', '1C', 'JC', 'QC', 'KC', 'AH', '2H', '3H', '4H', '5H', '6H', '7H', '8H', '9H', '1H', 'JH', 'QH', 'KH','BJ','RJ'], 'shuffled_deck': [], 'hands': [[], []], 'first_selected_card': (8, 5, '3H'), 'second_selected_card': (3, 0, '5S'), 'selected_first_card': False, 'card_array': [['7C', None, '9H', '9C', '1C', 'KS'], ['1D', 'QS', '6H', None, 'KD', 'JC'], ['3S', '7S', 'JS', 'AD', '8C', '9S'], ['5S', '1H', 'AS', 'RJ', '8S', 'KH'], ['BJ', '4H', 'QD', 'QH', '3D', 'AC'], ['JD', '5C', '1S', '4D', 'KC', '4S'], ['QC', '2D', 'AH', '5H', '5D', '2H'], ['6S', 'JH', '3C', '7D', '7H', '6D'], ['6C', '4C', '2C', '2S', '9D', '3H']], 'turn': 0, 'time_elapsed': 0, 'difficulty': (0, 'Easy'), 'winner': None, 'history': [('pick', 0, (6, 1, '2D')), ('pick', 0, (0, 5, 'KS')), ('Missed', 0, (6, 1, '2D'), (0, 5, 'KS')), ('pick', 1, (8, 3, '2S')), ('pick', 1, (1, 1, 'QS')), ('Missed', 0, (8, 3, '2S'), (1, 1, 'QS')), ('pick', 0, (8, 5, '3H')), ('pick', 0, (3, 0, '5S')), ('Missed', 0, (8, 5, '3H'), (3, 0, '5S')),('Matched', 0, (0, 1, '8H'), (1, 3, '8D'))]}
+state = {
+    'name': "memory",
+
+    'deck': [
+        "AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD",
+        "AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS",
+        "AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC",
+        "AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"
+    ],
+
+    'shuffled_deck': [],
+
+    'hands': [
+        ["8H", "9C"],     # Player 0 has 2 cards
+        ["7D", "JS", "KS"]  # Player 1 has 3 cards
+    ],
+
+    'first_selected_card': ('y','x','card'),
+    'second_selected_card': ('y','x','card'),
+    'selected_first_card': False,
+
+    # 9×6 board — '' means unknown/unflipped (your environment REQUIRES this format)
+    'card_array': [
+        ['7C','',  '9H','9C','',  'KS'],
+        ['1D','QS','6H','',  'KD','JC'],
+        ['3S','7S','',  'AD','8C','9S'],
+        ['5S','1H','AS','RJ','8S',''],
+        ['BJ','4H','',  'QH','3D','AC'],
+        ['JD','',  '1S','4D','KC',''],
+        ['QC','',  'AH','5H','5D',''],
+        ['6S','JH','3C','7D','',  '6D'],
+        ['6C','4C','2C','',  '9D','3H']
+    ],
+
+    'turn': 0,
+    'time_elapsed': 0,
+    'difficulty': (-1, ""),
+
+    'winner': None,
+
+    'history': [
+        # Player 0 reveals 7C and KS → miss
+        ('pick', 0, (0,0,'7C')),
+        ('pick', 0, (0,5,'KS')),
+        ('Missed', 0, (0,0,'7C'), (0,5,'KS')),
+
+        # Player 1 reveals BJ and RJ → match
+        ('pick', 1, (4,0,'BJ')),
+        ('pick', 1, (3,3,'RJ')),
+        ('Matched', 1, (4,0,'BJ'), (3,3,'RJ')),
+
+        # Player 0 reveals 2C and JD → miss
+        ('pick', 0, (8,2,'2C')),
+        ('pick', 0, (5,0,'JD')),
+        ('Missed', 0, (8,2,'2C'), (5,0,'JD'))
+    ]
+}
+
 print(genv.determinization(state))
 print(genv.get_reward(genv.determinization(state)))
 
