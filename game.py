@@ -20,6 +20,31 @@ class Game:
         random.shuffle(shuffled_deck)
         game.shuffled_deck = shuffled_deck
 
+    def unlocked_achievements(game,app,savedata):
+        unlocked = False
+        for id, name, desc, condition in app.all_achievements:
+            if id not in app.unlocked_achievements[id][0] and condition(savedata) == True:
+                unlocked = True
+                app.unlocked_achievements.append((id, name, desc, condition))
+        return unlocked
+    
+    def get_reward(game,shop,app,savedata):
+        shop.coin_count += (game.difficulty[0]*5)
+        amount_earned += game.difficulty[0]*5
+        Unlocked_achievement = game.unlocked_achievements(app,savedata)
+        if Unlocked_achievement:
+            shop.coin_count += 5*len(Unlocked_achievement)
+            amount_earned += 5*len(Unlocked_achievement)
+            # Dialog = Achievement_Dialog()
+            # Dialog.open()
+        if game.winner == 0:
+            shop.coin_count += (30 + game.difficulty[0]*5)
+            amount_earned += (30 + game.difficulty[0]*5)
+        else:
+            shop.coin_count += 10
+            amount_earned += 10
+        return (amount_earned, Unlocked_achievement)
+
 class Threes(Game):
     def __init__(threes, name, rank_order, state):
         super().__init__(name, rank_order, state)
@@ -174,25 +199,6 @@ class Threes(Game):
                     if card not in threes.hands[player]:
                         threes.hands[player].append(card)
             threes.played_cards = []
-
-    def unlocked_achievements(threes,app,savedata):
-        for achievement in app.all_achievements:
-            if achievement not in 
-
-    def get_reward(threes,shop):
-        shop.coin_count += (threes.difficulty[0]*5)
-        amount_earned += threes.difficulty[0]*5
-        Unlocked_achievement = threes.unlocked_achievements()
-        if Unlocked_achievement:
-            shop.coin_count += 5*len(Unlocked_achievement)
-            amount_earned += 5*len(Unlocked_achievement)
-        if threes.winner == 0:
-            shop.coin_count += (30 + threes.difficulty[0]*5)
-            amount_earned += (30 + threes.difficulty[0]*5)
-        else:
-            shop.coin_count += 10
-            amount_earned += 10
-        return (amount_earned, Unlocked_achievement)
     
     def update_game_state(threes):
         threes.state['selected_card'] = threes.selected_card
@@ -444,24 +450,6 @@ class Rummy(Game):
             rummy.discard_pile.append(move[1])
             rummy.hands[player].remove(move[1])
             rummy.turn = 1 - rummy.turn
-
-    def unlocked_achievements(rummy,savedata):
-        pass
-
-    def get_reward(rummy,shop):
-        shop.coin_count += (rummy.difficulty[0]*5)
-        amount_earned += rummy.difficulty[0]*5
-        Unlocked_achievement = rummy.unlocked_achievements()
-        if Unlocked_achievement:
-            shop.coin_count += 5*len(Unlocked_achievement)
-            amount_earned += 5*len(Unlocked_achievement)
-        if rummy.winner == 0:
-            shop.coin_count += (30 + rummy.difficulty[0]*5)
-            amount_earned += (30 + rummy.difficulty[0]*5)
-        else:
-            shop.coin_count += 10
-            amount_earned += 10
-        return (amount_earned, Unlocked_achievement)
     
     def update_game_state(rummy):
         rummy.state['shuffled_deck'] = rummy.shuffled_deck
@@ -586,24 +574,6 @@ class Memory(Game):
             memory.first_selected_card = ('y','x','card')
             memory.second_selected_card = ('y','x','card')
 
-    def unlocked_achievements(rummy,savedata):
-        pass
-
-    def get_reward(rummy,shop):
-        shop.coin_count += (rummy.difficulty[0]*5)
-        amount_earned += rummy.difficulty[0]*5
-        Unlocked_achievement = rummy.unlocked_achievements()
-        if Unlocked_achievement:
-            shop.coin_count += 5*len(Unlocked_achievement)
-            amount_earned += 5*len(Unlocked_achievement)
-        if rummy.winner == 0:
-            shop.coin_count += (30 + rummy.difficulty[0]*5)
-            amount_earned += (30 + rummy.difficulty[0]*5)
-        else:
-            shop.coin_count += 10
-            amount_earned += 10
-        return (amount_earned, Unlocked_achievement)
-    
     def update_game_state(memory):
         memory.state['shuffled_deck'] = memory.shuffled_deck
         memory.state['hands'] = memory.hands

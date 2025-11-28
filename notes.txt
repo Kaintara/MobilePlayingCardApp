@@ -2,9 +2,7 @@
 This is just a TO DO list lol
 
 Highest Pirority:
--  Find the SaveData Class so you can finish up all the game classes and write the section reviews.
-- Get Chat to generate the dictionary for the SaveData.alldata attribute 
-- Finish writing the algortims from SaveData class
+-  Finish Up the General Game Class unlocked_achievements section, write a test and result etc 
 - Finish writing the algortims for the get reward fucntions
+- Start on the UI!
 imperative that you fix the turns!!
-- 

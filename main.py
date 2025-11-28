@@ -10,17 +10,17 @@ class MobilePlayingCardApp(MDApp):
         self.timer = True
         self.score = True
         self.all_achievements = [
-            ('The memory of a goldfish','Play your first game of Memory',lambda save : save.alldata['Games']['Stats']['Memory_Stats']['General_Stats']["games_played"] >= 1),
-            ('Only Three?','Play your first game of Threes',lambda save : save.alldata['Games']['Stats']['Threes_Stats']['General_Stats']["games_played"] >= 1),
-            ('Four and Three!','Play your first game of Rummy',lambda save : save.alldata['Games']['Stats']['Rummy_Stats']['General_Stats']["games_played"] >= 1),
-            ('Better Luck Next Time!','Lose your first game of Rummy',lambda save : save.alldata['Games']["Previous_Games"]['Rummy'][-1]['winner'] == 1),
-            ('If only you had a ten, huh?','Lose your first game of Threes',lambda save : save.alldata['Games']["Previous_Games"]['Threes'][-1]['winner'] == 1),
-            ('FUMBLED!','Lose your first game of Memory',lambda save : save.alldata['Games']["Previous_Games"]['Memory'][-1]['winner'] == 1),
-            ('Poker Player','Win your first game of Rummy',lambda save : save.alldata['Games']["Previous_Games"]['Rummy'][-1]['winner'] == 0),
-            ('Uno Player','Win your first game of Three',lambda save : save.alldata['Games']["Previous_Games"]['Threes'][-1]['winner'] == 0),
-            ('The memory of an elephant','Win your first game of Memory',lambda save : save.alldata['Games']["Previous_Games"]['Memory'][-1]['winner'] == 0),
+            (0,'The memory of a goldfish','Play your first game of Memory',lambda save : save.alldata['Games']['Stats']['Memory_Stats']['General_Stats']["games_played"] >= 1),
+            (1,'Only Three?','Play your first game of Threes',lambda save : save.alldata['Games']['Stats']['Threes_Stats']['General_Stats']["games_played"] >= 1),
+            (2,'Four and Three!','Play your first game of Rummy',lambda save : save.alldata['Games']['Stats']['Rummy_Stats']['General_Stats']["games_played"] >= 1),
+            (3,'Better Luck Next Time!','Lose your first game of Rummy',lambda save : save.alldata['Games']["Previous_Games"]['Rummy'][-1]['winner'] == 1),
+            (4,'If only you had a ten, huh?','Lose your first game of Threes',lambda save : save.alldata['Games']["Previous_Games"]['Threes'][-1]['winner'] == 1),
+            (5,'FUMBLED!','Lose your first game of Memory',lambda save : save.alldata['Games']["Previous_Games"]['Memory'][-1]['winner'] == 1),
+            (6,'Poker Player','Win your first game of Rummy',lambda save : save.alldata['Games']["Previous_Games"]['Rummy'][-1]['winner'] == 0),
+            (7,'Uno Player','Win your first game of Three',lambda save : save.alldata['Games']["Previous_Games"]['Threes'][-1]['winner'] == 0),
+            (8,'The memory of an elephant','Win your first game of Memory',lambda save : save.alldata['Games']["Previous_Games"]['Memory'][-1]['winner'] == 0),
         ]
-        self.unlocked_achivements = []
+        self.unlocked_achievements = []
         self.previous_games = {
             'Threes' : [],
             'Rummy' : [],
