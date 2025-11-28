@@ -3,22 +3,29 @@ from ui import *
 class MobilePlayingCardApp(MDApp):
     def __init__(self, **kwargs):
         self.sm_stack = []
+        self.sfx = True
+        self.ai_difficulty = "Beginner"
+        self.timer = True
+        self.score = True
+        self.all_achievements = [('Achieve1','The first acheivement!','Open the Game'),('SUPER LUCKY!','Win rummy without playing...','History = None'),('Title Drop?','Win a game of threes with a three.','Last move in History is the (0,3somth,play)')]
+        self.unlocked_achivements = []
+        self.previous_games = {
+            'Threes' : [],
+            'Rummy' : [],
+            'Memory' : []
+        }
         super().__init__(**kwargs)
 
     def build(self):
-        #App Theming
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Red"
         self.theme_cls.primary_hue = "900"
         self.theme_cls.theme_style_switch_animation_duration = 0.4
-
         Window.set_icon(("icon.png"))
-        #App Default Font & Font Styles
         LabelBase.register(
             name="cataway",
             fn_regular="Catways.ttf",
         )
-
         self.theme_cls.font_styles["cataway"] = {
             "large" : {
                 "line-height": 1.64,
