@@ -1,4 +1,6 @@
-from ui import *
+from ui import * 
+from save import SaveData
+
 
 class MobilePlayingCardApp(MDApp):
     def __init__(self, **kwargs):
@@ -7,7 +9,17 @@ class MobilePlayingCardApp(MDApp):
         self.ai_difficulty = "Beginner"
         self.timer = True
         self.score = True
-        self.all_achievements = [('Achieve1','The first acheivement!','Open the Game'),('SUPER LUCKY!','Win rummy without playing...','History = None'),('Title Drop?','Win a game of threes with a three.','Last move in History is the (0,3somth,play)')]
+        self.all_achievements = [
+            ('The memory of a goldfish','Play your first game of Memory',lambda save : save.alldata['Games']['Stats']['Memory_Stats']['General_Stats']["games_played"] >= 1),
+            ('Only Three?','Play your first game of Threes',lambda save : save.alldata['Games']['Stats']['Threes_Stats']['General_Stats']["games_played"] >= 1),
+            ('Four and Three!','Play your first game of Rummy',lambda save : save.alldata['Games']['Stats']['Rummy_Stats']['General_Stats']["games_played"] >= 1),
+            ('Better Luck Next Time!','Lose your first game of Rummy',lambda save : save.alldata['Games']["Previous_Games"]['Rummy'][-1]['winner'] == 1),
+            ('If only you had a ten, huh?','Lose your first game of Threes',lambda save : save.alldata['Games']["Previous_Games"]['Threes'][-1]['winner'] == 1),
+            ('FUMBLED!','Lose your first game of Memory',lambda save : save.alldata['Games']["Previous_Games"]['Memory'][-1]['winner'] == 1),
+            ('Poker Player','Win your first game of Rummy',lambda save : save.alldata['Games']["Previous_Games"]['Rummy'][-1]['winner'] == 0),
+            ('Uno Player','Win your first game of Three',lambda save : save.alldata['Games']["Previous_Games"]['Threes'][-1]['winner'] == 0),
+            ('The memory of an elephant','Win your first game of Memory',lambda save : save.alldata['Games']["Previous_Games"]['Memory'][-1]['winner'] == 0),
+        ]
         self.unlocked_achivements = []
         self.previous_games = {
             'Threes' : [],

@@ -1,0 +1,199 @@
+{
+    "Shop": {
+        "equipped": "Cool Skin",
+        "unlocked_inventory": [
+            "Cool Skin",
+            "Basic Skin"
+        ],
+        "coin_count": 1234
+    },
+    "App": {
+        "sm_stack": true,
+        "sfx": true,
+        "ai_difficulty": "Hard",
+        "timer": true,
+        "score": 999,
+        "unlocked_achivements": [
+            "Hello World!"
+        ]
+    },
+    "Games": {
+        "Stats": {
+            "Threes_Stats": {
+                "General_Stats": {
+                    "games_played": 1,
+                    "wins": 1,
+                    "win_lose_ratio": "100.0%",
+                    "won_with_3": 1,
+                    "amount_of_pickups": 0,
+                    "best_time": 10,
+                    "total_time": 10,
+                    "last_played": "2025-11-28 20:06:23"
+                },
+                "Beginner": {
+                    "games_played": 1,
+                    "wins": 1,
+                    "best_time": 10,
+                    "last_played": "2025-11-28 20:06:23"
+                },
+                "Easy": {
+                    "games_played": 0,
+                    "wins": 0,
+                    "best_time": null,
+                    "last_played": null
+                },
+                "Normal": {
+                    "games_played": 0,
+                    "wins": 0,
+                    "best_time": null,
+                    "last_played": null
+                },
+                "Hard": {
+                    "games_played": 0,
+                    "wins": 0,
+                    "best_time": null,
+                    "last_played": null
+                },
+                "Expert": {
+                    "games_played": 0,
+                    "wins": 0,
+                    "best_time": null,
+                    "last_played": null
+                }
+            },
+            "Rummy_Stats": {
+                "General_Stats": {
+                    "games_played": 1,
+                    "wins": 1,
+                    "win_lose_ratio": "100.0%",
+                    "best_time": 50,
+                    "total_time": 50,
+                    "last_played": "2025-11-28 20:06:23"
+                },
+                "Beginner": {
+                    "games_played": 0,
+                    "wins": 0,
+                    "best_time": null,
+                    "last_played": null
+                },
+                "Easy": {
+                    "games_played": 1,
+                    "wins": 1,
+                    "best_time": 50,
+                    "last_played": "2025-11-28 20:06:23"
+                },
+                "Normal": {
+                    "games_played": 0,
+                    "wins": 0,
+                    "best_time": null,
+                    "last_played": null
+                },
+                "Hard": {
+                    "games_played": 0,
+                    "wins": 0,
+                    "best_time": null,
+                    "last_played": null
+                },
+                "Expert": {
+                    "games_played": 0,
+                    "wins": 0,
+                    "best_time": null,
+                    "last_played": null
+                }
+            },
+            "Memory_Stats": {
+                "General_Stats": {
+                    "games_played": 1,
+                    "wins": 0,
+                    "win_lose_ratio": "0.0%",
+                    "most_pairs": 0,
+                    "all_pairs": 0,
+                    "best_time": 30,
+                    "total_time": 30,
+                    "last_played": "2025-11-28 20:06:23"
+                },
+                "Beginner": {
+                    "games_played": 0,
+                    "wins": 0,
+                    "most_pairs": 0,
+                    "best_time": null,
+                    "last_played": null
+                },
+                "Easy": {
+                    "games_played": 0,
+                    "wins": 0,
+                    "most_pairs": 0,
+                    "best_time": null,
+                    "last_played": null
+                },
+                "Normal": {
+                    "games_played": 1,
+                    "wins": 0,
+                    "most_pairs": 0,
+                    "best_time": 30,
+                    "last_played": "2025-11-28 20:06:23"
+                },
+                "Hard": {
+                    "games_played": 0,
+                    "wins": 0,
+                    "most_pairs": 0,
+                    "best_time": null,
+                    "last_played": null
+                },
+                "Expert": {
+                    "games_played": 0,
+                    "wins": 0,
+                    "most_pairs": 0,
+                    "best_time": null,
+                    "last_played": null
+                }
+            }
+        },
+        "Previous_Games": {
+            "Threes": [
+                {
+                    "winner": 0,
+                    "history": [
+                        [
+                            0,
+                            "3D",
+                            "play"
+                        ]
+                    ],
+                    "difficulty": [
+                        0,
+                        "Beginner"
+                    ],
+                    "time": 10
+                }
+            ],
+            "Rummy": [
+                {
+                    "winner": 0,
+                    "history": [],
+                    "difficulty": [
+                        0,
+                        "Easy"
+                    ],
+                    "time": 50
+                }
+            ],
+            "Memory": [
+                {
+                    "winner": 1,
+                    "history": [],
+                    "difficulty": [
+                        0,
+                        "Normal"
+                    ],
+                    "time": 30
+                }
+            ]
+        },
+        "Current_Games": {
+            "Threes": "Threes current state",
+            "Rummy": "Rummy current state",
+            "Memory": "Memory current state"
+        }
+    }
+}

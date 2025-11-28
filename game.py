@@ -175,8 +175,9 @@ class Threes(Game):
                         threes.hands[player].append(card)
             threes.played_cards = []
 
-    def unlocked_achievements(threes,savedata):
-        pass
+    def unlocked_achievements(threes,app,savedata):
+        for achievement in app.all_achievements:
+            if achievement not in 
 
     def get_reward(threes,shop):
         shop.coin_count += (threes.difficulty[0]*5)

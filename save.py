@@ -1,3 +1,6 @@
+from datetime import datetime
+import json
+
 class SaveData():
     def __init__(save):
         save.alldata = {
@@ -21,38 +24,38 @@ class SaveData():
                         "win_lose_ratio": 0,
                         "won_with_3": 0,
                         "amount_of_pickups": 0,
-                        "best_time": 0,
+                        "best_time": None,
                         "total_time": 0,
                         "last_played": None
                         },  
                         'Beginner' : {
                             "games_played": 0,
                             "wins": 0,
-                            "best_time": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                         'Easy' : {
                             "games_played": 0,
                             "wins": 0,
-                            "best_time": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                         'Normal' : {
                             "games_played": 0,
                             "wins": 0,
-                            "best_time": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                         'Hard' : {
                             "games_played": 0,
                             "wins": 0,
-                            "best_time": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                         'Expert' : {
                             "games_played": 0,
                             "wins": 0,
-                            "best_time": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                     },
@@ -61,38 +64,38 @@ class SaveData():
                         "games_played": 0,
                         "wins": 0,
                         "win_lose_ratio": 0,
-                        "best_time": 0,
+                        "best_time": None,
                         "total_time": 0,
                         "last_played": None
                         },
                         'Beginner' : {
                             "games_played": 0,
                             "wins": 0,
-                            "best_time": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                         'Easy' : {
                             "games_played": 0,
                             "wins": 0,
-                            "best_time": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                         'Normal' : {
                             "games_played": 0,
                             "wins": 0,
-                            "best_time": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                         'Hard' : {
                             "games_played": 0,
                             "wins": 0,
-                            "best_time": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                         'Expert' : {
                             "games_played": 0,
                             "wins": 0,
-                            "best_time": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                     },
@@ -101,46 +104,50 @@ class SaveData():
                         "games_played": 0,
                         "wins": 0,
                         "win_lose_ratio": 0,
-                        "best_pairs": 0,
+                        "most_pairs": 0,
                         "all_pairs": 0,
-                        "best_time": 0,
+                        "best_time": None,
                         "total_time": 0,
                         "last_played": None
                     },
                         'Beginner' : {
                             "games_played": 0,
                             "wins": 0,
-                            "most"
-                            "best_time": 0,
+                            "most_pairs": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                         'Easy' : {
                             "games_played": 0,
                             "wins": 0,
-                            "best_time": 0,
+                            "most_pairs": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                         'Normal' : {
                             "games_played": 0,
                             "wins": 0,
-                            "best_time": 0,
+                            "most_pairs": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                         'Hard' : {
                             "games_played": 0,
                             "wins": 0,
-                            "best_time": 0,
+                            "most_pairs": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                         'Expert' : {
                             "games_played": 0,
                             "wins": 0,
-                            "best_time": 0,
+                            "most_pairs": 0,
+                            "best_time": None,
                             "last_played": None
                         },
                     },
                 },
-                'Previous_Games' : {   #Format = {'winner': None,'history': {},'difficulty' : (-1,"")}
+                'Previous_Games' : {   #Format = {'winner': None,'history': [],'difficulty' : (-1,""), 'time':0}
                     'Threes' : [],
                     'Rummy' : [],
                     'Memory' : []
@@ -190,14 +197,83 @@ class SaveData():
             }
         }
 
-    def calc_threes_stats(save):
-        Games = save.alldata['Games']['Previous_Games']['Threes']
+    def calc_threes_stats(save):  #Format of previous games = {'winner': None,'history': [],'difficulty' : (-1,""), 'time':0}
+        Game = save.alldata['Games']['Previous_Games']['Threes'][-1]
+        difficulty = Game['difficulty'][1]
+        Difficulty_Stats = save.alldata['Games']['Stats']['Threes_Stats'][difficulty]
+        All_Stats = save.alldata['Games']['Stats']['Threes_Stats']['General_Stats']
+        All_Stats["games_played"] += 1
+        Difficulty_Stats["games_played"] += 1
+        if Game['winner'] == 0:
+            All_Stats["wins"] += 1
+            Difficulty_Stats["wins"] += 1
+            threes = [(0,"3D","play"),(0,"3H","play"),(0,"3S","play"),(0,"3C","play")]
+            if Game['history'][-1] in threes:
+                All_Stats["won_with_3"] += 1
+        if All_Stats["games_played"] > 0:
+            All_Stats["win_lose_ratio"] = f"{round((All_Stats['wins']/All_Stats['games_played'])*100, 2)}%"
+        for move in Game['history']:
+            if move[2] == 'pickup' and move[0] == 0:
+                All_Stats["amount_of_pickups"] += 1
+        if Difficulty_Stats["best_time"] is None or Difficulty_Stats["best_time"] > Game['time']:
+            Difficulty_Stats["best_time"] = Game['time']
+            if All_Stats["best_time"] is None or All_Stats["best_time"] > Game['time']:
+                All_Stats["best_time"] = Game['time']
+        All_Stats['total_time'] += Game['time']
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        All_Stats["last_played"] = now
+        Difficulty_Stats["last_played"] = now
 
     def calc_rummy_stats(save):
-        pass
+        Game = save.alldata['Games']['Previous_Games']['Rummy'][-1]
+        difficulty = Game['difficulty'][1]
+        Difficulty_Stats = save.alldata['Games']['Stats']['Rummy_Stats'][difficulty]
+        All_Stats = save.alldata['Games']['Stats']['Rummy_Stats']['General_Stats']
+        All_Stats["games_played"] += 1
+        Difficulty_Stats["games_played"] += 1
+        if Game['winner'] == 0:
+            All_Stats["wins"] += 1
+            Difficulty_Stats["wins"] += 1
+        if All_Stats["games_played"] > 0:
+            All_Stats["win_lose_ratio"] = f"{round((All_Stats['wins']/All_Stats['games_played'])*100, 2)}%"
+        if Difficulty_Stats["best_time"] is None or Difficulty_Stats["best_time"] > Game['time']:
+            Difficulty_Stats["best_time"] = Game['time']
+            if All_Stats["best_time"] is None or All_Stats["best_time"] > Game['time']:
+                All_Stats["best_time"] = Game['time']
+        All_Stats['total_time'] += Game['time']
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        All_Stats["last_played"] = now
+        Difficulty_Stats["last_played"] = now
 
     def calc_memory_stats(save):
-        pass
+        Game = save.alldata['Games']['Previous_Games']['Memory'][-1]
+        difficulty = Game['difficulty'][1]
+        Difficulty_Stats = save.alldata['Games']['Stats']['Memory_Stats'][difficulty]
+        All_Stats = save.alldata['Games']['Stats']['Memory_Stats']['General_Stats']
+        All_Stats["games_played"] += 1
+        Difficulty_Stats["games_played"] += 1
+        if Game['winner'] == 0:
+            All_Stats["wins"] += 1
+            Difficulty_Stats["wins"] += 1
+        if All_Stats["games_played"] > 0:
+            All_Stats["win_lose_ratio"] = f"{round((All_Stats['wins']/All_Stats['games_played'])*100, 2)}%"
+        pair_count = 0
+        for move in Game['history']:
+            if move[1] == 0 and move[0] == "Matched":
+                pair_count += 1
+                All_Stats["all_pairs"] += 1
+        if Difficulty_Stats["most_pairs"] < pair_count:
+            Difficulty_Stats["most_pairs"] = pair_count
+            if All_Stats["most_pairs"] < pair_count:
+                All_Stats["most_pairs"] = pair_count
+        if Difficulty_Stats["best_time"] is None or Difficulty_Stats["best_time"] > Game['time']:
+            Difficulty_Stats["best_time"] = Game['time']
+            if All_Stats["best_time"] is None or All_Stats["best_time"] > Game['time']:
+                All_Stats["best_time"] = Game['time']
+        All_Stats['total_time'] += Game['time']
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        All_Stats["last_played"] = now
+        Difficulty_Stats["last_played"] = now
 
     def savedata(save, app, threes, rummy, memory, shop):
         save.alldata['Shop']['equipped'] = shop.equipped
@@ -211,15 +287,47 @@ class SaveData():
         save.alldata['App']['unlocked_achivements'] = app.unlocked_achivements
         if app.previous_games['Threes'] not in save.alldata['Games']['Previous_Games']['Threes']:
             save.alldata['Games']['Previous_Games']['Threes'].append(app.previous_games['Threes']) 
+            save.calc_threes_stats()
         if app.previous_games['Rummy'] not in save.alldata['Games']['Previous_Games']['Rummy']:
             save.alldata['Games']['Previous_Games']['Rummy'].append(app.previous_games['Rummy']) 
+            save.calc_rummy_stats()
         if app.previous_games['Memory'] not in save.alldata['Games']['Previous_Games']['Memory']:
             save.alldata['Games']['Previous_Games']['Memory'].append(app.previous_games['Memory']) 
-        save.alldata['Games']['Stats']['Threes_Stats'] = save.calc_threes_stats()
-        save.alldata['Games']['Stats']['Rummy_Stats'] = save.calc_rummy_stats()
-        save.alldata['Games']['Stats']['Memory_Stats'] = save.calc_memory_stats()
-        save.alldata['Current_Games']['Threes'] = threes.state
-        save.alldata['Current_Games']['Rummy'] = rummy.state
-        save.alldata['Current_Games']['Memory'] = memory.state
+            save.calc_memory_stats()
+        save.alldata['Games']['Current_Games']['Threes'] = threes.state
+        save.alldata['Games']['Current_Games']['Rummy'] = rummy.state
+        save.alldata['Games']['Current_Games']['Memory'] = memory.state
+        with open(r"MobilePlayingCardApp\player_data.json", "w") as f:
+            json.dump(save.alldata, f, indent=4)
+
+    def load(save):
+        with open(r"MobilePlayingCardApp\player_data.json", "r") as f:
+            save.alldata = json.load(f)
+        print(save.alldata)
+
+    def test_all_stats(save):
+        print("\n===== TESTING ALL STAT FUNCTIONS =====\n")
+        fake_threes_game = {'winner': 0,'history': [(0,"3D","play"),(1,"7H","pickup"),(0,"3H","play")],'difficulty': (0,"Beginner"),'time': 42}
+        save.alldata['Games']['Previous_Games']['Threes'].append(fake_threes_game)
+        print("Running calc_threes_stats() ...")
+        save.calc_threes_stats()
+        print("Threes General Stats:", save.alldata['Games']['Stats']['Threes_Stats']['General_Stats'])
+        print("Threes Beginner Stats:", save.alldata['Games']['Stats']['Threes_Stats']['Beginner'])
+        print()
+        fake_rummy_game = {'winner': 0,'history': [("Play","AD"),("Pickup","3H"),("Play","7C")],'difficulty': (0,"Easy"),'time': 55}
+        save.alldata['Games']['Previous_Games']['Rummy'].append(fake_rummy_game)
+        print("Running calc_rummy_stats() ...")
+        save.calc_rummy_stats()
+        print("Rummy General Stats:", save.alldata['Games']['Stats']['Rummy_Stats']['General_Stats'])
+        print("Rummy Easy Stats:", save.alldata['Games']['Stats']['Rummy_Stats']['Easy'])
+        print()
+        fake_memory_game = {'winner': 0,'history': [("Matched", 0, ("5H","5H")),("Matched", 0, ("7C","7C")),("Flip",1,"2D")],'difficulty': (0,"Normal"),'time': 33}
+        save.alldata['Games']['Previous_Games']['Memory'].append(fake_memory_game)
+        print("Running calc_memory_stats() ...")
+        save.calc_memory_stats()
+        print("Memory General Stats:", save.alldata['Games']['Stats']['Memory_Stats']['General_Stats'])
+        print("Memory Normal Stats:", save.alldata['Games']['Stats']['Memory_Stats']['Normal'])
+        print()
+        print("===== TEST COMPLETE =====\n")
 
 
