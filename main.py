@@ -86,5 +86,18 @@ class MobilePlayingCardApp(MDApp):
         else:
             self.sm_stack.insert(0, widget)
 
+    def resume_game_check(app,savedata):
+        Threes = savedata['Games']['Current_Games']['Threes']
+        Rummy = savedata['Games']['Current_Games']['Rummy']
+        Memory = savedata['Games']['Current_Games']['Memory']
+        Games = [Threes,Rummy,Memory]
+        for game in Games:
+            if not game['winner']:
+                return "Resume Game"
+            return "New Game"
+
     def on_start(self):
         return super().on_start()
+
+if __name__ == "__main__":
+    MobilePlayingCardApp().run()

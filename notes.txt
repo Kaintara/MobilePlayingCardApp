@@ -5,4 +5,6 @@ Highest Pirority:
 -  Finish Up the General Game Class unlocked_achievements section, write a test and result etc (get chat to do this icl)
 - Finish writing the algortims for the get reward fucntions
 - Start on the UI!
+- Get an icon.png for the main icon
+- Finish writing the App class, w/ the tests and results
 imperative that you fix the turns!!
