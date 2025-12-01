@@ -2,7 +2,7 @@
 This is just a TO DO list lol
 
 Highest Pirority:
--  Finish Up the General Game Class unlocked_achievements section, write a test and result etc 
+-  Finish Up the General Game Class unlocked_achievements section, write a test and result etc (get chat to do this icl)
 - Finish writing the algortims for the get reward fucntions
 - Start on the UI!
 imperative that you fix the turns!!
