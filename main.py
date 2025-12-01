@@ -1,5 +1,7 @@
 from ui import * 
 from save import SaveData
+from game import *
+from shop import *
 
 
 class MobilePlayingCardApp(MDApp):
@@ -59,12 +61,12 @@ class MobilePlayingCardApp(MDApp):
         sm = SM()
         sm.add_widget(MainMenu(name="Menu"))
         sm.add_widget(NewGame(name="NewGame"))
-        sm.add_widget(Threes(name="Threes"))
-        sm.add_widget(Rummy(name="Rummy"))
-        sm.add_widget(Memory(name="Memory"))
+        sm.add_widget(MDThrees(name="Threes"))
+        sm.add_widget(MDRummy(name="Rummy"))
+        sm.add_widget(MDMemory(name="Memory"))
         sm.add_widget(Rules(name="Rules"))
         sm.add_widget(Settings(name="Settings"))
-        sm.add_widget(Shop(name="Shop"))
+        sm.add_widget(MDShop(name="Shop"))
         sm.add_widget(Stats(name="Stats"))
         sm.current = "Menu"
         return sm
@@ -85,14 +87,19 @@ class MobilePlayingCardApp(MDApp):
             self.sm_stack.insert(0, widget)
         else:
             self.sm_stack.insert(0, widget)
-
-    def resume_game_check(app,savedata):
-        Threes = savedata['Games']['Current_Games']['Threes']
-        Rummy = savedata['Games']['Current_Games']['Rummy']
-        Memory = savedata['Games']['Current_Games']['Memory']
-        Games = [Threes,Rummy,Memory]
+    
+    def resume_game_check(self):
+        temp_save = SaveData()
+        savedata = temp_save.load()
+        G1 = savedata['Games']['Current_Games']['Threes']
+        G2 = savedata['Games']['Current_Games']['Rummy']
+        G3 = savedata['Games']['Current_Games']['Memory']
+        Games = [G1,G2,G3]
+        for x in Games:
+            print(x)
         for game in Games:
-            if not game['winner']:
+            print(game['winner'])
+            if not game['winner'] and game['history']:
                 return "Resume Game"
             return "New Game"
 

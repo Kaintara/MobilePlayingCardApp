@@ -30,19 +30,19 @@ class MainMenu(MDScreen):
 class NewGame(MDScreen):
     pass
 
-class Threes(MDScreen):
+class MDThrees(MDScreen):
     pass
 
-class Rummy(MDScreen):
+class MDRummy(MDScreen):
     pass
 
-class Memory(MDScreen):
+class MDMemory(MDScreen):
     pass
 
 class Rules(MDScreen):
     pass
 
-class Shop(MDScreen):
+class MDShop(MDScreen):
     pass
 
 class Stats(MDScreen):

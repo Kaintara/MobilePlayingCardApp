@@ -6,5 +6,6 @@ Highest Pirority:
 - Finish writing the algortims for the get reward fucntions
 - Start on the UI!
 - Get an icon.png for the main icon
+- Get lots of images going for the User Interface! We need to finish this up quick!
 - Finish writing the App class, w/ the tests and results
 imperative that you fix the turns!!

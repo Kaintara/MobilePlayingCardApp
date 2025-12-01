@@ -1,40 +1,37 @@
 {
     "Shop": {
-        "equipped": "Cool Skin",
+        "equipped": "Classic",
         "unlocked_inventory": [
-            "Cool Skin",
-            "Basic Skin"
+            "Classic"
         ],
-        "coin_count": 1234
+        "coin_count": 0
     },
     "App": {
-        "sm_stack": true,
+        "sm_stack": [],
         "sfx": true,
-        "ai_difficulty": "Hard",
+        "ai_difficulty": "Beginner",
         "timer": true,
-        "score": 999,
-        "unlocked_achivements": [
-            "Hello World!"
-        ]
+        "score": true,
+        "unlocked_achievements": []
     },
     "Games": {
         "Stats": {
             "Threes_Stats": {
                 "General_Stats": {
-                    "games_played": 1,
-                    "wins": 1,
-                    "win_lose_ratio": "100.0%",
-                    "won_with_3": 1,
+                    "games_played": 0,
+                    "wins": 0,
+                    "win_lose_ratio": 0,
+                    "won_with_3": 0,
                     "amount_of_pickups": 0,
-                    "best_time": 10,
-                    "total_time": 10,
-                    "last_played": "2025-11-28 20:06:23"
+                    "best_time": null,
+                    "total_time": 0,
+                    "last_played": null
                 },
                 "Beginner": {
-                    "games_played": 1,
-                    "wins": 1,
-                    "best_time": 10,
-                    "last_played": "2025-11-28 20:06:23"
+                    "games_played": 0,
+                    "wins": 0,
+                    "best_time": null,
+                    "last_played": null
                 },
                 "Easy": {
                     "games_played": 0,
@@ -63,12 +60,12 @@
             },
             "Rummy_Stats": {
                 "General_Stats": {
-                    "games_played": 1,
-                    "wins": 1,
-                    "win_lose_ratio": "100.0%",
-                    "best_time": 50,
-                    "total_time": 50,
-                    "last_played": "2025-11-28 20:06:23"
+                    "games_played": 0,
+                    "wins": 0,
+                    "win_lose_ratio": 0,
+                    "best_time": null,
+                    "total_time": 0,
+                    "last_played": null
                 },
                 "Beginner": {
                     "games_played": 0,
@@ -77,10 +74,10 @@
                     "last_played": null
                 },
                 "Easy": {
-                    "games_played": 1,
-                    "wins": 1,
-                    "best_time": 50,
-                    "last_played": "2025-11-28 20:06:23"
+                    "games_played": 0,
+                    "wins": 0,
+                    "best_time": null,
+                    "last_played": null
                 },
                 "Normal": {
                     "games_played": 0,
@@ -103,14 +100,14 @@
             },
             "Memory_Stats": {
                 "General_Stats": {
-                    "games_played": 1,
+                    "games_played": 0,
                     "wins": 0,
-                    "win_lose_ratio": "0.0%",
+                    "win_lose_ratio": 0,
                     "most_pairs": 0,
                     "all_pairs": 0,
-                    "best_time": 30,
-                    "total_time": 30,
-                    "last_played": "2025-11-28 20:06:23"
+                    "best_time": null,
+                    "total_time": 0,
+                    "last_played": null
                 },
                 "Beginner": {
                     "games_played": 0,
@@ -127,11 +124,11 @@
                     "last_played": null
                 },
                 "Normal": {
-                    "games_played": 1,
+                    "games_played": 0,
                     "wins": 0,
                     "most_pairs": 0,
-                    "best_time": 30,
-                    "last_played": "2025-11-28 20:06:23"
+                    "best_time": null,
+                    "last_played": null
                 },
                 "Hard": {
                     "games_played": 0,
@@ -150,50 +147,350 @@
             }
         },
         "Previous_Games": {
-            "Threes": [
-                {
-                    "winner": 0,
-                    "history": [
-                        [
-                            0,
-                            "3D",
-                            "play"
-                        ]
-                    ],
-                    "difficulty": [
-                        0,
-                        "Beginner"
-                    ],
-                    "time": 10
-                }
-            ],
-            "Rummy": [
-                {
-                    "winner": 0,
-                    "history": [],
-                    "difficulty": [
-                        0,
-                        "Easy"
-                    ],
-                    "time": 50
-                }
-            ],
-            "Memory": [
-                {
-                    "winner": 1,
-                    "history": [],
-                    "difficulty": [
-                        0,
-                        "Normal"
-                    ],
-                    "time": 30
-                }
-            ]
+            "Threes": [],
+            "Rummy": [],
+            "Memory": []
         },
         "Current_Games": {
-            "Threes": "Threes current state",
-            "Rummy": "Rummy current state",
-            "Memory": "Memory current state"
+            "Threes": {
+                "name": "threes",
+                "deck": [
+                    "AD",
+                    "2D",
+                    "3D",
+                    "4D",
+                    "5D",
+                    "6D",
+                    "7D",
+                    "8D",
+                    "9D",
+                    "1D",
+                    "JD",
+                    "QD",
+                    "KD",
+                    "AS",
+                    "2S",
+                    "3S",
+                    "4S",
+                    "5S",
+                    "6S",
+                    "7S",
+                    "8S",
+                    "9S",
+                    "1S",
+                    "JS",
+                    "QS",
+                    "KS",
+                    "AC",
+                    "2C",
+                    "3C",
+                    "4C",
+                    "5C",
+                    "6C",
+                    "7C",
+                    "8C",
+                    "9C",
+                    "1C",
+                    "JC",
+                    "QC",
+                    "KC",
+                    "AH",
+                    "2H",
+                    "3H",
+                    "4H",
+                    "5H",
+                    "6H",
+                    "7H",
+                    "8H",
+                    "9H",
+                    "1H",
+                    "JH",
+                    "QH",
+                    "KH"
+                ],
+                "shuffled_deck": [],
+                "rank_order": {
+                    "A": 14,
+                    "K": 13,
+                    "Q": 12,
+                    "J": 11,
+                    "1": 16,
+                    "9": 9,
+                    "8": 8,
+                    "7": 7,
+                    "6": 6,
+                    "5": 5,
+                    "4": 4,
+                    "3": 3,
+                    "2": 15
+                },
+                "hands": [
+                    [],
+                    []
+                ],
+                "discard_pile": [],
+                "selected_card": "",
+                "turn": 0,
+                "time_elapsed": 0,
+                "difficulty": [
+                    -1,
+                    ""
+                ],
+                "winner": null,
+                "bottom_hands": [
+                    [],
+                    []
+                ],
+                "top_hands": [
+                    [],
+                    []
+                ],
+                "another": false,
+                "played_cards": [],
+                "history": []
+            },
+            "Rummy": {
+                "name": "rummy",
+                "deck": [
+                    "AD",
+                    "2D",
+                    "3D",
+                    "4D",
+                    "5D",
+                    "6D",
+                    "7D",
+                    "8D",
+                    "9D",
+                    "1D",
+                    "JD",
+                    "QD",
+                    "KD",
+                    "AS",
+                    "2S",
+                    "3S",
+                    "4S",
+                    "5S",
+                    "6S",
+                    "7S",
+                    "8S",
+                    "9S",
+                    "1S",
+                    "JS",
+                    "QS",
+                    "KS",
+                    "AC",
+                    "2C",
+                    "3C",
+                    "4C",
+                    "5C",
+                    "6C",
+                    "7C",
+                    "8C",
+                    "9C",
+                    "1C",
+                    "JC",
+                    "QC",
+                    "KC",
+                    "AH",
+                    "2H",
+                    "3H",
+                    "4H",
+                    "5H",
+                    "6H",
+                    "7H",
+                    "8H",
+                    "9H",
+                    "1H",
+                    "JH",
+                    "QH",
+                    "KH"
+                ],
+                "shuffled_deck": [],
+                "value_map": {
+                    "A": 1,
+                    "K": 13,
+                    "Q": 12,
+                    "J": 11,
+                    "1": 10,
+                    "9": 9,
+                    "8": 8,
+                    "7": 7,
+                    "6": 6,
+                    "5": 5,
+                    "4": 4,
+                    "3": 3,
+                    "2": 2
+                },
+                "hands": [
+                    [],
+                    []
+                ],
+                "discard_pile": [],
+                "selected_card": "",
+                "turn": 0,
+                "time_elapsed": 0,
+                "difficulty": [
+                    -1,
+                    ""
+                ],
+                "winner": null,
+                "history": []
+            },
+            "Memory": {
+                "name": "memory",
+                "deck": [
+                    "AD",
+                    "2D",
+                    "3D",
+                    "4D",
+                    "5D",
+                    "6D",
+                    "7D",
+                    "8D",
+                    "9D",
+                    "1D",
+                    "JD",
+                    "QD",
+                    "KD",
+                    "AS",
+                    "2S",
+                    "3S",
+                    "4S",
+                    "5S",
+                    "6S",
+                    "7S",
+                    "8S",
+                    "9S",
+                    "1S",
+                    "JS",
+                    "QS",
+                    "KS",
+                    "AC",
+                    "2C",
+                    "3C",
+                    "4C",
+                    "5C",
+                    "6C",
+                    "7C",
+                    "8C",
+                    "9C",
+                    "1C",
+                    "JC",
+                    "QC",
+                    "KC",
+                    "AH",
+                    "2H",
+                    "3H",
+                    "4H",
+                    "5H",
+                    "6H",
+                    "7H",
+                    "8H",
+                    "9H",
+                    "1H",
+                    "JH",
+                    "QH",
+                    "KH"
+                ],
+                "shuffled_deck": [],
+                "hands": [
+                    [],
+                    []
+                ],
+                "first_selected_card": [
+                    "y",
+                    "x",
+                    "card"
+                ],
+                "second_selected_card": [
+                    "y",
+                    "x",
+                    "card"
+                ],
+                "selected_first_card": false,
+                "card_array": [
+                    [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ]
+                ],
+                "turn": 0,
+                "time_elapsed": 0,
+                "difficulty": [
+                    -1,
+                    ""
+                ],
+                "winner": null,
+                "history": []
+            }
         }
     }
 }

@@ -13,7 +13,7 @@ class SaveData():
                      'ai_difficulty' : "Beginner",
                      'timer': True,
                      'score' : True,
-                     'unlocked_achivements' : []
+                     'unlocked_achievements' : []
                      },
             'Games' : {
                 'Stats' : {
@@ -284,14 +284,14 @@ class SaveData():
         save.alldata['App']['ai_difficulty'] = app.ai_difficulty
         save.alldata['App']['timer'] = app.timer
         save.alldata['App']['score'] = app.score
-        save.alldata['App']['unlocked_achivements'] = app.unlocked_achivements
-        if app.previous_games['Threes'] not in save.alldata['Games']['Previous_Games']['Threes']:
+        save.alldata['App']['unlocked_achievements'] = app.unlocked_achievements
+        if app.previous_games['Threes'] not in save.alldata['Games']['Previous_Games']['Threes'] and save.alldata['Games']['Previous_Games']['Threes']:
             save.alldata['Games']['Previous_Games']['Threes'].append(app.previous_games['Threes']) 
             save.calc_threes_stats()
-        if app.previous_games['Rummy'] not in save.alldata['Games']['Previous_Games']['Rummy']:
+        if app.previous_games['Rummy'] not in save.alldata['Games']['Previous_Games']['Rummy'] and save.alldata['Games']['Previous_Games']['Rummy']:
             save.alldata['Games']['Previous_Games']['Rummy'].append(app.previous_games['Rummy']) 
             save.calc_rummy_stats()
-        if app.previous_games['Memory'] not in save.alldata['Games']['Previous_Games']['Memory']:
+        if app.previous_games['Memory'] not in save.alldata['Games']['Previous_Games']['Memory'] and save.alldata['Games']['Previous_Games']['Memory']:
             save.alldata['Games']['Previous_Games']['Memory'].append(app.previous_games['Memory']) 
             save.calc_memory_stats()
         save.alldata['Games']['Current_Games']['Threes'] = threes.state
@@ -303,7 +303,21 @@ class SaveData():
     def load(save):
         with open(r"MobilePlayingCardApp\player_data.json", "r") as f:
             save.alldata = json.load(f)
-        print(save.alldata)
+        return save.alldata
+    
+    def update(save, app, threes, rummy, memory, shop):
+        shop.equipped = save.alldata['Shop']['equipped']
+        shop.unlocked_inventory = save.alldata['Shop']['unlocked_inventory']
+        shop.coin_count = save.alldata['Shop']['coin_count']
+        app.sm_stack = save.alldata['App']['sm_stack']
+        app.sfx = save.alldata['App']['sfx']
+        app.ai_difficulty = save.alldata['App']['ai_difficulty']
+        app.timer = save.alldata['App']['timer']
+        app.score = save.alldata['App']['score']
+        app.unlocked_achievements = save.alldata['App']['unlocked_achievements']
+        threes.state = save.alldata['Games']['Current_Games']['Threes']
+        rummy.state = save.alldata['Games']['Current_Games']['Rummy']
+        memory.state = save.alldata['Games']['Current_Games']['Memory']
 
     def test_all_stats(save):
         print("\n===== TESTING ALL STAT FUNCTIONS =====\n")
