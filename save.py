@@ -305,7 +305,8 @@ class SaveData():
             save.alldata = json.load(f)
         return save.alldata
     
-    def update(save, app, threes, rummy, memory, shop):
+    def update(save, app):
+        shop = app.shop
         shop.equipped = save.alldata['Shop']['equipped']
         shop.unlocked_inventory = save.alldata['Shop']['unlocked_inventory']
         shop.coin_count = save.alldata['Shop']['coin_count']
@@ -315,9 +316,9 @@ class SaveData():
         app.timer = save.alldata['App']['timer']
         app.score = save.alldata['App']['score']
         app.unlocked_achievements = save.alldata['App']['unlocked_achievements']
-        threes.state = save.alldata['Games']['Current_Games']['Threes']
-        rummy.state = save.alldata['Games']['Current_Games']['Rummy']
-        memory.state = save.alldata['Games']['Current_Games']['Memory']
+        app.threes.state = save.alldata['Games']['Current_Games']['Threes']
+        app.rummy.state = save.alldata['Games']['Current_Games']['Rummy']
+        app.memory.state = save.alldata['Games']['Current_Games']['Memory']
 
     def test_all_stats(save):
         print("\n===== TESTING ALL STAT FUNCTIONS =====\n")

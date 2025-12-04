@@ -28,6 +28,11 @@ class MobilePlayingCardApp(MDApp):
             'Rummy' : [],
             'Memory' : []
         }
+        self.shop = None
+        self.save = None
+        self.threes = None
+        self.rummy = None
+        self.memory = None
         super().__init__(**kwargs)
 
     def build(self):
@@ -38,7 +43,7 @@ class MobilePlayingCardApp(MDApp):
         Window.set_icon(("icon.png"))
         LabelBase.register(
             name="cataway",
-            fn_regular="Catways.ttf",
+            fn_regular="assets/Catways.ttf",
         )
         self.theme_cls.font_styles["cataway"] = {
             "large" : {
@@ -89,11 +94,18 @@ class MobilePlayingCardApp(MDApp):
             self.sm_stack.insert(0, widget)
     
     def resume_game_check(self):
-        temp_save = SaveData()
-        savedata = temp_save.load()
+        AppShop = Shop()
+        self.shop = AppShop
+        AppSave = SaveData()
+        self.save = AppSave
+        savedata = self.save.load()
         G1 = savedata['Games']['Current_Games']['Threes']
         G2 = savedata['Games']['Current_Games']['Rummy']
         G3 = savedata['Games']['Current_Games']['Memory']
+        self.threes = Threes('threes',G1['rank_order'],G1)
+        self.rummy = Rummy('rummy',G2['value_map'],G2)
+        self.memory = Memory('memory',G3['rank_order'],G3)
+        self.save.update(self)
         Games = [G1,G2,G3]
         for x in Games:
             print(x)

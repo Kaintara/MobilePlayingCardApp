@@ -1,3 +1,5 @@
+from ui import Shop_Dialog
+
 class Theme:
     def __init__(theme,name,cost,front,back):
         theme.name = name
@@ -39,8 +41,8 @@ class Shop:
                 shop.update()
             else:
                 pass
-                #Dialog = Shop_Dialog(theme.cost)
-                #Dialog.open()
+                Dialog = Shop_Dialog(theme.cost,shop.coin_count)
+                Dialog.open()
 
 ShopTest = Shop()
 ShopTest.set_all_themes()

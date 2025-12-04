@@ -8,4 +8,5 @@ Highest Pirority:
 - Get an icon.png for the main icon
 - Get lots of images going for the User Interface! We need to finish this up quick!
 - Finish writing the App class, w/ the tests and results
+- Add a pause button in the game screens so the game can be stopped when this is touched
 imperative that you fix the turns!!

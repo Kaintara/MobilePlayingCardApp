@@ -1,4 +1,6 @@
 import random
+from ui import Achievement_Dialog, Reward_Dialog
+from kivy.clock import Clock
 
 class Game: 
     def __init__(game, name, rank_order,state):
@@ -21,29 +23,43 @@ class Game:
         game.shuffled_deck = shuffled_deck
 
     def unlocked_achievements(game,app,savedata):
-        unlocked = False
+        unlocked = []
         for id, name, desc, condition in app.all_achievements:
             if id not in app.unlocked_achievements[id][0] and condition(savedata) == True:
-                unlocked = True
+                unlocked.append((id, name, desc, condition))
                 app.unlocked_achievements.append((id, name, desc, condition))
         return unlocked
+
+    def display_achievements(game,achievement):
+        Dialog = Achievement_Dialog(achievement)
+        Dialog.open()
+        Clock.schedule_once(lambda dt: Dialog.dismiss(), 5)
     
     def get_reward(game,shop,app,savedata):
         shop.coin_count += (game.difficulty[0]*5)
         amount_earned += game.difficulty[0]*5
         Unlocked_achievement = game.unlocked_achievements(app,savedata)
+        total_delay = 0
         if Unlocked_achievement:
             shop.coin_count += 5*len(Unlocked_achievement)
             amount_earned += 5*len(Unlocked_achievement)
-            # Dialog = Achievement_Dialog()
-            # Dialog.open()
+            for index, achievement in enumerate(Unlocked_achievement):
+                delay = index * 5
+                total_delay += delay
+                Clock.schedule_once(lambda dt: game.display_achievements(achievement), delay) 
         if game.winner == 0:
             shop.coin_count += (30 + game.difficulty[0]*5)
             amount_earned += (30 + game.difficulty[0]*5)
         else:
             shop.coin_count += 10
             amount_earned += 10
-        return (amount_earned, Unlocked_achievement)
+        return (amount_earned, game.winner, total_delay)
+    
+    def end_game(game, app):
+        reward = game.get_reward(app.shop,app,app.save)
+        app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
+        Dialog = Reward_Dialog(reward,app)
+        Clock.schedule_once(lambda dt: Dialog.open(), reward[2]) 
 
 class Threes(Game):
     def __init__(threes, name, rank_order, state):
@@ -119,13 +135,6 @@ class Threes(Game):
             threes.winner = 1
             return True
         return False
-
-    def end_game(threes,savedata):
-        pass
-       # savedata.save()
-       # reward = threes.get_reward(shop)
-       # Dialog = Reward_Dialog(reward)
-       # Dialog.open()
 
     def next_vaild_player(threes,player,savedata):
         if threes.is_game_over():
@@ -403,14 +412,7 @@ class Rummy(Game):
             rummy.winner = 0
             return True
         return False
-
-    def end_game(rummy,savedata):
-        pass
-       # savedata.save()
-       # reward = threes.get_reward(shop)
-       # Dialog = Reward_Dialog(reward)
-       # Dialog.open()
-
+    
     def next_vaild_player(rummy,player,savedata):
         if rummy.is_game_over():
             rummy.end_game(savedata)
@@ -512,13 +514,6 @@ class Memory(Game):
         else:
             memory.winner = 0
         return True
-
-    def end_game(memory,savedata):
-        pass
-       # savedata.save()
-       # reward = threes.get_reward(shop)
-       # Dialog = Reward_Dialog(reward)
-       # Dialog.open()
 
     def next_vaild_player(memory,player,savedata):
         if memory.is_game_over():
