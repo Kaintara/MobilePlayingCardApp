@@ -3,10 +3,11 @@ This is just a TO DO list lol
 
 Highest Pirority:
 -  Finish Up the General Game Class unlocked_achievements section, write a test and result etc (get chat to do this icl)
-- Finish writing the algortims for the get reward fucntions
-- Start on the UI!
-- Get an icon.png for the main icon
+- Finish writing the algortims for the get reward fucntion
 - Get lots of images going for the User Interface! We need to finish this up quick!
 - Finish writing the App class, w/ the tests and results
 - Add a pause button in the game screens so the game can be stopped when this is touched
+- Finish up UI, started on shop need to make a shop inventory method
+- Think about how to do the UI for the game screens and Stats
+- Add a pause menu screen
 imperative that you fix the turns!!

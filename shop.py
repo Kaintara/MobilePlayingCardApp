@@ -44,6 +44,15 @@ class Shop:
                 Dialog = Shop_Dialog(theme.cost,shop.coin_count)
                 Dialog.open()
 
+    def filling_shop_inventory(shop,app):
+        grid = app.get_widget("grid","MDShop")
+        #for colour in self.colours:
+            #int = random.randint(0,3)
+            #card = Theme_Playing_Card(self.suits[int])
+            #card.colour = colour
+            #card.change_colour()
+            #grid.add_widget(card)
+
 ShopTest = Shop()
 ShopTest.set_all_themes()
 print(ShopTest.inventory[0].name,ShopTest.inventory[1].name)
