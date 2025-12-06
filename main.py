@@ -24,9 +24,9 @@ class MobilePlayingCardApp(MDApp):
         ]
         self.unlocked_achievements = []
         self.previous_games = {
-            'Threes' : [],
-            'Rummy' : [],
-            'Memory' : []
+            'threes' : [],
+            'rummy' : [],
+            'memory' : []
         }
         self.shop = None
         self.save = None
@@ -133,6 +133,8 @@ class MobilePlayingCardApp(MDApp):
 
     def on_start(self):
         self.shop.filling_shop_inventory(self)
+        Gird = self.get_widget("grid",'MDShop')
+        Gird.add_widget(Playing_Card('AH'))
         return super().on_start()
 
 if __name__ == "__main__":

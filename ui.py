@@ -151,3 +151,25 @@ class Reward_Dialog(MDDialog):
     def go_to_menu(self, app, *args):
         self.dismiss()
         app.root.current = "Menu"
+
+class Playing_Card(MDCard):
+    def __init__(self,suit_rank,**kwargs):
+        super().__init__(**kwargs)
+        self.size_hint = (None,None)
+        self.size = ("64dp", "89dp")
+        self.pos_hint = {"center_x": 0.5, "center_y": 0.5}
+        app = MDApp.get_running_app()
+        theme = app.shop.get_theme(app.shop.equipped)
+        img = FitImage(theme.asset_dict[suit_rank])
+        self.layout = RelativeLayout(
+            size = ("64dp", "89dp")
+        )
+        self.highlight = FitImage(
+            source='glow.png',
+            size_hint=(1.2,1.2),
+            opacity=0,
+            pos_hint={"center_x": 0.5, "center_y": 0.5}
+        )
+        self.layout.add_widget(self.highlight)
+        self.layout.add_widget(img)
+        self.add_widget(self.layout)

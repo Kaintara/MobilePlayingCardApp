@@ -304,13 +304,14 @@
             MDButtonIcon:
                 icon: "cart-outline"
                 size_hint_y: None
+                height: dp(50)
                 theme_font_size: "Custom"
                 font_size: "50sp"
-                pos_hint: {"center_x":0.3, "center_y":0.5}
+                pos_hint: {"center_x": 0.3, "center_y": 0.5}
         MDScrollView: #Themes
             do_scroll_x: False
             do_scroll_y: True
-            pos_hint: {"center_x":0.5, "top": 0.95}
+            pos_hint: {"center_x":0.5, "center_y":0.5}
             size_hint: 1, 1
             MDBoxLayout:
                 orientation: "vertical"
