@@ -276,6 +276,9 @@ state = {'name' : "threes",
         'played_cards' : [],
         'history': []}
 
+Threes_game = Threes("threes",rank_order,state)
+Threes_game.test_run()
+
 
 class Rummy(Game):
     def __init__(rummy, name, rank_order, state):

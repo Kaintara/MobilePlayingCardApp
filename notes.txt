@@ -1,7 +1,6 @@
 
 This is just a TO DO list lol
 
-Highest Pirority:
 -  Finish Up the General Game Class unlocked_achievements section, write a test and result etc (get chat to do this icl)
 - Finish writing the algortims for the get reward fucntions
 - Start on the UI!
@@ -10,3 +9,12 @@ Highest Pirority:
 - Finish writing the App class, w/ the tests and results
 - Add a pause button in the game screens so the game can be stopped when this is touched
 imperative that you fix the turns!!
+
+FOR NEA YOU NEED TO FINISH THIS BEFORE JAN!!!
+
+PLEASE DO THIS INSTEAD OF BG3 :pray:
+
+Start doing section reviews!!
+
+One section review to ensure code is working solely THEN a review to make sure code is working externally.
+
