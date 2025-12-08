@@ -28,8 +28,10 @@ class MobilePlayingCardApp(MDApp):
             'rummy' : [],
             'memory' : []
         }
-        self.shop = None
-        self.save = None
+        AppShop = Shop()
+        self.shop = AppShop
+        AppSave = SaveData()
+        self.save = AppSave
         self.threes = None
         self.rummy = None
         self.memory = None
@@ -98,10 +100,6 @@ class MobilePlayingCardApp(MDApp):
             self.sm_stack.insert(0, widget)
     
     def resume_game_check(self):
-        AppShop = Shop()
-        self.shop = AppShop
-        AppSave = SaveData()
-        self.save = AppSave
         savedata = self.save.load()
         G1 = savedata['Games']['Current_Games']['Threes']
         G2 = savedata['Games']['Current_Games']['Rummy']
