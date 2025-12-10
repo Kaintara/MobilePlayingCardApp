@@ -56,6 +56,14 @@ class Game:
         return (amount_earned, game.winner, total_delay)
     
     def end_game(game, app):
+        completed_game = {
+            'winner': game.winner,
+            'history': game.state['history'],
+            'difficulty' : game.difficulty,
+            'time': game.time_elapsed
+        }
+        app.previous_games[game.name].append(completed_game)
+        app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
         reward = game.get_reward(app.shop,app,app.save)
         app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
         Dialog = Reward_Dialog(reward,app)
