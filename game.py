@@ -1,6 +1,6 @@
 import random
-from ui import Achievement_Dialog, Reward_Dialog
-from kivy.clock import Clock
+#from ui import Achievement_Dialog, Reward_Dialog
+#from kivy.clock import Clock
 
 class Game: 
     def __init__(game, name, rank_order,state):
@@ -23,6 +23,7 @@ class Game:
         game.shuffled_deck = shuffled_deck
 
     def unlocked_achievements(game,app,savedata):
+        return # Uncomment when achievements are available
         unlocked = []
         for id, name, desc, condition in app.all_achievements:
             if id not in app.unlocked_achievements[id][0] and condition(savedata) == True:
@@ -31,11 +32,13 @@ class Game:
         return unlocked
 
     def display_achievements(game,achievement):
+        return # Uncomment when UI is available
         Dialog = Achievement_Dialog(achievement)
         Dialog.open()
         Clock.schedule_once(lambda dt: Dialog.dismiss(), 5)
     
     def get_reward(game,shop,app,savedata):
+        return # Uncomment when achievements are available
         shop.coin_count += (game.difficulty[0]*5)
         amount_earned += game.difficulty[0]*5
         Unlocked_achievement = game.unlocked_achievements(app,savedata)
@@ -56,6 +59,7 @@ class Game:
         return (amount_earned, game.winner, total_delay)
     
     def end_game(game, app):
+        return # Uncomment when achievements are available
         completed_game = {
             'winner': game.winner,
             'history': game.state['history'],
@@ -284,8 +288,8 @@ state = {'name' : "threes",
         'played_cards' : [],
         'history': []}
 
-Threes_game = Threes("threes",rank_order,state)
-Threes_game.test_run()
+#Threes_game = Threes("threes",rank_order,state)
+#Threes_game.test_run()
 
 
 class Rummy(Game):
@@ -379,12 +383,15 @@ class Rummy(Game):
                Spades.append(card)
             elif card.endswith('D'):
                Diamonds.append(card)
-        Suits = [Hearts,Clubs,Clubs,Diamonds]
+        Suits = [Hearts,Clubs,Spades,Diamonds]
         for suit in Suits:
             if rummy.find_run(suit):
                 Runs = rummy.find_run(suit)
                 Sorted_hand += Runs
+                print(Runs)
                 for card in Runs:
+                    print(card)
+                    print(Temp_hand)
                     Temp_hand.remove(card)
         if rummy.find_set(Temp_hand):
             Sets = rummy.find_set(Temp_hand)
@@ -462,6 +469,7 @@ class Rummy(Game):
         elif move[2] == "discard":
             rummy.discard_pile.append(move[1])
             rummy.hands[player].remove(move[1])
+            print(rummy.turn)
             rummy.turn = 1 - rummy.turn
     
     def update_game_state(rummy):
@@ -473,6 +481,26 @@ class Rummy(Game):
         rummy.state['time_elapsed'] = rummy.time_elapsed
         rummy.state['difficulty'] = rummy.difficulty
         rummy.state['winner'] = rummy.winner
+
+    def test_run(rummy):
+        rummy.shuffle_cards()
+        rummy.distribute_cards()
+        rummy.turn = 0
+        while not rummy.is_game_over():
+            moves = rummy.get_valid_moves(rummy.turn)
+            if not moves:
+                rummy.turn = rummy.next_vaild_player(rummy.turn, 'save')
+                print("No valid moves – skipping turn")
+                continue
+            mo = [m for m in enumerate(moves)]
+            print(mo)
+            rummy.apply_move(moves[int(input())])
+            print("HANDS:", rummy.hands)
+            print("HISTORY:", rummy.state['history'])
+            print("DECK:", rummy.shuffled_deck)
+            rummy.update_game_state()
+            print(rummy.turn)
+        print("game over")
     
 state = {'name' : "rummy",
         'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
@@ -490,6 +518,8 @@ state = {'name' : "rummy",
 
 rummy = Rummy("rummy",{'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,
 '5': 5,'4': 4,'3': 3,'2': 2},state)
+
+rummy.test_run()
 
 class Memory(Game):
     def __init__(memory, name, rank_order, state):
