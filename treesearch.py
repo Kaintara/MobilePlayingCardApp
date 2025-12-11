@@ -1,6 +1,7 @@
 import math
 import copy
 import random
+import time
 
 class Node:
     def __init__(self, state, parent=None, previous_move=None):
@@ -42,12 +43,16 @@ class Node:
             depth += 1
         return s
     
-def mtcs(root_state,game_env,iterations):
+def is_time_over(time_limit,time_elapsed):
+    return time_limit is not None and (time.time() - time_elapsed) >= time_limit
+    
+def mtcs(root_state,game_env,time_limit):
     det_root = game_env.determinization(root_state)
     det_root['turn'] = 1
     root_node = Node(det_root,None,None)
     root_node.all_moves = game_env.get_vaild_moves(root_node.state)
     root_node.children = []
+    time_elapsed = time.time()
     for move in root_node.all_moves:
         child_state = game_env.apply_moves(root_node.state, move)
         child_node = Node(child_state, root_node, move)

@@ -1,6 +1,6 @@
 import random
-#from ui import Achievement_Dialog, Reward_Dialog
-#from kivy.clock import Clock
+from ui import Achievement_Dialog, Reward_Dialog
+from kivy.clock import Clock
 
 class Game: 
     def __init__(game, name, rank_order,state):
@@ -23,7 +23,6 @@ class Game:
         game.shuffled_deck = shuffled_deck
 
     def unlocked_achievements(game,app,savedata):
-        return # Uncomment when achievements are available
         unlocked = []
         for id, name, desc, condition in app.all_achievements:
             if id not in app.unlocked_achievements[id][0] and condition(savedata) == True:
@@ -32,13 +31,11 @@ class Game:
         return unlocked
 
     def display_achievements(game,achievement):
-        return # Uncomment when UI is available
         Dialog = Achievement_Dialog(achievement)
         Dialog.open()
         Clock.schedule_once(lambda dt: Dialog.dismiss(), 5)
     
     def get_reward(game,shop,app,savedata):
-        return # Uncomment when achievements are available
         shop.coin_count += (game.difficulty[0]*5)
         amount_earned += game.difficulty[0]*5
         Unlocked_achievement = game.unlocked_achievements(app,savedata)
@@ -59,7 +56,6 @@ class Game:
         return (amount_earned, game.winner, total_delay)
     
     def end_game(game, app):
-        return # Uncomment when achievements are available
         completed_game = {
             'winner': game.winner,
             'history': game.state['history'],
@@ -672,5 +668,5 @@ state = {'name' : "memory",
         'winner' : None,
         'history': []}
 
-memory = Memory('memory','rank',state)
-memory.test_run()
+#memory = Memory('memory','rank',state)
+#memory.test_run()

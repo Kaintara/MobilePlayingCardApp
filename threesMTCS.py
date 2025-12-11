@@ -1,5 +1,5 @@
 import copy
-from treesearch import mtcs
+from treesearch_mcts import mtcs
 
 class GameEnvironment:
     def __init__(env):
@@ -227,9 +227,9 @@ class GameEnvironment:
                 return 1
 
 genv = GameEnvironment()
-state = {'name': 'threes', 'deck': ['AD', '2D', '3D', '4D', '5D', '6D', '7D', '8D', '9D', '1D', 'JD', 'QD', 'KD', 'AS', '2S', '3S', '4S', '5S', '6S', '7S', '8S', '9S', '1S', 'JS', 'QS', 'KS', 'AC', '2C', '3C', '4C', '5C', '6C', '7C', '8C', '9C', '1C', 'JC', 'QC', 'KC', 'AH', '2H', '3H', '4H', '5H', '6H', '7H', '8H', '9H', '1H', 'JH', 'QH', 'KH'], 'shuffled_deck': ['4C', 'AD', '8D', 'AS', '7C', 'KC', '2S', '7D', 'QH', '3C', '5S', 'AC', '6H', '8C', '5H', '4D', '1C', '9D', '1S', 'QS', 'KD', 'QD', '6D', '5D', 'JC', '9C', '3D', '4H', '9H', 'JD'], 'rank_order': {'A': 14, 'K': 13, 'Q': 12, 'J': 11, '1': 16, '9': 9, '8': 8, '7': 7, '6': 6, '5': 5, '4': 4, '3': 3, '2': 15}, 'hands': [['7H', 'JS', 'KH'], ['1D', '7S', '8H']], 'discard_pile': [], 'selected_card': '', 'turn': 0, 'time_elapsed': 0, 'difficulty': (0, 'Easy'), 'winner': None, 'bottom_hands': [['2C', '3H', '8S'], ['1H', '2D', 'AH']], 'top_hands': [['5C', '6C', '6S'], ['JH', '4S', '3S']], 'another': False, 'played_cards': ['QC', 'KS', '2H', '9S'], 'history': [(0, 'KS', 'play'), (1, 'KH', 'play'), (0, ['KS', 'KH'], 'pickup'), (1, 'QC', 'play'), (0, 'KS', 'play'), (1, '2H', 'play'), (0, '9S', 'play')]}
+state = {'name': 'threes', 'deck': ['AD', '2D', '3D', '4D', '5D', '6D', '7D', '8D', '9D', '1D', 'JD', 'QD', 'KD', 'AS', '2S', '3S', '4S', '5S', '6S', '7S', '8S', '9S', '1S', 'JS', 'QS', 'KS', 'AC', '2C', '3C', '4C', '5C', '6C', '7C', '8C', '9C', '1C', 'JC', 'QC', 'KC', 'AH', '2H', '3H', '4H', '5H', '6H', '7H', '8H', '9H', '1H', 'JH', 'QH', 'KH'], 'shuffled_deck': ['4C', 'AD', '8D', 'AS', '7C', 'KC', '2S', '7D', 'QH', '3C', '5S', 'AC', '6H', '8C', '5H', '4D', '1C', '9D', '1S', 'QS', 'KD', 'QD', '6D', '5D', 'JC', '9C', '3D', '4H', '9H', 'JD'], 'rank_order': {'A': 14, 'K': 13, 'Q': 12, 'J': 11, '1': 16, '9': 9, '8': 8, '7': 7, '6': 6, '5': 5, '4': 4, '3': 3, '2': 15}, 'hands': [['7H', 'JS', 'KH'], ['1D', '7S', '8H']], 'discard_pile': [], 'selected_card': '', 'turn': 1, 'time_elapsed': 0, 'difficulty': (0, 'Easy'), 'winner': None, 'bottom_hands': [['2C', '3H', '8S'], ['1H', '2D', 'AH']], 'top_hands': [['5C', '6C', '6S'], ['JH', '4S', '3S']], 'another': False, 'played_cards': ['QC', 'KS', '2H', '9S'], 'history': [(0, 'KS', 'play'), (1, 'KH', 'play'), (0, ['KS', 'KH'], 'pickup'), (1, 'QC', 'play'), (0, 'KS', 'play'), (1, '2H', 'play'), (0, '9S', 'play')]}
 
 print(genv.determinization(state))
 print(genv.get_reward(genv.determinization(state)))
 
-print(mtcs(state,genv,100))
+print(mtcs(state,genv,100,2))
