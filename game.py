@@ -516,10 +516,9 @@ state = {'name' : "rummy",
         'winner' : None,
         'history': []}
 
-rummy = Rummy("rummy",{'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,
-'5': 5,'4': 4,'3': 3,'2': 2},state)
+#rummy = Rummy("rummy",{'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 2},state)
 
-rummy.test_run()
+#rummy.test_run()
 
 class Memory(Game):
     def __init__(memory, name, rank_order, state):
@@ -542,7 +541,13 @@ class Memory(Game):
         for y, row in enumerate(memory.card_array):
             for x, card in enumerate(row):
                 if card:
-                    Moves.append(("pick",player,(y,x,card)))
+                    if memory.first_selected_card:
+                        if card == memory.first_selected_card[2]:
+                            continue
+                        else:
+                            Moves.append(("pick",player,(y,x,card)))
+                    else:
+                        Moves.append(("pick",player,(y,x,card)))
         return Moves
     
     def is_game_over(memory):
@@ -563,6 +568,11 @@ class Memory(Game):
             if memory.state['history']:
                 if memory.state['history'][-1][0] == "Matched":
                     return player
+                elif memory.state['history'][-1][0] == "Missed":
+                    if player == 1:
+                        return 0
+                    else:
+                        return 1
                 else:
                     if player == 1:
                         return 0
@@ -592,12 +602,16 @@ class Memory(Game):
             memory.selected_first_card = False
             first = memory.first_selected_card
             second = memory.second_selected_card
-            if first[2][0] == second[2][0]:
-                suit1 = first[2][1]
-                suit2 = second[2][1]
-                is_joker_pair = (first[2] in ('BJ','RJ') and second[2] in ('BJ','RJ'))
-                same_color = (suit1 in ['D','H'] and suit2 in ['D','H']) or (suit1 in ['C','S'] and suit2 in ['C','S'])
-                if is_joker_pair or same_color:
+            is_joker_pair = (first[2] in ('BJ', 'RJ') and second[2] in ('BJ', 'RJ'))
+            if is_joker_pair or first[2][0] == second[2][0]:
+                if not is_joker_pair:
+                    suit1 = first[2][1]
+                    suit2 = second[2][1]
+                    same_color = (suit1 in ['D','H'] and suit2 in ['D','H']) or (suit1 in ['C','S'] and suit2 in ['C','S'])
+                    match_condition = same_color
+                else:
+                    match_condition = True
+                if match_condition:
                     memory.card_array[first[0]][first[1]] = None
                     memory.card_array[second[0]][second[1]] = None
                     memory.state["history"].append(("Matched",player,first,second))
@@ -606,7 +620,8 @@ class Memory(Game):
                 else:
                     memory.state["history"].append(("Missed",player,first,second))
             else:
-                    memory.state["history"].append(("Missed",player,first,second))
+                memory.state["history"].append(("Missed",player,first,second))
+            memory.turn = memory.next_vaild_player(player,'savedata')
             memory.first_selected_card = ('y','x','card')
             memory.second_selected_card = ('y','x','card')
 
@@ -621,6 +636,27 @@ class Memory(Game):
         memory.state['time_elapsed'] = memory.time_elapsed
         memory.state['difficulty'] = memory.difficulty
         memory.state['winner'] = memory.winner
+
+    def test_run(memory):
+        memory.shuffle_cards()
+        memory.distribute_cards()
+        memory.turn = 0
+        while not memory.is_game_over():
+            moves = memory.get_valid_moves(memory.turn)
+            # No moves at all – skip or break the game
+            if not moves:
+                memory.turn = memory.next_vaild_player(memory.turn, 'save')
+                print("No valid moves – skipping turn")
+                continue
+            chosen_move = random.choice(moves)
+            memory.apply_move(chosen_move)
+            print("PAIRS:", memory.hands)
+            print("HISTORY:", memory.state['history'][-1])
+            print("CARD ARRAY:", memory.shuffled_deck)
+            memory.update_game_state()
+            #print(threes.state)
+            #input()
+        print("game over")
     
 state = {'name' : "memory",
         'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
@@ -637,13 +673,4 @@ state = {'name' : "memory",
         'history': []}
 
 memory = Memory('memory','rank',state)
-memory.shuffle_cards()
-memory.distribute_cards()
-memory.apply_move(random.choice(memory.get_valid_moves(0)))
-memory.apply_move(random.choice(memory.get_valid_moves(0)))
-memory.apply_move(random.choice(memory.get_valid_moves(1)))
-memory.apply_move(random.choice(memory.get_valid_moves(1)))
-memory.apply_move(random.choice(memory.get_valid_moves(0)))
-memory.apply_move(random.choice(memory.get_valid_moves(0)))
-memory.update_game_state()
-print(memory.state)
+memory.test_run()
