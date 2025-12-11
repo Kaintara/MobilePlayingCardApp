@@ -10,6 +10,7 @@ class Node:
         self.previous_move = previous_move
         self.children = []
         self.all_moves = None
+        self.untried_moves = None
         self.visits = 0
         self.value = 0.0
 
@@ -53,6 +54,8 @@ def mtcs(root_state,game_env,time_limit):
     root_node.all_moves = game_env.get_vaild_moves(root_node.state)
     root_node.children = []
     time_elapsed = time.time()
+    while not is_time_over(time_limit,time_elapsed):
+        while not game_env.is_terminal(root_node.state)
     for move in root_node.all_moves:
         child_state = game_env.apply_moves(root_node.state, move)
         child_node = Node(child_state, root_node, move)
