@@ -111,17 +111,18 @@ class Threes(Game):
             if Top_card[0] == '2':
                 for card in Hand:
                     Moves.append((player,card,"play"))
-                    return Moves
-            temp_hand = Hand[:] + [Top_card]
-            temp_hand.sort(key=lambda a: threes.rank_order[a[0]])
+                return Moves
             for card in Hand:
                 if card[0] == Top_card[0]:
                     Valid_Cards.append(card)
+            temp_hand = Hand[:] + [Top_card]
+            temp_hand.sort(key=lambda a: rank_order[a[0]])
             idx = temp_hand.index(Top_card) + 1
             if idx < len(temp_hand):
                 Valid_Cards += temp_hand[idx:]
             for card in Valid_Cards:
-                Moves.append((player,card,"play"))
+                if card not in [m[1] for m in Moves]:  # Avoid duplicate moves
+                    Moves.append((player,card,"play"))
         else:
             for card in Hand:
                 Moves.append((player,card,"play"))

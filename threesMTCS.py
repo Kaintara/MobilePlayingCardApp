@@ -1,9 +1,17 @@
 import copy
-from treesearch_mcts import mtcs
+from treesearch import mtcs
+import random
+import math
 
 class GameEnvironment:
     def __init__(env):
         pass
+
+    def softmax(env,xs, temp=0.7):
+        m = max(xs)
+        exps = [math.exp((x - m) / temp) for x in xs]
+        s = sum(exps)
+        return [e / s for e in exps]
 
     def determinization(env,state):
         threes = copy.deepcopy(state)
@@ -79,21 +87,18 @@ class GameEnvironment:
             if Top_card[0] == '2':
                 for card in Hand:
                     Moves.append((player,card,"play"))
-                    return Moves
-            for card in Hand:
-                if Top_card[0] == card[0]:
-                    Valid_Cards.append(Top_card)
-                    break
-            temp_hand = Hand[:] + [Top_card]
-            temp_hand.sort(key=lambda a: rank_order[a[0]])
+                return Moves
             for card in Hand:
                 if card[0] == Top_card[0]:
                     Valid_Cards.append(card)
+            temp_hand = Hand[:] + [Top_card]
+            temp_hand.sort(key=lambda a: rank_order[a[0]])
             idx = temp_hand.index(Top_card) + 1
             if idx < len(temp_hand):
                 Valid_Cards += temp_hand[idx:]
             for card in Valid_Cards:
-                Moves.append((player,card,"play"))
+                if card not in [m[1] for m in Moves]:  # Avoid duplicate moves
+                    Moves.append((player,card,"play"))
         else:
             for card in Hand:
                 Moves.append((player,card,"play"))
@@ -120,14 +125,13 @@ class GameEnvironment:
             Top_card = '2H'
         if move[2] == "try":
             if Top_card[0] == '2':
-                env.apply_moves(state, (player,move[1],"play"))
+                return env.apply_moves(state, (player,move[1],"play"))
             else:
                 Card_rank = rank_order[move[1][0]]
                 if Card_rank >= rank_order[Top_card[0]]:
-                    env.apply_moves(state, (player,move[1],"play"))
+                    return env.apply_moves(state, (player,move[1],"play"))
                 else:
-                    env.apply_moves(state, (player, list(state["played_cards"]), "pickup"))
-                    return
+                    return env.apply_moves(state, (player, list(state["played_cards"]), "pickup"))
         elif move[2] == "play":
             state["played_cards"].append(move[1])
             Hands = [state['hands'][player],state["bottom_hands"][player],state["top_hands"][player]]
@@ -176,33 +180,33 @@ class GameEnvironment:
         return state
     
     def get_reward(env,state):
-        rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 15}
-        Hand = []
-        Bot_Hand = []
-        player = 1
-        for i in range(0,2):
-            if state['hands'][i]:
-                Hand = state['hands'][i]
-            elif state['top_hands'][i]:
-                Hand = state['top_hands'][i]
-            else:
-                Hand = state['bottom_hands'][i]
-            if i == 1:
-                Bot_Hand = Hand
         if env.is_terminal(state):
-            return 1000 if state['winner'] == player else -1000
-        reward = 0
-        reward -= len(Bot_Hand) * 4
-        if state['history'] and state['history'][-1][2] == "pickup":
-            reward -= 20
-        if len(state['played_cards']) == 0 and state['history']:
-            if state['history'][-1][2] == "play":
-                reward += 12
-        if state.get('another', False):
-            reward += 5
-        difference = (len(Hand)-3) * 2
-        card_difference = min([rank_order[card[0]] for card in Bot_Hand]) - max([rank_order[card[0]] for card in Bot_Hand])
-        return reward + difference + card_difference
+            return 1 if state['winner'] == 1 else -1
+        return 0
+    
+    def rollout_policy(env,moves,state):
+        rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 15}
+        scores = []
+        for move in moves:
+            player, card, action = move
+            score = 0.0
+            if action == 'pickup':
+                score -= 10
+            elif action == 'play':
+                score += 10
+                rank = card[0]
+                score -= rank_order[rank] * 0.3
+                if rank == '2':
+                    score -= 2
+                if rank == '1':
+                    score -= 3
+            elif action == 'try':
+                score += random.uniform(-1, 1)
+            if state['another']:
+                score += 0.5
+            scores.append(score)
+        probs = env.softmax(scores)
+        return random.choices(moves, probs)[0]
 
     def is_terminal(env,state):
         for player in [0, 1]:
@@ -227,9 +231,64 @@ class GameEnvironment:
                 return 1
 
 genv = GameEnvironment()
-state = {'name': 'threes', 'deck': ['AD', '2D', '3D', '4D', '5D', '6D', '7D', '8D', '9D', '1D', 'JD', 'QD', 'KD', 'AS', '2S', '3S', '4S', '5S', '6S', '7S', '8S', '9S', '1S', 'JS', 'QS', 'KS', 'AC', '2C', '3C', '4C', '5C', '6C', '7C', '8C', '9C', '1C', 'JC', 'QC', 'KC', 'AH', '2H', '3H', '4H', '5H', '6H', '7H', '8H', '9H', '1H', 'JH', 'QH', 'KH'], 'shuffled_deck': ['4C', 'AD', '8D', 'AS', '7C', 'KC', '2S', '7D', 'QH', '3C', '5S', 'AC', '6H', '8C', '5H', '4D', '1C', '9D', '1S', 'QS', 'KD', 'QD', '6D', '5D', 'JC', '9C', '3D', '4H', '9H', 'JD'], 'rank_order': {'A': 14, 'K': 13, 'Q': 12, 'J': 11, '1': 16, '9': 9, '8': 8, '7': 7, '6': 6, '5': 5, '4': 4, '3': 3, '2': 15}, 'hands': [['7H', 'JS', 'KH'], ['1D', '7S', '8H']], 'discard_pile': [], 'selected_card': '', 'turn': 1, 'time_elapsed': 0, 'difficulty': (0, 'Easy'), 'winner': None, 'bottom_hands': [['2C', '3H', '8S'], ['1H', '2D', 'AH']], 'top_hands': [['5C', '6C', '6S'], ['JH', '4S', '3S']], 'another': False, 'played_cards': ['QC', 'KS', '2H', '9S'], 'history': [(0, 'KS', 'play'), (1, 'KH', 'play'), (0, ['KS', 'KH'], 'pickup'), (1, 'QC', 'play'), (0, 'KS', 'play'), (1, '2H', 'play'), (0, '9S', 'play')]}
+state = threes_end_game = {
+    'name': 'threes',
+    'deck': ['AD', '2D', '3D', '4D', '5D', '6D', '7D', '8D', '9D', '1D', 'JD', 'QD', 'KD',
+             'AS', '2S', '3S', '4S', '5S', '6S', '7S', '8S', '9S', '1S', 'JS', 'QS', 'KS',
+             'AC', '2C', '3C', '4C', '5C', '6C', '7C', '8C', '9C', '1C', 'JC', 'QC', 'KC',
+             'AH', '2H', '3H', '4H', '5H', '6H', '7H', '8H', '9H', '1H', 'JH', 'QH', 'KH'],
+    
+    'shuffled_deck': [],
+    
+    'rank_order': {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 15},
+    
+    'hands': [
+        ['7H', '8H'],            # Player 0 - low hand count
+        ['6C']                   # Player 1 - obvious move: play 6C (matches top card, and only has 1 card left!)
+    ],
+    
+    'discard_pile': ['2H', '3C', '4D', '5S', '7D', '8D'],
+    'selected_card': '',
+    'turn': 1,
+    'time_elapsed': 0,
+    'difficulty': (0, 'Easy'),
+    'winner': None,
+    
+    'bottom_hands': [
+        ['2C', '3H'],            # Player 0
+        ['1H']                   # Player 1
+    ],
+    
+    'top_hands': [
+        ['5C'],                  # Player 0
+        []                       # Player 1 (empty)
+    ],
+    
+    'another': False,
+    'played_cards': ['3D', '4D', '5D', '6D'],  # Run of 3-4-5-6 (top card is 6D)
+    
+    'history': [
+        (0, '3D', 'play'),
+        (1, '4D', 'play'),
+        (0, '5D', 'play'),
+        (1, '6D', 'play'),
+        (0, ['3D', '4D', '5D', '6D'], 'pickup'),
+        (1, '1H', 'play'),
+        (0, '7H', 'play'),
+    ]
+}
+
 
 print(genv.determinization(state))
 print(genv.get_reward(genv.determinization(state)))
+print(genv.get_vaild_moves(state))
+print(genv.rollout_policy(genv.get_vaild_moves(state),state))
 
-print(mtcs(state,genv,100,2))
+lst = []
+for _ in range(100):
+    choice = mtcs(state,genv,100,True)
+    lst.append(choice)
+    print(choice)
+
+counts = lst.count((1, '6C', 'play'))
+print(f'Picks Best Move: {counts}%')
