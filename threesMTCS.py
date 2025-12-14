@@ -20,28 +20,34 @@ class GameEnvironment:
             for card in threes['hands'][1]:
                 public_cards.append(card)
         if threes['top_hands'][1]:
-            for card in threes['hands'][1]:
+            for card in threes['top_hands'][1]:
                 public_cards.append(card)
         if threes['top_hands'][0]:
-            for card in threes['hands'][1]:
+            for card in threes['top_hands'][0]:
                 public_cards.append(card)
         if threes['discard_pile']:
-            for card in threes['hands'][1]:
+            for card in threes['discard_pile']:
                 public_cards.append(card)   
         if threes['played_cards']:
-            for card in threes['hands'][1]:
+            for card in threes['played_cards']:
                 public_cards.append(card)
         unknown_cards = threes['deck']
         for card in unknown_cards:
             if card in public_cards:
                 unknown_cards.remove(card)
         if not threes["history"]:
-            Hands = [threes['hands'][1], threes['bottom_hands'][1], threes['bottom_hands'][0]]
-            for hand in Hands:
-                hand = []
-                for _ in range(0,3):
-                    card = unknown_cards.pop()
-                    hand.append(card)
+            threes['hands'][1] = []
+            for _ in range(0,3):
+                card = unknown_cards.pop()
+                threes['hands'][1].append(card)
+            threes['bottom_hands'][1] = []
+            for _ in range(0,3):
+                card = unknown_cards.pop()
+                threes['bottom_hands'][1].append(card)
+            threes['bottom_hands'][0] = []
+            for _ in range(0,3):
+                card = unknown_cards.pop()
+                threes['bottom_hands'][0].append(card)
             threes['shuffled_deck'] = unknown_cards
         else:
             Player_hand = []
@@ -181,40 +187,46 @@ class GameEnvironment:
     
     def get_reward(env,state):
         if env.is_terminal(state):
-            return 1 if state['winner'] == 1 else -1
-        return 0
+            return 100 if state['winner'] == 1 else -100
+        cards_left = len(state['hands'][1]) + len(state['top_hands'][1]) + len(state['bottom_hands'][1])
+        cards_left2 = len(state['hands'][0]) + len(state['top_hands'][0]) + len(state['bottom_hands'][0])
+        if state['turn'] == 0:
+            return cards_left2
+        return -cards_left
     
     def rollout_policy(env,moves,state):
-        rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 15}
-        scores = []
-        for move in moves:
-            player, card, action = move
-            score = 0.0
-            if action == 'pickup':
-                score -= 10
-            elif action == 'play':
-                score += 10
-                rank = card[0]
-                score -= rank_order[rank] * 0.3
-                if rank == '2':
-                    score -= 2
-                if rank == '1':
-                    score -= 3
-            elif action == 'try':
-                score += random.uniform(-1, 1)
-            if state['another']:
-                score += 0.5
-            scores.append(score)
-        probs = env.softmax(scores)
-        return random.choices(moves, probs)[0]
+        if len(moves) == 1:
+            return moves[0]
+        else:
+            rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 15}
+            scores = []
+            for move in moves:
+                player, card, action = move
+                score = 0.0
+                if action == 'pickup':
+                    score -= 10
+                elif action == 'play':
+                    score += 10
+                    rank = card[0]
+                    score -= rank_order[rank] * 0.5
+                    if rank == '2':
+                        score -= 2
+                    if rank == '1':
+                        score -= 3
+                elif action == 'try':
+                    score += random.uniform(-1, 1)
+                if state['another']:
+                    score += 0.5
+                scores.append(score)
+            probs = env.softmax(scores)
+            return random.choices(moves, probs)[0]
 
     def is_terminal(env,state):
-        for player in [0, 1]:
-            if (not state['hands'][player] and not state['top_hands'][player] and not state['bottom_hands'][player]):
-                if not state['bottom_hands'][0]:
-                    state['winner'] = 0
-                else:
-                    state['winner'] = 1
+        if not state['bottom_hands'][0]:
+                state['winner'] = 0
+                return True
+        elif not state['bottom_hands'][1]:
+                state['winner'] = 1
                 return True
         return False
     
@@ -279,14 +291,14 @@ state = threes_end_game = {
 }
 
 
-print(genv.determinization(state))
-print(genv.get_reward(genv.determinization(state)))
-print(genv.get_vaild_moves(state))
-print(genv.rollout_policy(genv.get_vaild_moves(state),state))
+#print(genv.determinization(state))
+#print(genv.get_reward(genv.determinization(state)))
+#print(genv.get_vaild_moves(state))
+#print(genv.rollout_policy(genv.get_vaild_moves(state),state))
 
 lst = []
 for _ in range(100):
-    choice = mtcs(state,genv,0.2,True)
+    choice = mtcs(state,genv,0.5,True)
     lst.append(choice)
     print(choice)
 

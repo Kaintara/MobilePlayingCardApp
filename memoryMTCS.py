@@ -44,17 +44,21 @@ class GameEnvironment:
                 elif move[0] == 'Matched':
                     first = move[2]
                     second = move[3]
+                    # Clear matched cards from board so they can't be picked again
+                    memory['card_array'][first[0]][first[1]] = None
+                    memory['card_array'][second[0]][second[1]] = None
+                    # Also remove from deck
                     if first[2] in memory['deck']:
                         memory['deck'].remove(first[2])
                     if second[2] in memory['deck']:
                        memory['deck'].remove(second[2])
-        random.shuffle(memory['deck'])
-        for y in range(9):
-            for x in range(6):
-                if not memory['card_array'][y][x]:
-                    if not memory['deck']:
-                        raise ValueError("Deck exhausted while determinizing")
-                    memory['card_array'][y][x] = 'Blank'
+        #random.shuffle(memory['deck'])
+        #for y in range(9):
+            #for x in range(6):
+                #if not memory['card_array'][y][x]:
+                    #if not memory['deck']:
+                        #raise ValueError("Deck exhausted while determinizing")
+                    #memory['card_array'][y][x] = 'Blank'
         return memory
  
     def get_vaild_moves(env,state):
@@ -246,9 +250,9 @@ genv = GameEnvironment()
 #print(genv.get_reward(genv.determinization(state)))
 #print(genv.convert_move(((0,2,'4H')),state))
 
-move1= mtcs(state,genv,5,True)
-print(move1)
-state = genv.apply_moves(state,genv.convert_move(move1,state))
-print(state)
-move1= mtcs(state,genv,1,True)
-print(move1)
+#move1= mtcs(state,genv,5,True)
+#print(move1)
+#state = genv.apply_moves(state,genv.convert_move(move1,state))
+#print(state)
+#move1= mtcs(state,genv,1,True)
+#print(move1)

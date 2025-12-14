@@ -12,6 +12,7 @@ class Node:
         self.untried_moves = None
         self.visits = 0
         self.value = 0.0
+        self.depth = 0 if parent is None else parent.depth + 1
 
     def tried_all_moves(self):
         return self.untried_moves is not None and len(self.untried_moves) == 0
@@ -45,11 +46,80 @@ class Node:
 def is_time_over(time_limit,time_elapsed):
     return time_limit is not None and (time.time() - time_elapsed) >= time_limit
     
-def mtcs(root_state,game_env,time_limit, debug=False):
+def m_mtcs(root_state,game_env,time_limit, debug=False):
     #Determinize
     det_root = game_env.determinization(root_state)
     # Preserve the current player's turn from the root state when determinizing.
     det_root['turn'] = root_state.get('turn', det_root.get('turn', 1))
+    root_node = Node(det_root,None,None)
+    root_node.untried_moves = game_env.get_vaild_moves(root_node.state)
+    time_elapsed = time.time()
+    start_time = time.time()
+    iterations = 0
+    while not is_time_over(time_limit,time_elapsed):
+        node = root_node
+        path = [root_node]
+        #Selection
+        while (node.depth < 2 and node.tried_all_moves() and node.children):
+            node = node.best_child()
+            if node is None:
+                break
+            path.append(node)        
+        # If selection returned None (no children), skip this iteration
+        if node is None:
+            iterations += 1
+            continue
+
+        #Expansion
+        if node.depth < 2:
+            if node.untried_moves is None:
+                node.untried_moves = game_env.get_vaild_moves(node.state)
+            if node.untried_moves:
+                move = node.untried_moves.pop(random.randrange(len(node.untried_moves)))
+                child_state = game_env.apply_moves(node.state, move)
+                child_node = Node(child_state, node, move)
+                node.children.append(child_node)
+                node = child_node
+                path.append(node)
+        #Simulation
+            sim_state = copy.deepcopy(node.state)
+            final_state = node.simulations(sim_state,game_env,20) 
+        #Backpropagation
+            if final_state is None:
+                reward = 0
+            else:
+                reward = game_env.get_reward(final_state)
+            for nodes in path:
+                nodes.visits += 1
+                nodes.value += reward
+        iterations += 1
+
+    total_time = time.time() - start_time
+    if debug:
+        print(f"MCTS debug: iterations={iterations}, elapsed={total_time:.3f}s, root_turn={det_root.get('turn')}")
+        untried = len(root_node.untried_moves) if root_node.untried_moves else 0
+        explored = len(root_node.children)
+        print(f"Root node: {untried} untried moves, {explored} explored children (total moves: {untried + explored})")
+        if root_node.children:
+            # show stats sorted by visits
+            stats = []
+            for c in root_node.children:
+                avg = (c.value / c.visits) if c.visits else float('nan')
+                stats.append((c.previous_move, c.visits, avg))
+            stats.sort(key=lambda x: x[1], reverse=True)
+            print("Root children stats (move, visits, avg_value):")
+            for m, v, a in stats:
+                print(f"  {m} -> visits={v}, avg={a}")
+
+    best = root_node.best_child(1.4)
+    if best is None:
+        return None
+    return best.previous_move
+
+def mtcs(root_state,game_env,time_limit, debug=False):
+    #Determinize
+    det_root = game_env.determinization(root_state)
+    det_root['turn'] = 1
     root_node = Node(det_root,None,None)
     root_node.untried_moves = game_env.get_vaild_moves(root_node.state)
     time_elapsed = time.time()
@@ -81,7 +151,7 @@ def mtcs(root_state,game_env,time_limit, debug=False):
                 path.append(node)
         #Simulation
             sim_state = copy.deepcopy(node.state)
-            final_state = node.simulations(sim_state,game_env,1000) 
+            final_state = node.simulations(sim_state,game_env,50) 
         #Backpropagation
             if final_state is None:
                 reward = 0
@@ -95,6 +165,9 @@ def mtcs(root_state,game_env,time_limit, debug=False):
     total_time = time.time() - start_time
     if debug:
         print(f"MCTS debug: iterations={iterations}, elapsed={total_time:.3f}s, root_turn={det_root.get('turn')}")
+        untried = len(root_node.untried_moves) if root_node.untried_moves else 0
+        explored = len(root_node.children)
+        print(f"Root node: {untried} untried moves, {explored} explored children (total moves: {untried + explored})")
         if root_node.children:
             # show stats sorted by visits
             stats = []

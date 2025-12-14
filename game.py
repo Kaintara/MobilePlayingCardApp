@@ -1,6 +1,8 @@
 import random
-from ui import Achievement_Dialog, Reward_Dialog
-from kivy.clock import Clock
+#from ui import Achievement_Dialog, Reward_Dialog
+#from kivy.clock import Clock
+from threesMTCS import genv
+from treesearch import mtcs
 
 class Game: 
     def __init__(game, name, rank_order,state):
@@ -23,6 +25,7 @@ class Game:
         game.shuffled_deck = shuffled_deck
 
     def unlocked_achievements(game,app,savedata):
+        return
         unlocked = []
         for id, name, desc, condition in app.all_achievements:
             if id not in app.unlocked_achievements[id][0] and condition(savedata) == True:
@@ -31,11 +34,13 @@ class Game:
         return unlocked
 
     def display_achievements(game,achievement):
+        return
         Dialog = Achievement_Dialog(achievement)
         Dialog.open()
         Clock.schedule_once(lambda dt: Dialog.dismiss(), 5)
     
     def get_reward(game,shop,app,savedata):
+        return
         shop.coin_count += (game.difficulty[0]*5)
         amount_earned += game.difficulty[0]*5
         Unlocked_achievement = game.unlocked_achievements(app,savedata)
@@ -56,6 +61,7 @@ class Game:
         return (amount_earned, game.winner, total_delay)
     
     def end_game(game, app):
+        return
         completed_game = {
             'winner': game.winner,
             'history': game.state['history'],
@@ -164,7 +170,7 @@ class Threes(Game):
                 threes.end_game()
                 return
             else:
-                threes.turn = threes.next_vaild_player()
+                threes.turn = threes.next_vaild_player(threes.turn, 'savedata')
                 return
         
         threes.state["history"].append(move)
@@ -237,29 +243,32 @@ class Threes(Game):
         threes.distribute_cards()
         threes.turn = 0
         while not threes.is_game_over():
-            moves = threes.get_valid_moves()
-            # No moves at all – skip or break the game
-            if not moves:
-                threes.turn = threes.next_vaild_player(threes.turn, 'save')
-                print("No valid moves – skipping turn")
-                continue
-            # Filter moves
-            play_moves = [m for m in moves if m[2] != "pickup"]
-            pickup_moves = [m for m in moves if m[2] == "pickup"]
-            # Decide which move to apply
-            if play_moves:
-                # Choose the first non-pickup move
-                chosen_move = play_moves[0]
+            if threes.turn == 1:
+                chosen_move = mtcs(threes.state, genv, 0.3, True)
             else:
-                # Only pickup available
-                chosen_move = pickup_moves[0]
+                moves = threes.get_valid_moves()
+                # No moves at all – skip or break the game
+                if not moves:
+                    threes.turn = threes.next_vaild_player(threes.turn, 'save')
+                    print("No valid moves – skipping turn")
+                    continue
+                # Filter moves
+                play_moves = [m for m in moves if m[2] != "pickup"]
+                pickup_moves = [m for m in moves if m[2] == "pickup"]
+                # Decide which move to apply
+                if play_moves:
+                    # Choose the first non-pickup move
+                    chosen_move = play_moves[0]
+                else:
+                    # Only pickup available
+                    chosen_move = pickup_moves[0]
             # Apply the chosen move
             threes.apply_move(chosen_move)
-            #print("HANDS:", threes.hands)
-            #print("HISTORY:", threes.state['history'])
-            #print("DECK:", threes.shuffled_deck)
+            print("HANDS:", threes.hands)
+            print("CARDS LEFT:", threes.state['bottom_hands'])
+            print("DECK:", threes.shuffled_deck)
             threes.update_game_state()
-            print(threes.state)
+            print("HISTORY:",threes.state['history'][-1])
             threes.turn = threes.next_vaild_player(threes.turn, 'save')
             input()
         print("game over")
@@ -285,8 +294,22 @@ state = {'name' : "threes",
         'played_cards' : [],
         'history': []}
 
-#Threes_game = Threes("threes",rank_order,state)
-#Threes_game.test_run()
+threes_game = Threes("threes",rank_order,state)
+counts = 0
+for _ in range(3):
+    threes_game.test_run()
+    counts += 1 if threes_game.winner == 1 else 0
+    # reset
+    threes_game.shuffled_deck = []
+    threes_game.hands = [[],[]]
+    threes_game.bottom_hands = [[],[]]
+    threes_game.top_hands = [[],[]]
+    threes_game.turn = 0
+    threes_game.winner = None
+    threes_game.history = []
+    threes_game.state = state
+
+print(f"Threes AI wins {counts*33}%")
 
 
 class Rummy(Game):
@@ -525,7 +548,7 @@ class Memory(Game):
         memory.first_selected_card = ('y','x','card')
         memory.second_selected_card = ('y','x','card')
         memory.selected_first_card = False
-        memory.card_array = [['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','','']]
+        memory.card_array = [[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None]]
 
     def distribute_cards(memory):
         for y in range(0,9):
@@ -537,13 +560,15 @@ class Memory(Game):
         Moves = []
         for y, row in enumerate(memory.card_array):
             for x, card in enumerate(row):
-                if card:
-                    if memory.first_selected_card:
+                # Skip empty slots (None) and already-matched cards
+                if card is not None and card != '':
+                    if memory.first_selected_card[2] != 'card':  # First card has been picked
                         if card == memory.first_selected_card[2]:
-                            continue
+                            continue  # Can't pick the same card twice
                         else:
                             Moves.append(("pick",player,(y,x,card)))
                     else:
+                        # First card not yet picked, any valid card works
                         Moves.append(("pick",player,(y,x,card)))
         return Moves
     
@@ -640,21 +665,23 @@ class Memory(Game):
         memory.turn = 0
         while not memory.is_game_over():
             moves = memory.get_valid_moves(memory.turn)
-            # No moves at all – skip or break the game
             if not moves:
                 memory.turn = memory.next_vaild_player(memory.turn, 'save')
                 print("No valid moves – skipping turn")
                 continue
-            chosen_move = random.choice(moves)
+            if memory.turn == 1:
+                chosen_move = mtcs(memory.state,genv,0.5,True)
+            else:
+                chosen_move = random.choice(moves)
             memory.apply_move(chosen_move)
             print("PAIRS:", memory.hands)
             print("HISTORY:", memory.state['history'][-1])
-            print("CARD ARRAY:", memory.shuffled_deck)
+            print("CARD ARRAY:", memory.card_array)
             memory.update_game_state()
-            #print(threes.state)
-            #input()
         print("game over")
+        return memory.winner
     
+'''
 state = {'name' : "memory",
         'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
         'shuffled_deck' : [],
@@ -669,5 +696,16 @@ state = {'name' : "memory",
         'winner' : None,
         'history': []}
 
-#memory = Memory('memory','rank',state)
-#memory.test_run()
+memory = Memory('memory','rank',state)
+counts = 0
+for _ in range(5):
+    counts += memory.test_run()
+    memory.shuffled_deck = []
+    memory.hands = [[],[]]
+    memory.turn = 0
+    memory.winner = None
+    memory.history = []
+    memory.state = state
+print(f"Wins {counts*20}%")
+
+'''
