@@ -286,7 +286,7 @@ print(genv.rollout_policy(genv.get_vaild_moves(state),state))
 
 lst = []
 for _ in range(100):
-    choice = mtcs(state,genv,100,True)
+    choice = mtcs(state,genv,0.2,True)
     lst.append(choice)
     print(choice)
 

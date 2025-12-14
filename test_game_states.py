@@ -213,7 +213,7 @@ rummy_mid_game = {
         ['4H','5H','4D','2D','2S','8C','4C'],
         
         # PLAYER 1 (in discard phase: has 8 cards - obvious best move: discard QH!)
-        ['3H','3S','6D','6C','9H','QH','1S','KC']
+        ['3H','3S','6D','6C','9H','QS','1S','KS']
     ],
     
     'discard_pile': ['5C','7D','2C'],

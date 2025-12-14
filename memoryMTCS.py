@@ -1,10 +1,26 @@
 import copy
 import random
 from treesearch import mtcs
+import math
 
 class GameEnvironment:
     def __init__(env):
         pass
+
+    def softmax(env,xs, temp=0.7):
+        m = max(xs)
+        exps = [math.exp((x - m) / temp) for x in xs]
+        s = sum(exps)
+        return [e / s for e in exps]
+    
+    def convert_move(env,move,state):
+        y = int(move[2][0])
+        x = int(move[2][1])
+        if move[2] != state['card_array'][y][x]:
+            vaild_move = ('pick',1,(y,x,state['card_array'][y][x]))
+            return vaild_move
+        else:
+            return move
 
     def determinization(env,state):
         memory = copy.deepcopy(state)
@@ -38,7 +54,7 @@ class GameEnvironment:
                 if not memory['card_array'][y][x]:
                     if not memory['deck']:
                         raise ValueError("Deck exhausted while determinizing")
-                    memory['card_array'][y][x] = memory['deck'].pop()
+                    memory['card_array'][y][x] = 'Blank'
         return memory
  
     def get_vaild_moves(env,state):
@@ -47,7 +63,10 @@ class GameEnvironment:
         for y, row in enumerate(state['card_array']):
             for x, card in enumerate(row):
                 if card and card != 'Blank':
-                    Moves.append(("pick",player,(y,x,card)))
+                    if card == state.get('first_selected_card')[2]:
+                            continue
+                    else:
+                        Moves.append(("pick",player,(y,x,card)))
         return Moves
     
     def apply_moves(env,og_state,move):
@@ -89,12 +108,34 @@ class GameEnvironment:
         return state
     
     def get_reward(env,state):
-        player = state['turn']
+        reward = len(state['hands'][1]) * 0.5
         if env.is_terminal(state):
-            return 1000 if state['winner'] == player else -1000
-        reward = len(state['hands'][1]) * 2
-        return reward + env.cards_undiscovered(state)
+            return 10 if state['winner'] == 1 else -10
+        return reward
     
+    def rollout_policy(env,moves,state):
+        scores = []
+        first_pick = state.get('first_selected_card')
+        for move in moves:
+            action, player, cardpos = move
+            score = 0.0
+            if state['selected_first_card'] and first_pick != ('y','x','card'):
+                if first_pick == cardpos:
+                    score -= 10
+                elif first_pick[2][0] == cardpos[2][0]:
+                    suit1 = cardpos[2][1]
+                    suit2 = first_pick[2][1]
+                    is_joker_pair = (first_pick[2] in ('BJ','RJ') and cardpos[2] in ('BJ','RJ'))
+                    same_color = (suit1 in ['D','H'] and suit2 in ['D','H']) or (suit1 in ['C','S'] and suit2 in ['C','S'])
+                    if is_joker_pair or same_color:
+                        score += 10
+            else:
+                if move in state['history']:
+                    score -= 10
+            scores.append(score)
+        probs = env.softmax(scores)
+        return random.choices(moves, probs)[0]
+
     def cards_undiscovered(env,state):
         count = 0
         memory = copy.deepcopy(state)
@@ -107,7 +148,6 @@ class GameEnvironment:
         if memory['history']:
             for move in memory['history']:
                 if move[0] == 'Missed':
-                    print(move)
                     first = move[2]
                     second = move[3]
                     memory['card_array'][first[0]][first[1]] = first[2]
@@ -148,67 +188,67 @@ class GameEnvironment:
         else:
             return 1 - player
 
-genv = GameEnvironment()
 
-state = {
+
+state = memory_early_game = {
     'name': "memory",
-
+    
     'deck': [
         "AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD",
         "AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS",
         "AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC",
         "AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"
     ],
-
+    
     'shuffled_deck': [],
-
+    
     'hands': [
-        ["8H", "9C"],     # Player 0 has 2 cards
-        ["7D", "JS", "KS"]  # Player 1 has 3 cards
+        ["8H", "9C"],     # Player 0 has 2 cards (1 match)
+        ["7D", "JS"]      # Player 1 has 2 cards (1 match)
     ],
-
+    
     'first_selected_card': ('y','x','card'),
     'second_selected_card': ('y','x','card'),
     'selected_first_card': False,
-
-    # 9×6 board — '' means unknown/unflipped (your environment REQUIRES this format)
+    
+    # 9×6 board - Player 1 can see two matching cards (7H and 7C)
     'card_array': [
-        ['7C','',  '9H','9C','',  'KS'],
-        ['1D','QS','6H','',  'KD','JC'],
-        ['3S','7S','',  'AD','8C','9S'],
-        ['5S','1H','AS','RJ','8S',''],
-        ['BJ','4H','',  'QH','3D','AC'],
-        ['JD','',  '1S','4D','KC',''],
-        ['QC','',  'AH','5H','5D',''],
-        ['6S','JH','3C','7D','',  '6D'],
-        ['6C','4C','2C','',  '9D','3H']
+        ['',    '',    '9H',  '9C',  '',    'KS'],
+        ['1D',  'QS',  '6H',  '',    'KD',  'JC'],
+        ['3S',  '7S',  '',    'AD',  '8C',  '9S'],
+        ['5S',  '1H',  'AS',  'RJ',  '8S',  ''],
+        ['BJ',  '4H',  '',    'QH',  '3D',  'AC'],
+        ['JD',  '',    '7H',  '4D',  'KC',  ''],
+        ['QC',  '',    'AH',  '5H',  '5D',  ''],
+        ['6S',  'JH',  '3C',  '7D',  '',    '6D'],
+        ['6C',  '4C',  '2C',  '',    '9D',  '7C']  # 7C at (8,5)
     ],
-
-    'turn': 0,
+    
+    'turn': 1,
     'time_elapsed': 0,
     'difficulty': (-1, ""),
-
     'winner': None,
-
+    
     'history': [
-        # Player 0 reveals 7C and KS → miss
-        ('pick', 0, (0,0,'7C')),
-        ('pick', 0, (0,5,'KS')),
-        ('Missed', 0, (0,0,'7C'), (0,5,'KS')),
-
-        # Player 1 reveals BJ and RJ → match
-        ('pick', 1, (4,0,'BJ')),
-        ('pick', 1, (3,3,'RJ')),
-        ('Matched', 1, (4,0,'BJ'), (3,3,'RJ')),
-
-        # Player 0 reveals 2C and JD → miss
-        ('pick', 0, (8,2,'2C')),
-        ('pick', 0, (5,0,'JD')),
-        ('Missed', 0, (8,2,'2C'), (5,0,'JD'))
+        # Player 0 revealed two non-matching cards
+        ('pick', 1, (8,4,'9D')),
+        ('pick', 1, (8,4,'9D')),
+        ('Missed', 1, (0,2,'9H'), (2,5,'9S')),
+        ('pick', 0, (0,2,'9H')),
+        ('pick', 0, (0,3,'9C')),
+        ('Missed', 0, (0,2,'9H'), (0,3,'9C'))     
     ]
 }
 
-print(genv.determinization(state))
-print(genv.get_reward(genv.determinization(state)))
+genv = GameEnvironment()
 
-print(mtcs(state,genv,50))
+#print(genv.determinization(state))
+#print(genv.get_reward(genv.determinization(state)))
+#print(genv.convert_move(((0,2,'4H')),state))
+
+move1= mtcs(state,genv,5,True)
+print(move1)
+state = genv.apply_moves(state,genv.convert_move(move1,state))
+print(state)
+move1= mtcs(state,genv,1,True)
+print(move1)

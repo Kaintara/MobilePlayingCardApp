@@ -64,6 +64,11 @@ def mtcs(root_state,game_env,time_limit, debug=False):
             if node is None:
                 break
             path.append(node)        
+        # If selection returned None (no children), skip this iteration
+        if node is None:
+            iterations += 1
+            continue
+
         if not game_env.is_terminal(node.state):
             if node.untried_moves is None:
                 node.untried_moves = game_env.get_vaild_moves(node.state)

@@ -62,3 +62,41 @@ def test_savedata():
     Save.load()
 
 test_savedata()
+
+'''
+    def cards_left(env,state,player):
+        rank_order = {'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 2}
+        Runs = []
+        Sets = []
+        Temp_hand = state['hands'][player][:]
+        Temp_hand.sort(key=(lambda a : rank_order[a[0]]))
+        Hearts = []
+        Clubs = []
+        Spades = []
+        Diamonds = []
+        for card in Temp_hand:
+            if card.endswith('H'):
+               Hearts.append(card)
+            elif card.endswith('C'):
+               Clubs.append(card)
+            elif card.endswith('S'):
+               Spades.append(card)
+            elif card.endswith('D'):
+               Diamonds.append(card)
+        Suits = [Hearts,Clubs,Clubs,Diamonds]
+        for suit in Suits:
+            if env.find_run(suit):
+                Runs = env.find_run(suit)
+                for card in Runs:
+                    if card in Temp_hand:
+                        Temp_hand.remove(card)
+        if env.find_set(Temp_hand):
+            Sets = env.find_set(Temp_hand)
+            for card in Sets:
+                if card in Temp_hand:
+                    Temp_hand.remove(card)
+        if not Temp_hand:
+            return 0
+        else:
+            return len(Temp_hand)
+    '''

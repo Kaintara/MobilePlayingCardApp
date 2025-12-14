@@ -1,9 +1,17 @@
 import copy
 from treesearch import mtcs
+import random
+import math
 
 class GameEnvironment:
     def __init__(env):
         pass
+    
+    def softmax(env,xs, temp=0.7):
+        m = max(xs)
+        exps = [math.exp((x - m) / temp) for x in xs]
+        s = sum(exps)
+        return [e / s for e in exps]
 
     def determinization(env,state):
         rummy = copy.deepcopy(state)
@@ -132,43 +140,7 @@ class GameEnvironment:
             Sorted_hand += Temp_hand
             state['hands'][player] = Sorted_hand
             return None
-        
-    def cards_left(env,state,player):
-        rank_order = {'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 2}
-        Runs = []
-        Sets = []
-        Temp_hand = state['hands'][player][:]
-        Temp_hand.sort(key=(lambda a : rank_order[a[0]]))
-        Hearts = []
-        Clubs = []
-        Spades = []
-        Diamonds = []
-        for card in Temp_hand:
-            if card.endswith('H'):
-               Hearts.append(card)
-            elif card.endswith('C'):
-               Clubs.append(card)
-            elif card.endswith('S'):
-               Spades.append(card)
-            elif card.endswith('D'):
-               Diamonds.append(card)
-        Suits = [Hearts,Clubs,Clubs,Diamonds]
-        for suit in Suits:
-            if env.find_run(suit):
-                Runs = env.find_run(suit)
-                for card in Runs:
-                    if card in Temp_hand:
-                        Temp_hand.remove(card)
-        if env.find_set(Temp_hand):
-            Sets = env.find_set(Temp_hand)
-            for card in Sets:
-                if card in Temp_hand:
-                    Temp_hand.remove(card)
-        if not Temp_hand:
-            return 0
-        else:
-            return len(Temp_hand)
-    
+
     def get_vaild_moves(env,state):
         player = state['turn']
         Moves = []
@@ -185,6 +157,7 @@ class GameEnvironment:
             return Moves
         else:
             return Moves
+    
     
     def apply_moves(env,og_state,move):
         state = copy.deepcopy(og_state)
@@ -211,9 +184,41 @@ class GameEnvironment:
     def get_reward(env,state):
         player = state['turn']
         if env.is_terminal(state):
-            return 1000 if state['winner'] == player else -1000
-        reward = env.cards_left(state,1) - env.cards_left(state,0)
-        return reward
+            return 10 if state['winner'] == 1 else -10
+        return 0
+    
+    def card_helps_meld(env, hand, card):
+        rank_order = {'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 2}
+        rank = card[0]
+        suit = card[1]
+        value = rank_order[rank]
+        same_rank = sum(1 for c in hand if c[0] == rank)
+        if same_rank > 1:
+            return True
+        suit_cards = [c for c in hand if c[1] == suit]
+        values = sorted(rank_order[c[0]] for c in suit_cards)
+        return (value - 1 in values) or (value + 1 in values)
+    
+    def rollout_policy(env, moves, state):
+        scored_moves = []
+        for move in moves:
+            player, card, action = move
+            score = 0.0
+            if action == 'draw':
+                if card != 'deck' and env.card_helps_meld(state['hands'][player], card):
+                    score += 10
+                elif card == 'deck':
+                    score += random.uniform(-2, 3)
+            elif action == 'discard':
+                if env.card_helps_meld(state['hands'][player], card):
+                    score -= 10
+                else:
+                    score += 10
+            scored_moves.append((score, move))
+        scores = [s for s, _ in scored_moves]
+        moves = [m for _, m in scored_moves]
+        probs = env.softmax(scores, temp=0.8)
+        return random.choices(moves, probs)[0]
 
     def is_terminal(env,state):
         if env.sort_cards(state,1) == 'GameOver':
@@ -245,34 +250,52 @@ class GameEnvironment:
 
 genv = GameEnvironment()
 
-state = state = {
+state = rummy_mid_game = {
     'name': 'rummy',
-    'deck': ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],   # unused in your implementation
-    'shuffled_deck': [
-        '7H','3C','KD','9S','5H','2C','4D','JC','8D','QS','6S','AH','9C'
-    ],
+    'deck': ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD",
+             "AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS",
+             "AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC",
+             "AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
+    
+    'shuffled_deck': ['4C','AD','8D','AS','7C','KC','2S','7D','QH','3C','5S','AC','6H'],
+    
     'value_map': {'A':1,'K':13,'Q':12,'J':11,'1':10,'9':9,'8':8,'7':7,'6':6,'5':5,'4':4,'3':3,'2':2},
+    
     'hands': [
         # PLAYER 0 (about to draw: has 7 cards)
-        ['4H','5H','7H','2D','2S','8C','KD'],
-
-        # PLAYER 1 (in discard phase: has 8 cards)
-        ['3H','3S','6D','6C','9H','QH','1S','KC']
+        ['4H','5H','4D','2D','2S','8C','4C'],
+        
+        # PLAYER 1 (in discard phase: has 8 cards - obvious best move: discard QH!)
+        ['3H','6S','6D','6C','9H','QS','1S','KS']
     ],
-    'discard_pile': ['5C','4C','7D'],
+    
+    'discard_pile': ['5C','7D','2C'],
     'selected_card': '',
     'turn': 1,
     'time_elapsed': 0,
     'difficulty': (0,'Easy'),
     'winner': None,
+    
     'history': [
         (1,'KC','discard'),
         (0,'7D','draw'),
         (0,'7D','discard'),
-        (1,'KC','draw')
+        (1,'2C','draw'),
+        (0,'4C','draw'),
     ]
 }
 print(genv.determinization(state))
 print(genv.get_reward(genv.determinization(state)))
 
-print(mtcs(state,genv,150))
+print(mtcs(state,genv,0.5))
+print(genv.rollout_policy(genv.get_vaild_moves(state),state))
+
+lst = []
+for _ in range(100):
+    choice = mtcs(state,genv,0.2,True)
+    lst.append(choice)
+    print(choice)
+
+counts = lst.count((1, '9H', 'discard'))
+counts2 = lst.count((1, '3H', 'discard'))
+print(f'Picks Best Move: {counts+counts2}%')
