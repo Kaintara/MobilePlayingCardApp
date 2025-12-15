@@ -270,7 +270,7 @@ class Threes(Game):
             threes.update_game_state()
             print("HISTORY:",threes.state['history'][-1])
             threes.turn = threes.next_vaild_player(threes.turn, 'save')
-            input()
+            #input()
         print("game over")
 
 rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,

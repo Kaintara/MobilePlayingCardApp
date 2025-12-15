@@ -199,9 +199,18 @@ class GameEnvironment:
             return moves[0]
         else:
             rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 15}
-            scores = []
+            #scores = []
+            best_move = moves[0]
             for move in moves:
                 player, card, action = move
+                if action == 'pickup':
+                    continue
+                elif action == 'play':
+                    rank = card[0]
+                    best_move_rank = best_move[1][0]
+                    if rank_order[rank] < rank_order[best_move_rank[0]]:
+                        best_move = move
+                '''
                 score = 0.0
                 if action == 'pickup':
                     score -= 10
@@ -220,6 +229,8 @@ class GameEnvironment:
                 scores.append(score)
             probs = env.softmax(scores)
             return random.choices(moves, probs)[0]
+            '''
+            return best_move
 
     def is_terminal(env,state):
         if not state['bottom_hands'][0]:
@@ -295,7 +306,7 @@ state = threes_end_game = {
 #print(genv.get_reward(genv.determinization(state)))
 #print(genv.get_vaild_moves(state))
 #print(genv.rollout_policy(genv.get_vaild_moves(state),state))
-
+'''
 lst = []
 for _ in range(100):
     choice = mtcs(state,genv,0.5,True)
@@ -304,3 +315,4 @@ for _ in range(100):
 
 counts = lst.count((1, '6C', 'play'))
 print(f'Picks Best Move: {counts}%')
+'''
