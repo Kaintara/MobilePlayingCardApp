@@ -109,7 +109,7 @@ class Threes(Game):
         else:
             Hand = threes.bottom_hands[player]
             for card in Hand:
-                Moves.append((player,card,"try"))
+                Moves.append((player,card,"try"))   
             return Moves
         if threes.played_cards:
             Moves.append((player,threes.played_cards[:],"pickup"))
@@ -172,7 +172,6 @@ class Threes(Game):
             else:
                 threes.turn = threes.next_vaild_player(threes.turn, 'savedata')
                 return
-        
         threes.state["history"].append(move)
         if threes.played_cards:
             Top_card = threes.played_cards[-1]
@@ -189,11 +188,29 @@ class Threes(Game):
                     threes.apply_move((player,threes.played_cards,"pickup"))
                     return
         elif move[2] == "play":
-            threes.played_cards.append(move[1])
             Hands = [threes.hands[player],threes.bottom_hands[player],threes.top_hands[player]]
-            for cards in Hands:
-                if move[1] in cards:
-                    cards.remove(move[1])
+            played_rank = move[1][0]
+            if played_rank in ('1','2'):
+                threes.played_cards.append(move[1])
+                for cards in Hands:
+                    if move[1] in cards:
+                        cards.remove(move[1])
+            else:
+                played_now = []
+                Hand = []
+                if threes.hands[player]:
+                    Hand = threes.hands[player]
+                elif threes.top_hands[player]:
+                    Hand = threes.top_hands[player]
+                else:
+                    Hand = threes.bottom_hands[player]
+                for card in Hand[:]:
+                    if card[0] == played_rank:
+                        Hand.remove(card)
+                        threes.played_cards.append(card)
+                        played_now.append(card)
+                if len(played_now) > 1:
+                    state['history'][-1] = (player,played_now,'play')
             four = False
             if len(threes.played_cards) > 3:
                 for i in range(1,5):

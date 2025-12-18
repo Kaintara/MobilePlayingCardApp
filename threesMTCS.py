@@ -139,11 +139,31 @@ class GameEnvironment:
                 else:
                     return env.apply_moves(state, (player, list(state["played_cards"]), "pickup"))
         elif move[2] == "play":
-            state["played_cards"].append(move[1])
+            played_rank = move[1][0]
             Hands = [state['hands'][player],state["bottom_hands"][player],state["top_hands"][player]]
-            for cards in Hands:
-                if move[1] in cards:
-                    cards.remove(move[1])
+            if played_rank in ('1','2'):
+                state["played_cards"].append(move[1])
+                for cards in Hands:
+                    if move[1] in cards:
+                        cards.remove(move[1])
+            else:
+                played_now = []
+                Hand = []
+                if state['hands'][player]:
+                    Hand = state['hands'][player]
+                elif state['top_hands'][player]:
+                    Hand = state['top_hands'][player]
+                elif state['bottom_hands'][player]:
+                    Hand = state['bottom_hands'][player]
+                else:
+                    Hand = []
+
+                for card in Hand[:]:
+                    if card[0] == played_rank:
+                        Hand.remove(card)
+                        state["played_cards"].append(card)
+                        played_now.append(card)
+                state['history'][-1] = (player,played_now,'play')
             four = False
             if len(state["played_cards"]) > 3:
                 for i in range(1,5):

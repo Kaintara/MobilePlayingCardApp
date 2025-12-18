@@ -40,6 +40,7 @@ class Node:
                 break
             move = game_env.rollout_policy(moves,s)
             s = game_env.apply_moves(s, move)
+            print(s['history'][-1])
             depth += 1
         return s
     
