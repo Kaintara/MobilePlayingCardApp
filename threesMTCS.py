@@ -31,10 +31,7 @@ class GameEnvironment:
         if threes['played_cards']:
             for card in threes['played_cards']:
                 public_cards.append(card)
-        unknown_cards = threes['deck']
-        for card in unknown_cards:
-            if card in public_cards:
-                unknown_cards.remove(card)
+        unknown_cards = [c for c in threes['deck'] if c not in public_cards]
         if not threes["history"]:
             threes['hands'][1] = []
             for _ in range(0,3):
@@ -58,10 +55,11 @@ class GameEnvironment:
             while len(threes['hands'][0]) != len(Player_hand):
                 Player_hand.append(unknown_cards.pop())
             threes['bottom_hands'][1] = []
-            threes['bottom_hands'][0] = []
-            for _ in range(0,3):
+            for _ in range(len(state['bottom_hands'][1])):
                 card1 = unknown_cards.pop()
                 threes["bottom_hands"][1].append(card1)
+            threes['bottom_hands'][0] = []
+            for _ in range(len(state['bottom_hands'][0])):
                 card2 = unknown_cards.pop()
                 threes["bottom_hands"][0].append(card2)
             threes['shuffled_deck'] = unknown_cards
@@ -88,7 +86,6 @@ class GameEnvironment:
                 Moves.append((player,card,"try"))
             return Moves
         if state['played_cards']:
-            Moves.append((player,list(state['played_cards']),"pickup"))
             Top_card = state['played_cards'][-1]
             if Top_card[0] == '2':
                 for card in Hand:
@@ -105,6 +102,8 @@ class GameEnvironment:
             for card in Valid_Cards:
                 if card not in [m[1] for m in Moves]:  # Avoid duplicate moves
                     Moves.append((player,card,"play"))
+            if not Moves:
+                Moves.append((player,list(state['played_cards']),"pickup"))
         else:
             for card in Hand:
                 Moves.append((player,card,"play"))
@@ -183,7 +182,7 @@ class GameEnvironment:
                 state['another'] = True
             if state['shuffled_deck'] and state['hands'][player]:
                 while state['shuffled_deck']:
-                    while len(state['hands'][player]) < 3:
+                    while len(state['hands'][player]) < 3 and state['shuffled_deck']:
                         card = state['shuffled_deck'].pop()
                         state['hands'][player].append(card)
                     break
