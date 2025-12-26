@@ -155,6 +155,7 @@ class Shop:
             shop.update()
     
     def buy_theme(shop,theme):
+        theme = shop.get_theme(theme)
         if theme.name not in shop.unlocked_inventory:
             if theme.cost <= shop.coin_count:
                 shop.unlocked_inventory.append(theme.name)

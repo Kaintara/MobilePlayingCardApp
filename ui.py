@@ -54,10 +54,11 @@ class Settings(MDScreen):
 
 class Shop_Dialog(MDDialog):
     def __init__(self, themecost, coins, **kwargs):
-        # Build content container
-        content = MDBoxLayout(orientation="vertical", spacing=dp(8), adaptive_height=True)
-        content.add_widget(MDDialogIcon(icon="account-circle"))
-        content.add_widget(
+        super().__init__(**kwargs)
+        self.add_widget(
+            MDDialogIcon(icon="emoticon-confused")
+        )
+        self.add_widget(
             MDDialogHeadlineText(
                 text="Insufficient coins!",
                 halign="center",
@@ -65,7 +66,7 @@ class Shop_Dialog(MDDialog):
                 role="medium",
             )
         )
-        content.add_widget(
+        self.add_widget(
             MDDialogSupportingText(
                 text=f"Unfortunately for you, this theme costs {themecost}.\nYou have {coins} coins.",
                 halign="left",
@@ -74,8 +75,15 @@ class Shop_Dialog(MDDialog):
                 font_size=dp(20),
             )
         )
-        # Initialize parent dialog with custom content
-        super().__init__(type="custom", content_cls=content, **kwargs)
+        self.add_widget(
+            MDDialogButtonContainer(
+                MDButton(
+                    MDButtonText(text="OK"),
+                    MDButtonIcon(icon="check"),
+                    on_release=self.dismiss
+                )
+            )
+        )
 
 class Achievement_Dialog(MDDialog):
     def __init__(self, achievement, **kwargs):
@@ -185,48 +193,54 @@ class Playing_Card(MDCard):
         self.layout.add_widget(img)
         self.add_widget(self.layout)
 
-class Shop_Button(MDCard):
-    def __init__(self, price="200", equipped=False, **kwargs):
+class Shop_Button(MDButton):
+    def __init__(self, theme_obj, equipped=False, unlocked=False,**kwargs):
         super().__init__(**kwargs)
-
+        price = theme_obj.cost
+        self.theme_name = theme_obj.name
         self.size_hint = (1, None)
         self.height = dp(32)
         self.radius = [16]
         self.elevation = 0
-
+        self.equipped = equipped
+        self.unlocked = unlocked
         if equipped:
             self.md_bg_color = (0.75, 0.55, 0.55, 1)
             text = "Equipped"
-            icon = "lock"
+            icon = "lock-open"
+        elif unlocked:
+            self.md_bg_color = (0.75, 0.55, 0.55, 1)
+            text = "Equip"
+            icon = "lock-open"
         else:
             self.md_bg_color = (0.6, 0.4, 0.4, 1)
-            text = price
+            text = str(price)
             icon = "lock"
-
-        layout = MDBoxLayout(
-            orientation="horizontal",
-            padding=[dp(12), 0, dp(12), 0],
-            spacing=dp(8)
-        )
-
-        layout.add_widget(
-            MDLabel(
+        self.add_widget(
+            MDButtonText(
                 text=text,
                 halign="center",
                 font_style="cataway",
                 role="small"
             )
         )
-
-        layout.add_widget(
+        self.add_widget(
             MDIconButton(
                 icon=icon,
                 size_hint=(None, None),
                 size=(dp(18), dp(18))
             )
         )
+    
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            app = MDApp.get_running_app()
+            if not self.unlocked:
+                app.shop.buy_theme(self.theme_name)
+            else:
+                app.shop.equip_theme(self.theme_name)
+        return super().on_touch_down(touch)
 
-        self.add_widget(layout)
 
 class Shop_Card(MDCard):
     def __init__(self, theme_name, **kwargs):
@@ -273,7 +287,7 @@ class Shop_Card(MDCard):
         card_stack.add_widget(card_back)
         card_stack.add_widget(card_front)
         
-        button = Shop_Button()
+        button = Shop_Button(theme_name)
 
         layout.add_widget(card_stack)
         layout.add_widget(button)
