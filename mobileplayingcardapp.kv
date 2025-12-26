@@ -321,16 +321,15 @@
                 padding: [dp(self.width%64), dp(50), dp(50), dp(50)]
                 spacing: dp(12)
                 MDGridLayout:
-                    pos_hint: {"center_x":0.5}
-                    md_bg_color: app.theme_cls.surfaceColor
                     id: grid
-                    cols: 1 if int((self.width / 64) -2) <= 0 else (int((self.width / 64) -1))
+                    cols: 2
                     adaptive_height: True
                     size_hint_y: None
-                    spacing: dp(12)
-                    padding: [dp(self.width%64), dp(20), dp(20), dp(20)]
-                    on_size:
-                        self.cols = 1 if int((self.width / 64) -2) <= 0 else (int((self.width / 64) -1))
+                    spacing: dp(20)
+                    padding: dp(20)
+                    size_hint_x: None
+                    width: dp(320)
+                    pos_hint: {"center_x": 0.5}
         MDIconButton: #Back button
             pos_hint: {"left":0.98, "top": 0.98}
             size: dp(48), dp(48)

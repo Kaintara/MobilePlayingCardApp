@@ -185,35 +185,96 @@ class Playing_Card(MDCard):
         self.layout.add_widget(img)
         self.add_widget(self.layout)
 
-class Shop_Button(MDButton):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.size = ("94dp","30dp")
-        self.style = "tonal"
-        self.pos_hint = {"center_x": 0.5, "center_y": 0.5}
-        self.icon = "lock"       
-        text = MDButtonText(text = "Threes",
-                    font_style = "cataway",
-                    role = "small")
-        self.add_widget(text)
+class Shop_Button(MDCard):
+    def __init__(self, price="200", equipped=False, **kwargs):
+        super().__init__(**kwargs)
+
+        self.size_hint = (1, None)
+        self.height = dp(32)
+        self.radius = [16]
+        self.elevation = 0
+
+        if equipped:
+            self.md_bg_color = (0.75, 0.55, 0.55, 1)
+            text = "Equipped"
+            icon = "lock"
+        else:
+            self.md_bg_color = (0.6, 0.4, 0.4, 1)
+            text = price
+            icon = "lock"
+
+        layout = MDBoxLayout(
+            orientation="horizontal",
+            padding=[dp(12), 0, dp(12), 0],
+            spacing=dp(8)
+        )
+
+        layout.add_widget(
+            MDLabel(
+                text=text,
+                halign="center",
+                font_style="cataway",
+                role="small"
+            )
+        )
+
+        layout.add_widget(
+            MDIconButton(
+                icon=icon,
+                size_hint=(None, None),
+                size=(dp(18), dp(18))
+            )
+        )
+
+        self.add_widget(layout)
 
 class Shop_Card(MDCard):
-    def __init__(self,theme_name,**kwargs):
+    def __init__(self, theme_name, **kwargs):
         super().__init__(**kwargs)
-        self.size_hint = (None,None)
-        self.adaptive_size = True
-        self.pos_hint = {"center_x": 0.5, "center_y": 0.5}
-        app = MDApp.get_running_app()
-        img_src = theme_name.asset_dict["KH"]
-        img = Image(source=img_src)
-        self.container = RelativeLayout(
-            size = ("64dp", "89dp"))
-        self.layout = MDBoxLayout(orientation = 'vertical',
-            pos_hint = {'center_x': .5, 'center_y': .5},
-            adaptive_size = True,
-            spacing= dp(20))
+
+        self.size_hint = (None, None)
+        self.size = ("140dp", "210dp")
+        self.radius = [24]
+        self.elevation = 1
+        self.padding = dp(10)
+        self.md_bg_color = MDApp.get_running_app().theme_cls.surfaceColor
+
+        front_src = theme_name.front_img
+        back_src = theme_name.back_img
+
+        layout = MDBoxLayout(
+            orientation="vertical",
+            spacing=dp(10),
+            adaptive_height=True
+        )
+
+        card_stack = RelativeLayout(
+            size_hint=(None, None),
+            size=(dp(90), dp(130)),
+            pos_hint={"center_x": 0.5}
+            )
+        
+        card_back = Image(
+            source=back_src,
+            size_hint=(None, None),
+            size=(dp(90), dp(130)),
+            pos=(dp(20), dp(0))
+            )
+        card_back.size = (dp(86), dp(126))
+        card_back.rotation = 2
+        
+        card_front = Image(
+            source=front_src,
+            size_hint=(None, None),
+            size=(dp(75), dp(102)),
+            pos=(0, 0)
+            )
+        
+        card_stack.add_widget(card_back)
+        card_stack.add_widget(card_front)
+        
         button = Shop_Button()
-        self.container.add_widget(img)
-        self.layout.add_widget(self.container)
-        self.layout.add_widget(button)
-        self.add_widget(self.layout)
+
+        layout.add_widget(card_stack)
+        layout.add_widget(button)
+        self.add_widget(layout)
