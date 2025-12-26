@@ -3,7 +3,7 @@ from treesearch import mtcs
 import random
 import math
 
-class GameEnvironment:
+class GameEnvironmentR:
     def __init__(env):
         pass
     
@@ -248,7 +248,7 @@ class GameEnvironment:
                 else:
                     return 1
 
-genv = GameEnvironment()
+genv = GameEnvironmentR()
 
 state = rummy_mid_game = {
     'name': 'rummy',

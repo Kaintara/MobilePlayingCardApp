@@ -305,6 +305,11 @@ class SaveData():
             save.alldata = json.load(f)
         return save.alldata
     
+    def quick_save(save,app):
+        save.alldata['Games']['Current_Games']['Threes'] = app.threes.state
+        save.alldata['Games']['Current_Games']['Rummy'] = app.rummy.state
+        save.alldata['Games']['Current_Games']['Memory'] = app.memory.state
+    
     def update(save, app):
         shop = app.shop
         shop.equipped = save.alldata['Shop']['equipped']

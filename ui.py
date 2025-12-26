@@ -206,15 +206,20 @@ class Display_Card(MDCard):
         self.add_widget(self.layout)
 
 class Playing_Card(MDCard):
-    def __init__(self,suit_rank,**kwargs):
+    def __init__(self,suit_rank,game,face,**kwargs):
         super().__init__(**kwargs)
+        self.selected = False
+        self.game = game
         self.size_hint = (None,None)
         self.size = ("64dp", "89dp")
         self.pos_hint = {"center_x": 0.5, "center_y": 0.5}
         app = MDApp.get_running_app()
         theme = None
         theme = app.shop.get_theme(app.shop.equipped)
-        img_src = theme.asset_dict[suit_rank]
+        if face == 'front':
+            img_src = theme.asset_dict[suit_rank]
+        else:
+            img_src = theme.back_img
         img = Image(source=img_src)
         self.layout = RelativeLayout(
             size = ("64dp", "89dp")
@@ -227,6 +232,27 @@ class Playing_Card(MDCard):
         self.layout.add_widget(self.highlight)
         self.layout.add_widget(img)
         self.add_widget(self.layout)
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            app = MDApp.get_running_app()
+            if self.game == 'threes':
+                game = app.threes
+                if game.turn == 0:
+                    if game.selected_card != self:
+                        if game.selected_card:
+                            game.selected_card.highlight.opacity = 0
+                            game.selected_card = self
+                        else:
+                            game.selected_card = self
+                        self.selected = True
+                        self.highlight.opacity = 1
+                    else:
+                        self.selected = False
+                        self.highlight.opacity = 0
+        return super().on_touch_down(touch)
+
+
 
 class Shop_Button(MDButton):
     def __init__(self, theme_obj, equipped=False, unlocked=False,**kwargs):

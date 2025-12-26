@@ -2,7 +2,9 @@ from ui import *
 from save import SaveData
 from game import *
 from shop import *
-
+from treesearch import *
+from threesMTCS import GameEnvironmentT
+from rummyMTCS import GameEnvironmentR
 
 class MobilePlayingCardApp(MDApp):
     def __init__(self, **kwargs):
@@ -119,6 +121,20 @@ class MobilePlayingCardApp(MDApp):
                 return "Resume Game"
             return "New Game"
         
+    def get_difficulty(self):
+        Carou = self.get_widget("carou","Settings")
+        difficulty = Carou.current_slide.text
+        if difficulty == "Beginner":
+            return "Beginner"
+        elif difficulty == "Easy":
+            return "Easy"
+        elif difficulty == "Medium":
+            return "Medium"
+        elif difficulty == "Hard":
+            return "Hard"
+        elif difficulty == "Expert":
+            return "Expert"
+        
     def left(self,Screen):
         Carou = self.get_widget("carou",Screen)
         if Screen == "Stats":
@@ -149,6 +165,11 @@ class MobilePlayingCardApp(MDApp):
         if game == "threes":
             timer = self.get_widget('timer','MDThrees')
             timer.text = self.s_to_mmss(self.threes.time_elapsed)
+        for i in range(3):
+            Ai_hand = self.get_widget(f'ai_hand{i + 1}', 'MDThrees')
+            Ai_hand.clear_widgets()
+            hand = self.get_widget(f'hand{i + 1}', 'MDThrees')
+            hand.clear_widgets()
         for i in range(len(self.threes.bottom_hands[1])):
             Ai_hand = self.get_widget(f'ai_hand{i + 1}', 'MDThrees')
             Ai_hand.add_widget(Display_Card(self.threes.bottom_hands[1][i], 'back'))
@@ -158,6 +179,7 @@ class MobilePlayingCardApp(MDApp):
             card.pos_hint = {"center_x": 0.6, "center_y": 0.5}
             Ai_hand.add_widget(card)
         deck = self.get_widget('deck', 'MDThrees')
+        deck.clear_widgets()
         if self.threes.played_cards:
             deck.add_widget(Display_Card(self.threes.played_cards[-1],'front'))
         if self.threes.shuffled_deck:
@@ -166,16 +188,47 @@ class MobilePlayingCardApp(MDApp):
             deck.add_widget(card)
         for i in range(len(self.threes.bottom_hands[0])):
             hand = self.get_widget(f'hand{i + 1}', 'MDThrees')
-            hand.add_widget(Playing_Card(self.threes.bottom_hands[0][i], 'back'))
+            hand.add_widget(Playing_Card(self.threes.bottom_hands[0][i], 'threes','back'))
         for i in range(len(self.threes.top_hands[0])):
             hand = self.get_widget(f'hand{i + 1}', 'MDThrees')
-            card = Playing_Card(self.threes.top_hands[0][i], 'front')
+            card = Playing_Card(self.threes.top_hands[0][i],'threes','front')
             card.pos_hint = {"center_x": 0.6, "center_y": 0.5}
             hand.add_widget(card)
         hand = self.get_widget('hand', 'MDThrees')
+        hand.clear_widgets()
         for card in self.threes.hands[0]:
-            hand.add_widget(Playing_Card(card))
-        
+            hand.add_widget(Playing_Card(card,'threes','front'))
+
+    def next_turn(self,game):
+        self.update_game(game)
+        if game == 'threes':
+            if self.threes.is_game_over():
+                self.threes.end_game(self)
+            else:
+                if self.threes.turn == 1:
+                    if self.get_difficulty() == "Beginner":
+                        move = m_mtcs(self.threes.state,GameEnvironmentT(),0.15)
+                        self.threes.apply_move(move)
+                        self.threes.update_game_state()
+                    elif self.get_difficulty() == "Easy":
+                        move = m_mtcs(self.threes.state,GameEnvironmentT(),0.2)
+                        self.threes.apply_move(move)
+                        self.threes.update_game_state()
+                    elif self.get_difficulty() == "Medium":
+                        move = m_mtcs(self.threes.state,GameEnvironmentT(),0.25)
+                        self.threes.apply_move(move)
+                        self.threes.update_game_state()
+                    elif self.get_difficulty() == "Hard":
+                        move = m_mtcs(self.threes.state,GameEnvironmentT(),0.35)
+                        self.threes.apply_move(move)
+                        self.threes.update_game_state()
+                    elif self.get_difficulty() == "Expert":
+                        move = m_mtcs(self.threes.state,GameEnvironmentT(),0.5)
+                        self.threes.apply_move(move)
+                        self.threes.update_game_state()
+                    self.save.quick_save(self)
+                    Clock.schedule_once(self.next_turn, 0.5)
+
     def new_game(self,game):
         if game == "threes":
             self.threes = Threes("threes",rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,
@@ -200,6 +253,8 @@ state = {'name' : "threes",
             self.threes.shuffle_cards()
             self.threes.distribute_cards()
             self.update_game(game)
+            self.threes.turn = 1
+            self.next_turn(game)
             
     def start_game(self,game):
         if game == "threes":

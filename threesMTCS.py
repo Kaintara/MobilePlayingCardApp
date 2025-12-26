@@ -3,7 +3,7 @@ from treesearch import mtcs
 import random
 import math
 
-class GameEnvironment:
+class GameEnvironmentT:
     def __init__(env):
         pass
 
@@ -272,7 +272,7 @@ class GameEnvironment:
             else:
                 return 1
 
-genv = GameEnvironment()
+genv = GameEnvironmentT()
 state = threes_end_game = {
     'name': 'threes',
     'deck': ['AD', '2D', '3D', '4D', '5D', '6D', '7D', '8D', '9D', '1D', 'JD', 'QD', 'KD',
