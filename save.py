@@ -148,12 +148,12 @@ class SaveData():
                     },
                 },
                 'Previous_Games' : {   #Format = {'winner': None,'history': [],'difficulty' : (-1,""), 'time':0}
-                    'Threes' : [],
-                    'Rummy' : [],
-                    'Memory' : []
+                    'threes' : [],
+                    'rummy' : [],
+                    'memory' : []
                 },
                 'Current_Games' :
-                {'Threes': {'name' : "threes",
+                {'threes': {'name' : "threes",
                             'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
                             'shuffled_deck' : [],
                             'rank_order' : {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 15},
@@ -169,7 +169,7 @@ class SaveData():
                             'another' : False,
                             'played_cards' : [],
                             'history': []},
-                 'Rummy': {'name' : "rummy",
+                 'rummy': {'name' : "rummy",
                             'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
                             'shuffled_deck' : [],
                             'value_map' : {'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 2},
@@ -181,7 +181,7 @@ class SaveData():
                             'difficulty' : (-1,""),
                             'winner' : None,
                             'history': []},
-                 'Memory': {'name' : "memory",
+                 'memory': {'name' : "memory",
                             'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
                             'shuffled_deck' : [],
                             'hands' : [[],[]],
@@ -198,7 +198,7 @@ class SaveData():
         }
 
     def calc_threes_stats(save):  #Format of previous games = {'winner': None,'history': [],'difficulty' : (-1,""), 'time':0}
-        Game = save.alldata['Games']['Previous_Games']['Threes'][-1]
+        Game = save.alldata['Games']['Previous_Games']['threes'][-1]
         difficulty = Game['difficulty'][1]
         Difficulty_Stats = save.alldata['Games']['Stats']['Threes_Stats'][difficulty]
         All_Stats = save.alldata['Games']['Stats']['Threes_Stats']['General_Stats']
@@ -225,7 +225,7 @@ class SaveData():
         Difficulty_Stats["last_played"] = now
 
     def calc_rummy_stats(save):
-        Game = save.alldata['Games']['Previous_Games']['Rummy'][-1]
+        Game = save.alldata['Games']['Previous_Games']['rummy'][-1]
         difficulty = Game['difficulty'][1]
         Difficulty_Stats = save.alldata['Games']['Stats']['Rummy_Stats'][difficulty]
         All_Stats = save.alldata['Games']['Stats']['Rummy_Stats']['General_Stats']
@@ -246,7 +246,7 @@ class SaveData():
         Difficulty_Stats["last_played"] = now
 
     def calc_memory_stats(save):
-        Game = save.alldata['Games']['Previous_Games']['Memory'][-1]
+        Game = save.alldata['Games']['Previous_Games']['memory'][-1]
         difficulty = Game['difficulty'][1]
         Difficulty_Stats = save.alldata['Games']['Stats']['Memory_Stats'][difficulty]
         All_Stats = save.alldata['Games']['Stats']['Memory_Stats']['General_Stats']
@@ -285,18 +285,18 @@ class SaveData():
         save.alldata['App']['timer'] = app.timer
         save.alldata['App']['score'] = app.score
         save.alldata['App']['unlocked_achievements'] = app.unlocked_achievements
-        if app.previous_games['Threes'] not in save.alldata['Games']['Previous_Games']['Threes'] and save.alldata['Games']['Previous_Games']['Threes']:
-            save.alldata['Games']['Previous_Games']['Threes'].append(app.previous_games['Threes']) 
+        if app.previous_games['threes'] not in save.alldata['Games']['Previous_Games']['threes'] and save.alldata['Games']['Previous_Games']['threes']:
+            save.alldata['Games']['Previous_Games']['threes'].append(app.previous_games['threes']) 
             save.calc_threes_stats()
-        if app.previous_games['Rummy'] not in save.alldata['Games']['Previous_Games']['Rummy'] and save.alldata['Games']['Previous_Games']['Rummy']:
-            save.alldata['Games']['Previous_Games']['Rummy'].append(app.previous_games['Rummy']) 
+        if app.previous_games['rummy'] not in save.alldata['Games']['Previous_Games']['rummy'] and save.alldata['Games']['Previous_Games']['rummy']:
+            save.alldata['Games']['Previous_Games']['rummy'].append(app.previous_games['rummy']) 
             save.calc_rummy_stats()
-        if app.previous_games['Memory'] not in save.alldata['Games']['Previous_Games']['Memory'] and save.alldata['Games']['Previous_Games']['Memory']:
-            save.alldata['Games']['Previous_Games']['Memory'].append(app.previous_games['Memory']) 
+        if app.previous_games['memory'] not in save.alldata['Games']['Previous_Games']['memory'] and save.alldata['Games']['Previous_Games']['memory']:
+            save.alldata['Games']['Previous_Games']['memory'].append(app.previous_games['memory']) 
             save.calc_memory_stats()
-        save.alldata['Games']['Current_Games']['Threes'] = threes.state
-        save.alldata['Games']['Current_Games']['Rummy'] = rummy.state
-        save.alldata['Games']['Current_Games']['Memory'] = memory.state
+        save.alldata['Games']['Current_Games']['threes'] = threes.state
+        save.alldata['Games']['Current_Games']['rummy'] = rummy.state
+        save.alldata['Games']['Current_Games']['memory'] = memory.state
         with open(r"MobilePlayingCardApp\player_data.json", "w") as f:
             json.dump(save.alldata, f, indent=4)
 
@@ -306,11 +306,12 @@ class SaveData():
         return save.alldata
     
     def quick_save(save,app):
-        save.alldata['Games']['Current_Games']['Threes'] = app.threes.state
-        save.alldata['Games']['Current_Games']['Rummy'] = app.rummy.state
-        save.alldata['Games']['Current_Games']['Memory'] = app.memory.state
+        save.alldata['Games']['Current_Games']['threes'] = app.threes.state
+        save.alldata['Games']['Current_Games']['rummy'] = app.rummy.state
+        save.alldata['Games']['Current_Games']['memory'] = app.memory.state
     
     def update(save, app):
+        save.load()
         shop = app.shop
         shop.equipped = save.alldata['Shop']['equipped']
         shop.unlocked_inventory = save.alldata['Shop']['unlocked_inventory']
@@ -321,33 +322,9 @@ class SaveData():
         app.timer = save.alldata['App']['timer']
         app.score = save.alldata['App']['score']
         app.unlocked_achievements = save.alldata['App']['unlocked_achievements']
-        app.threes.state = save.alldata['Games']['Current_Games']['Threes']
-        app.rummy.state = save.alldata['Games']['Current_Games']['Rummy']
-        app.memory.state = save.alldata['Games']['Current_Games']['Memory']
+        app.threes.state = save.alldata['Games']['Current_Games']['threes']
+        app.rummy.state = save.alldata['Games']['Current_Games']['rummy']
+        app.memory.state = save.alldata['Games']['Current_Games']['memory']
 
-    def test_all_stats(save):
-        print("\n===== TESTING ALL STAT FUNCTIONS =====\n")
-        fake_threes_game = {'winner': 0,'history': [(0,"3D","play"),(1,"7H","pickup"),(0,"3H","play")],'difficulty': (0,"Beginner"),'time': 42}
-        save.alldata['Games']['Previous_Games']['Threes'].append(fake_threes_game)
-        print("Running calc_threes_stats() ...")
-        save.calc_threes_stats()
-        print("Threes General Stats:", save.alldata['Games']['Stats']['Threes_Stats']['General_Stats'])
-        print("Threes Beginner Stats:", save.alldata['Games']['Stats']['Threes_Stats']['Beginner'])
-        print()
-        fake_rummy_game = {'winner': 0,'history': [("Play","AD"),("Pickup","3H"),("Play","7C")],'difficulty': (0,"Easy"),'time': 55}
-        save.alldata['Games']['Previous_Games']['Rummy'].append(fake_rummy_game)
-        print("Running calc_rummy_stats() ...")
-        save.calc_rummy_stats()
-        print("Rummy General Stats:", save.alldata['Games']['Stats']['Rummy_Stats']['General_Stats'])
-        print("Rummy Easy Stats:", save.alldata['Games']['Stats']['Rummy_Stats']['Easy'])
-        print()
-        fake_memory_game = {'winner': 0,'history': [("Matched", 0, ("5H","5H")),("Matched", 0, ("7C","7C")),("Flip",1,"2D")],'difficulty': (0,"Normal"),'time': 33}
-        save.alldata['Games']['Previous_Games']['Memory'].append(fake_memory_game)
-        print("Running calc_memory_stats() ...")
-        save.calc_memory_stats()
-        print("Memory General Stats:", save.alldata['Games']['Stats']['Memory_Stats']['General_Stats'])
-        print("Memory Normal Stats:", save.alldata['Games']['Stats']['Memory_Stats']['Normal'])
-        print()
-        print("===== TEST COMPLETE =====\n")
 
 

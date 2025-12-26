@@ -27,10 +27,16 @@ class Game:
     def unlocked_achievements(game,app,savedata):
         unlocked = []
         for id, name, desc, condition in app.all_achievements:
-            if id not in app.unlocked_achievements[id][0] and condition(savedata) == True:
-                unlocked.append((id, name, desc, condition))
-                app.unlocked_achievements.append((id, name, desc, condition))
-        return unlocked
+            if app.unlocked_achievements:
+                if id not in app.unlocked_achievements[id][0] and condition(savedata) == True:
+                    unlocked.append((id, name, desc, condition))
+                    app.unlocked_achievements.append((id, name, desc, condition))
+                return unlocked
+            else:
+                if condition(savedata) == True:
+                    unlocked.append((id, name, desc, condition))
+                    app.unlocked_achievements.append((id, name, desc, condition))
+                return unlocked
 
     def display_achievements(game,achievement):
         Dialog = Achievement_Dialog(achievement)
@@ -38,6 +44,7 @@ class Game:
         Clock.schedule_once(lambda dt: Dialog.dismiss(), 5)
     
     def get_reward(game,shop,app,savedata):
+        amount_earned = 0
         shop.coin_count += (game.difficulty[0]*5)
         amount_earned += game.difficulty[0]*5
         Unlocked_achievement = game.unlocked_achievements(app,savedata)
@@ -71,7 +78,7 @@ class Game:
         Dialog = Reward_Dialog(reward,app)
         Clock.schedule_once(lambda dt: Dialog.open(), reward[2]) 
 
-class Threes(Game):
+class threes(Game):
     def __init__(threes, name, rank_order, state):
         super().__init__(name, rank_order, state)
         threes.bottom_hands = [[],[]]
@@ -149,7 +156,7 @@ class Threes(Game):
 
     def next_vaild_player(threes,player,savedata):
         if threes.is_game_over():
-            threes.end_game(savedata)
+            return None
         else:
             if threes.another == True:
                 threes.another = False
@@ -163,7 +170,7 @@ class Threes(Game):
         player = move[0]
         if not move:
             if threes.is_game_over():
-                threes.end_game()
+                #threes.end_game()
                 return
             else:
                 threes.turn = threes.next_vaild_player(threes.turn, 'savedata')
@@ -206,7 +213,7 @@ class Threes(Game):
                         threes.played_cards.append(card)
                         played_now.append(card)
                 if len(played_now) > 1:
-                    state['history'][-1] = (player,played_now,'play')
+                    threes.state['history'][-1] = (player,played_now,'play')
             four = False
             if len(threes.played_cards) > 3:
                 for i in range(1,5):
@@ -308,7 +315,7 @@ state = {'name' : "threes",
         'history': []}
 
 '''
-threes_game = Threes("threes",rank_order,state)
+threes_game = threes("threes",rank_order,state)
 counts = 0
 for _ in range(3):
     threes_game.test_run()
@@ -323,10 +330,10 @@ for _ in range(3):
     threes_game.history = []
     threes_game.state = state
 
-print(f"Threes AI wins {counts*33}%")
+print(f"threes AI wins {counts*33}%")
 '''
 
-class Rummy(Game):
+class rummy(Game):
     def __init__(rummy, name, rank_order, state):
         super().__init__(name, rank_order, state)
         rummy.value_map = rank_order
@@ -550,11 +557,11 @@ state = {'name' : "rummy",
         'winner' : None,
         'history': []}
 
-#rummy = Rummy("rummy",{'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 2},state)
+#rummy = rummy("rummy",{'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 2},state)
 
 #rummy.test_run()
 
-class Memory(Game):
+class memory(Game):
     def __init__(memory, name, rank_order, state):
         super().__init__(name, rank_order, state)
         memory.state = state
@@ -710,7 +717,7 @@ state = {'name' : "memory",
         'winner' : None,
         'history': []}
 
-memory = Memory('memory','rank',state)
+memory = memory('memory','rank',state)
 counts = 0
 for _ in range(5):
     counts += memory.test_run()
@@ -723,3 +730,4 @@ for _ in range(5):
 print(f"Wins {counts*20}%")
 
 '''
+

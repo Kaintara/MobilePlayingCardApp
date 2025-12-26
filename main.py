@@ -14,15 +14,15 @@ class MobilePlayingCardApp(MDApp):
         self.timer = True
         self.score = True
         self.all_achievements = [
-            (0,'The memory of a goldfish','Play your first game of Memory',lambda save : save.alldata['Games']['Stats']['Memory_Stats']['General_Stats']["games_played"] >= 1),
-            (1,'Only Three?','Play your first game of Threes',lambda save : save.alldata['Games']['Stats']['Threes_Stats']['General_Stats']["games_played"] >= 1),
-            (2,'Four and Three!','Play your first game of Rummy',lambda save : save.alldata['Games']['Stats']['Rummy_Stats']['General_Stats']["games_played"] >= 1),
-            (3,'Better Luck Next Time!','Lose your first game of Rummy',lambda save : save.alldata['Games']["Previous_Games"]['Rummy'][-1]['winner'] == 1),
-            (4,'If only you had a ten, huh?','Lose your first game of Threes',lambda save : save.alldata['Games']["Previous_Games"]['Threes'][-1]['winner'] == 1),
-            (5,'FUMBLED!','Lose your first game of Memory',lambda save : save.alldata['Games']["Previous_Games"]['Memory'][-1]['winner'] == 1),
-            (6,'Poker Player','Win your first game of Rummy',lambda save : save.alldata['Games']["Previous_Games"]['Rummy'][-1]['winner'] == 0),
-            (7,'Uno Player','Win your first game of Three',lambda save : save.alldata['Games']["Previous_Games"]['Threes'][-1]['winner'] == 0),
-            (8,'The memory of an elephant','Win your first game of Memory',lambda save : save.alldata['Games']["Previous_Games"]['Memory'][-1]['winner'] == 0),
+            (0,'The memory of a goldfish','Play your first game of memory',lambda save : save.alldata['Games']['Stats']['memory_Stats']['General_Stats']["games_played"] >= 1),
+            (1,'Only Three?','Play your first game of threes',lambda save : save.alldata['Games']['Stats']['threes_Stats']['General_Stats']["games_played"] >= 1),
+            (2,'Four and Three!','Play your first game of rummy',lambda save : save.alldata['Games']['Stats']['rummy_Stats']['General_Stats']["games_played"] >= 1),
+            (3,'Better Luck Next Time!','Lose your first game of rummy',lambda save : save.alldata['Games']["Previous_Games"]['rummy'][-1]['winner'] == 1),
+            (4,'If only you had a ten, huh?','Lose your first game of threes',lambda save : save.alldata['Games']["Previous_Games"]['threes'][-1]['winner'] == 1),
+            (5,'FUMBLED!','Lose your first game of memory',lambda save : save.alldata['Games']["Previous_Games"]['memory'][-1]['winner'] == 1),
+            (6,'Poker Player','Win your first game of rummy',lambda save : save.alldata['Games']["Previous_Games"]['rummy'][-1]['winner'] == 0),
+            (7,'Uno Player','Win your first game of Three',lambda save : save.alldata['Games']["Previous_Games"]['threes'][-1]['winner'] == 0),
+            (8,'The memory of an elephant','Win your first game of memory',lambda save : save.alldata['Games']["Previous_Games"]['memory'][-1]['winner'] == 0),
         ]
         self.unlocked_achievements = []
         self.previous_games = {
@@ -105,12 +105,12 @@ class MobilePlayingCardApp(MDApp):
     
     def resume_game_check(self):
         savedata = self.save.load()
-        G1 = savedata['Games']['Current_Games']['Threes']
-        G2 = savedata['Games']['Current_Games']['Rummy']
-        G3 = savedata['Games']['Current_Games']['Memory']
-        self.threes = Threes('threes',G1['rank_order'],G1)
-        self.rummy = Rummy('rummy',G2['value_map'],G2)
-        self.memory = Memory('memory',G1['rank_order'],G3)
+        G1 = savedata['Games']['Current_Games']['threes']
+        G2 = savedata['Games']['Current_Games']['rummy']
+        G3 = savedata['Games']['Current_Games']['memory']
+        self.threes = threes('threes',G1['rank_order'],G1)
+        self.rummy = rummy('rummy',G2['value_map'],G2)
+        self.memory = memory('memory',G1['rank_order'],G3)
         self.save.update(self)
         Games = [G1,G2,G3]
         for x in Games:
@@ -153,7 +153,6 @@ class MobilePlayingCardApp(MDApp):
     def set_up_shop(self):
         self.shop.filling_shop_inventory(self)
         Grid = self.get_widget("grid",'MDShop')
-        Grid.add_widget(Playing_Card('AH'))
         print("outputted card")
 
     def s_to_mmss(self,total_seconds):
@@ -181,7 +180,7 @@ class MobilePlayingCardApp(MDApp):
         deck = self.get_widget('deck', 'MDThrees')
         deck.clear_widgets()
         if self.threes.played_cards:
-            deck.add_widget(Display_Card(self.threes.played_cards[-1],'front'))
+            deck.add_widget(Playing_Card(self.threes.played_cards[-1],'threes','front'))
         if self.threes.shuffled_deck:
             card = Display_Card(self.threes.shuffled_deck[-1],'back')
             card.pos_hint = {"center_x": 1.5, "center_y": 0.5}
@@ -202,12 +201,15 @@ class MobilePlayingCardApp(MDApp):
     def next_turn(self,game):
         self.update_game(game)
         if game == 'threes':
+            self.threes.selected_card = "" 
+            self.threes.update_game_state()
             if self.threes.is_game_over():
                 self.threes.end_game(self)
             else:
                 if self.threes.turn == 1:
                     if self.get_difficulty() == "Beginner":
                         move = m_mtcs(self.threes.state,GameEnvironmentT(),0.15)
+                        print(move)
                         self.threes.apply_move(move)
                         self.threes.update_game_state()
                     elif self.get_difficulty() == "Easy":
@@ -226,12 +228,16 @@ class MobilePlayingCardApp(MDApp):
                         move = m_mtcs(self.threes.state,GameEnvironmentT(),0.5)
                         self.threes.apply_move(move)
                         self.threes.update_game_state()
+                    self.threes.turn = self.threes.next_vaild_player(self.threes.turn,self.save)
                     self.save.quick_save(self)
-                    Clock.schedule_once(self.next_turn, 0.5)
+                    if not self.threes.turn:
+                        self.threes.end_game(self)
+                    else:
+                        Clock.schedule_once(lambda dt: self.next_turn('threes'), 0.5)
 
     def new_game(self,game):
         if game == "threes":
-            self.threes = Threes("threes",rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,
+            self.threes = threes("threes",rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,
 '5': 5,'4': 4,'3': 3,'2': 15},
 state = {'name' : "threes",
         'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
@@ -252,8 +258,9 @@ state = {'name' : "threes",
         'history': []})
             self.threes.shuffle_cards()
             self.threes.distribute_cards()
+            self.threes.update_game_state()
             self.update_game(game)
-            self.threes.turn = 1
+            self.threes.turn = random.randint(0,1)
             self.next_turn(game)
             
     def start_game(self,game):

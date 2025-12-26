@@ -7,7 +7,7 @@ Each state is set up so that:
 """
 
 # ============================================================================
-# MEMORY GAME STATES
+# memory GAME STATES
 # ============================================================================
 
 memory_early_game = {
@@ -158,7 +158,7 @@ memory_end_game = {
 
 
 # ============================================================================
-# RUMMY GAME STATES
+# rummy GAME STATES
 # ============================================================================
 
 rummy_early_game = {
@@ -272,7 +272,7 @@ rummy_end_game = {
 
 
 # ============================================================================
-# THREES GAME STATES
+# threes GAME STATES
 # ============================================================================
 
 threes_early_game = {
@@ -424,3 +424,4 @@ if __name__ == "__main__":
     print("- threes_early_game: Player 1 should play 1D (highest, must beat 2H)")
     print("- threes_mid_game: Player 1 should play 8C (matches 8S in sequence)")
     print("- threes_end_game: Player 1 has 1 card left, should play 6C (matches 6D)")
+

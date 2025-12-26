@@ -50,7 +50,7 @@ def m_mtcs(root_state,game_env,time_limit, debug=False):
     #Determinize
     det_root = game_env.determinization(root_state)
     # Preserve the current player's turn from the root state when determinizing.
-    det_root['turn'] = root_state.get('turn', det_root.get('turn', 1))
+    det_root['turn'] = 1
     root_node = Node(det_root,None,None)
     root_node.untried_moves = game_env.get_vaild_moves(root_node.state)
     time_elapsed = time.time()

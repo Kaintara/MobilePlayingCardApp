@@ -115,10 +115,10 @@ class Achievement_Dialog(MDDialog):
 
 class Reward_Dialog(MDDialog):
     def __init__(self, reward, app,**kwargs):
-        content = MDBoxLayout(orientation="vertical", spacing=dp(8), adaptive_height=True)
+        super().__init__(**kwargs)
         if reward[1] == 0:
-            content.add_widget(MDDialogIcon(icon="crown"))
-            content.add_widget(
+            self.add_widget(MDDialogIcon(icon="crown"))
+            self.add_widget(
                 MDDialogHeadlineText(
                     text="Game Over! You won!",
                     halign="center",
@@ -127,8 +127,8 @@ class Reward_Dialog(MDDialog):
                 )
             )
         else:
-            content.add_widget(MDDialogIcon(icon="check"))
-            content.add_widget(
+            self.add_widget(MDDialogIcon(icon="skull-crossbones-outline"))
+            self.add_widget(
                 MDDialogHeadlineText(
                     text="Game Over! You lost...",
                     halign="center",
@@ -136,7 +136,7 @@ class Reward_Dialog(MDDialog):
                     role="medium",
                 )
             )
-        content.add_widget(
+        self.add_widget(
             MDDialogSupportingText(
                 text=f"You gained {reward[0]} coins for your efforts!",
                 halign="left",
@@ -145,7 +145,7 @@ class Reward_Dialog(MDDialog):
                 font_size=dp(20),
             )
         )
-        content.add_widget(
+        self.add_widget(
             MDDialogButtonContainer(
                 MDButton(
                     MDButtonText(text="Good Game!", font_style="cataway", role="small"),
@@ -156,8 +156,6 @@ class Reward_Dialog(MDDialog):
                 )
             )
         )
-        
-        super().__init__(type="custom", content_cls=content, **kwargs)
         self.auto_dismiss = False
     
     def go_to_menu(self, app, *args):
@@ -208,6 +206,7 @@ class Display_Card(MDCard):
 class Playing_Card(MDCard):
     def __init__(self,suit_rank,game,face,**kwargs):
         super().__init__(**kwargs)
+        self.suit_rank = suit_rank
         self.selected = False
         self.game = game
         self.size_hint = (None,None)
@@ -239,17 +238,26 @@ class Playing_Card(MDCard):
             if self.game == 'threes':
                 game = app.threes
                 if game.turn == 0:
-                    if game.selected_card != self:
-                        if game.selected_card:
-                            game.selected_card.highlight.opacity = 0
-                            game.selected_card = self
-                        else:
-                            game.selected_card = self
-                        self.selected = True
-                        self.highlight.opacity = 1
-                    else:
-                        self.selected = False
-                        self.highlight.opacity = 0
+                    for move in game.get_valid_moves():
+                        for move in game.get_valid_moves():
+                            if self.suit_rank == move[1] or (move[2] == 'pickup' and self.suit_rank == game.played_cards[-1]):
+                                if game.selected_card != self:
+                                    if game.selected_card:
+                                        game.selected_card.highlight.opacity = 0
+                                    game.selected_card = self
+                                    self.selected = True
+                                    self.highlight.opacity = 1
+                                else:
+                                    game.selected_card = ''
+                                    game.turn = game.next_vaild_player(game.turn,app.save)
+                                    if game.turn:
+                                        game.apply_move(move)
+                                        game.update_game_state()
+                                        app.save.quick_save(app)
+                                        Clock.schedule_once(lambda dt: app.next_turn('threes'), 0.5)
+                                    else:
+                                        game.end_game(self)
+                                break   # now break only after we found a matching move
         return super().on_touch_down(touch)
 
 

@@ -10,19 +10,19 @@ class FakeApp:
         self.unlocked_achivements = ["Hello World!"]
 
         self.previous_games = {
-            'Threes': {
+            'threes': {
                 'winner': 0,
                 'history': [(0, "3D", "play")],
                 'difficulty': (0, "Beginner"),
                 'time': 10
             },
-            'Rummy': {
+            'rummy': {
                 'winner': 0,
                 'history': [],
                 'difficulty': (0, "Easy"),
                 'time': 50
             },
-            'Memory': {
+            'memory': {
                 'winner': 1,
                 'history': [],
                 'difficulty': (0, "Normal"),
@@ -45,9 +45,9 @@ def test_savedata():
     Save = SaveData()
     app = FakeApp()
     shop = FakeShop()
-    threes = FakeGameState("Threes")
-    rummy  = FakeGameState("Rummy")
-    memory = FakeGameState("Memory")
+    threes = FakeGameState("threes")
+    rummy  = FakeGameState("rummy")
+    memory = FakeGameState("memory")
     Save.savedata(app, threes, rummy, memory, shop)
     print("\n===== SHOP DATA =====")
     print(Save.alldata['Shop'])
@@ -100,3 +100,4 @@ test_savedata()
         else:
             return len(Temp_hand)
     '''
+
