@@ -52,6 +52,9 @@ class Stats(MDScreen):
 class Settings(MDScreen):
     pass
 
+class Pause(MDScreen):
+    pass
+
 class Shop_Dialog(MDDialog):
     def __init__(self, themecost, coins, **kwargs):
         super().__init__(**kwargs)
@@ -161,6 +164,47 @@ class Reward_Dialog(MDDialog):
         self.dismiss()
         app.root.current = "Menu"
 
+class HandLayout(MDBoxLayout):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.bind(width=self.update_spacing, children=self.update_spacing)
+
+    def update_spacing(self, *args):
+        n = len(self.children)
+        if n <= 1:
+            self.spacing = 0
+        else:
+            required = n * dp(64)
+            avail = self.width
+            desired = (avail - required) / (n - 1)
+            max_overlap = -dp(64) * 0.75   
+            max_spread = dp(64) * 0.5 
+            if desired < max_overlap:
+                desired = max_overlap
+            elif desired > max_spread:
+                desired = max_spread
+            self.spacing = desired
+
+class Display_Card(MDCard):
+    def __init__(self, suit_rank,face,*args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.size_hint = (None,None)
+        self.size = ("64dp", "89dp")
+        self.pos_hint = {"center_x": 0.5, "center_y": 0.5}
+        app = MDApp.get_running_app()
+        theme = None
+        theme = app.shop.get_theme(app.shop.equipped)
+        if face == 'front':
+            img_src = theme.asset_dict[suit_rank]
+        else:
+            img_src = theme.back_img
+        img = Image(source=img_src)    
+        self.layout = RelativeLayout(
+            size = ("64dp", "89dp")
+        )
+        self.layout.add_widget(img)
+        self.add_widget(self.layout)
+
 class Playing_Card(MDCard):
     def __init__(self,suit_rank,**kwargs):
         super().__init__(**kwargs)
@@ -170,26 +214,17 @@ class Playing_Card(MDCard):
         app = MDApp.get_running_app()
         theme = None
         theme = app.shop.get_theme(app.shop.equipped)
-        print("Works!")
-        if app.shop.inventory:
-            theme = app.shop.inventory[0]
-            print(theme)
-        # pick asset, fallback to a generic placeholder if missing
-        if theme and getattr(theme, "asset_dict", None) and suit_rank in theme.asset_dict:
-            img_src = theme.asset_dict[suit_rank]
-        else:
-            img_src = "assets/img/theme1/2_of_clubs.png"  # add a small placeholder image in assets
+        img_src = theme.asset_dict[suit_rank]
         img = Image(source=img_src)
         self.layout = RelativeLayout(
             size = ("64dp", "89dp")
         )
-        #self.highlight = Image(
-            #source='glow.png',
-            #size_hint=(1.2,1.2),
-            #opacity=0,
-            #pos_hint={"center_x": 0.5, "center_y": 0.5}
-       # )
-       # self.layout.add_widget(self.highlight)
+        self.highlight = Image(
+            source='MobilePlayingCardApp/assets/img/glow.png',
+            size_hint=(1.2,1.2),
+            opacity=0,
+            pos_hint={"center_x": 0.5, "center_y": 0.5})
+        self.layout.add_widget(self.highlight)
         self.layout.add_widget(img)
         self.add_widget(self.layout)
 
@@ -240,7 +275,6 @@ class Shop_Button(MDButton):
             else:
                 app.shop.equip_theme(self.theme_name)
         return super().on_touch_down(touch)
-
 
 class Shop_Card(MDCard):
     def __init__(self, theme_name, **kwargs):

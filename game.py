@@ -1,6 +1,6 @@
 import random
-#from ui import Achievement_Dialog, Reward_Dialog
-#from kivy.clock import Clock
+from ui import Achievement_Dialog, Reward_Dialog
+from kivy.clock import Clock
 from threesMTCS import genv
 from treesearch import mtcs
 
@@ -25,7 +25,6 @@ class Game:
         game.shuffled_deck = shuffled_deck
 
     def unlocked_achievements(game,app,savedata):
-        return
         unlocked = []
         for id, name, desc, condition in app.all_achievements:
             if id not in app.unlocked_achievements[id][0] and condition(savedata) == True:
@@ -34,13 +33,11 @@ class Game:
         return unlocked
 
     def display_achievements(game,achievement):
-        return
         Dialog = Achievement_Dialog(achievement)
         Dialog.open()
         Clock.schedule_once(lambda dt: Dialog.dismiss(), 5)
     
     def get_reward(game,shop,app,savedata):
-        return
         shop.coin_count += (game.difficulty[0]*5)
         amount_earned += game.difficulty[0]*5
         Unlocked_achievement = game.unlocked_achievements(app,savedata)
@@ -61,7 +58,6 @@ class Game:
         return (amount_earned, game.winner, total_delay)
     
     def end_game(game, app):
-        return
         completed_game = {
             'winner': game.winner,
             'history': game.state['history'],
