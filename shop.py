@@ -1,4 +1,4 @@
-from ui import Shop_Dialog
+from ui import Shop_Dialog, Shop_Card
 
 class Theme:
     def __init__(theme,name,cost,front,back,dictionary):
@@ -167,13 +167,11 @@ class Shop:
 
     def filling_shop_inventory(shop,app):
         grid = app.get_widget("grid","MDShop")
-        #for colour in self.colours:
-            #int = random.randint(0,3)
-            #card = Theme_Playing_Card(self.suits[int])
-            #card.colour = colour
-            #card.change_colour()
-            #grid.add_widget(card)
+        for theme_ in shop.inventory:
+            display = Shop_Card(theme_)
+            grid.add_widget(display)
 
+'''
 ShopTest = Shop()
 ShopTest.set_all_themes()
 print(ShopTest.inventory[0].name,ShopTest.inventory[1].name)
@@ -183,3 +181,4 @@ ShopTest.equipped = 'Blue_Classic'
 ShopTest.equip_theme('Classic')
 print(ShopTest.equipped)
 print(ShopTest.get_theme('Classic').cost)
+'''

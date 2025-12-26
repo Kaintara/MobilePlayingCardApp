@@ -284,18 +284,18 @@ state = rummy_mid_game = {
         (0,'4C','draw'),
     ]
 }
-print(genv.determinization(state))
-print(genv.get_reward(genv.determinization(state)))
+#print(genv.determinization(state))
+#print(genv.get_reward(genv.determinization(state)))
 
-print(mtcs(state,genv,0.5))
-print(genv.rollout_policy(genv.get_vaild_moves(state),state))
+#print(mtcs(state,genv,0.5))
+#print(genv.rollout_policy(genv.get_vaild_moves(state),state))
 
-lst = []
-for _ in range(100):
-    choice = mtcs(state,genv,0.2,True)
-    lst.append(choice)
-    print(choice)
+#lst = []
+#for _ in range(100):
+    #choice = mtcs(state,genv,0.2,True)
+    #lst.append(choice)
+    #print(choice)
 
-counts = lst.count((1, '9H', 'discard'))
-counts2 = lst.count((1, '3H', 'discard'))
-print(f'Picks Best Move: {counts+counts2}%')
+#counts = lst.count((1, '9H', 'discard'))
+#counts2 = lst.count((1, '3H', 'discard'))
+#print(f'Picks Best Move: {counts+counts2}%')

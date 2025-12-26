@@ -160,21 +160,17 @@ class Playing_Card(MDCard):
         self.size = ("64dp", "89dp")
         self.pos_hint = {"center_x": 0.5, "center_y": 0.5}
         app = MDApp.get_running_app()
-        # defensive: app.shop or equipped theme may be None during startup
         theme = None
-        if getattr(app, "shop", None):
-            try:
-                theme = app.shop.get_theme(app.shop.equipped)
-            except Exception:
-                theme = None
-        # fallback to first available theme
-        if theme is None and getattr(app, "shop", None) and app.shop.inventory:
+        theme = app.shop.get_theme(app.shop.equipped)
+        print("Works!")
+        if app.shop.inventory:
             theme = app.shop.inventory[0]
+            print(theme)
         # pick asset, fallback to a generic placeholder if missing
         if theme and getattr(theme, "asset_dict", None) and suit_rank in theme.asset_dict:
             img_src = theme.asset_dict[suit_rank]
         else:
-            img_src = "assets/img/default_card.png"  # add a small placeholder image in assets
+            img_src = "assets/img/theme1/2_of_clubs.png"  # add a small placeholder image in assets
         img = Image(source=img_src)
         self.layout = RelativeLayout(
             size = ("64dp", "89dp")
@@ -187,4 +183,37 @@ class Playing_Card(MDCard):
        # )
        # self.layout.add_widget(self.highlight)
         self.layout.add_widget(img)
+        self.add_widget(self.layout)
+
+class Shop_Button(MDButton):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.size = ("94dp","30dp")
+        self.style = "tonal"
+        self.pos_hint = {"center_x": 0.5, "center_y": 0.5}
+        self.icon = "lock"       
+        text = MDButtonText(text = "Threes",
+                    font_style = "cataway",
+                    role = "small")
+        self.add_widget(text)
+
+class Shop_Card(MDCard):
+    def __init__(self,theme_name,**kwargs):
+        super().__init__(**kwargs)
+        self.size_hint = (None,None)
+        self.adaptive_size = True
+        self.pos_hint = {"center_x": 0.5, "center_y": 0.5}
+        app = MDApp.get_running_app()
+        img_src = theme_name.asset_dict["KH"]
+        img = Image(source=img_src)
+        self.container = RelativeLayout(
+            size = ("64dp", "89dp"))
+        self.layout = MDBoxLayout(orientation = 'vertical',
+            pos_hint = {'center_x': .5, 'center_y': .5},
+            adaptive_size = True,
+            spacing= dp(20))
+        button = Shop_Button()
+        self.container.add_widget(img)
+        self.layout.add_widget(self.container)
+        self.layout.add_widget(button)
         self.add_widget(self.layout)

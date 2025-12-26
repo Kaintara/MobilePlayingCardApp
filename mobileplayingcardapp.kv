@@ -29,6 +29,7 @@
                 pos_hint: {"center_x": 0.5}
                 on_release: 
                     app.sm_stacky("Menu")
+                    app.set_up_shop()
                     root.manager.current = "MDShop"
                 MDButtonText:
                     text: "Shop"
@@ -296,18 +297,18 @@
             pos_hint: {"center_x":0.5, "top":0.7}
             MDLabel:
                 text: "Shop"
-                width: self.parent.width
+                width: self.parent.width*0.3
                 height: self.parent.height*0.3
                 font_style: "cataway"
                 role: "large"
-                pos_hint: {"center_x":0.6, "center_y": 0.5}
-            MDButtonIcon:
+                pos_hint: {"center_x":0.6, "center_y": 1}
+            MDIconButton:
                 icon: "cart-outline"
                 size_hint_y: None
                 height: dp(50)
                 theme_font_size: "Custom"
                 font_size: "50sp"
-                pos_hint: {"center_x": 0.3, "center_y": 0.5}
+                pos_hint: {"center_x": 0.3, "center_y": 1}
         MDScrollView: #Themes
             do_scroll_x: False
             do_scroll_y: True
@@ -522,6 +523,7 @@
                 icon: "cart-outline"
                 on_release: 
                     app.sm_stacky("Settings")
+                    app.set_up_shop()
                     root.manager.current = "MDShop"
             MDIconButton: #Go to how to play
                 style: "tonal"

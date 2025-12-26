@@ -311,6 +311,7 @@ state = {'name' : "threes",
         'played_cards' : [],
         'history': []}
 
+'''
 threes_game = Threes("threes",rank_order,state)
 counts = 0
 for _ in range(3):
@@ -327,7 +328,7 @@ for _ in range(3):
     threes_game.state = state
 
 print(f"Threes AI wins {counts*33}%")
-
+'''
 
 class Rummy(Game):
     def __init__(rummy, name, rank_order, state):

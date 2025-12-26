@@ -30,6 +30,7 @@ class MobilePlayingCardApp(MDApp):
         }
         AppShop = Shop()
         self.shop = AppShop
+        self.shop.set_all_themes()
         AppSave = SaveData()
         self.save = AppSave
         self.threes = None
@@ -130,10 +131,13 @@ class MobilePlayingCardApp(MDApp):
         Carou.load_next()
 
     def on_start(self):
+        pass
+
+    def set_up_shop(self):
         self.shop.filling_shop_inventory(self)
-        Gird = self.get_widget("grid",'MDShop')
-        Gird.add_widget(Playing_Card('AH'))
-        return super().on_start()
+        Grid = self.get_widget("grid",'MDShop')
+        Grid.add_widget(Playing_Card('AH'))
+        print("outputted card")
 
 if __name__ == "__main__":
     MobilePlayingCardApp().run()
