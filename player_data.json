@@ -4,7 +4,7 @@
         "unlocked_inventory": [
             "Classic"
         ],
-        "coin_count": 30
+        "coin_count": 40
     },
     "App": {
         "sm_stack": [
@@ -211,40 +211,7 @@
                     "QH",
                     "KH"
                 ],
-                "shuffled_deck": [
-                    "KH",
-                    "8D",
-                    "QD",
-                    "5H",
-                    "1D",
-                    "2H",
-                    "JH",
-                    "5S",
-                    "1C",
-                    "AC",
-                    "2S",
-                    "4H",
-                    "4C",
-                    "1H",
-                    "8H",
-                    "9H",
-                    "AH",
-                    "5C",
-                    "1S",
-                    "3D",
-                    "KC",
-                    "5D",
-                    "QC",
-                    "6S",
-                    "AD",
-                    "7H",
-                    "6C",
-                    "JS",
-                    "9C",
-                    "JD",
-                    "AS",
-                    "9S"
-                ],
+                "shuffled_deck": [],
                 "rank_order": {
                     "A": 14,
                     "K": 13,
@@ -261,67 +228,29 @@
                     "2": 15
                 },
                 "hands": [
-                    [
-                        "3S",
-                        "2D",
-                        "7C"
-                    ],
-                    [
-                        "7S",
-                        "7D",
-                        "6D"
-                    ]
+                    [],
+                    []
                 ],
                 "discard_pile": [],
                 "selected_card": "",
-                "turn": 1,
+                "turn": 0,
                 "time_elapsed": 0,
                 "difficulty": [
-                    0,
-                    "Easy"
+                    -1,
+                    ""
                 ],
                 "winner": null,
                 "bottom_hands": [
-                    [
-                        "9D",
-                        "3C",
-                        "KD"
-                    ],
-                    [
-                        "6H",
-                        "QH",
-                        "8S"
-                    ]
+                    [],
+                    []
                 ],
                 "top_hands": [
-                    [
-                        "3H",
-                        "JC",
-                        "8C"
-                    ],
-                    [
-                        "QS",
-                        "KS",
-                        "4D"
-                    ]
+                    [],
+                    []
                 ],
                 "another": false,
-                "played_cards": [
-                    "4S",
-                    "2C"
-                ],
-                "history": [
-                    [
-                        0,
-                        "4S",
-                        "play"
-                    ],
-                    [
-                        1,
-                        "2C",
-                        "play"
-                    ]
-                ]
+                "played_cards": [],
+                "history": []
             },
             "rummy": {
                 "name": "rummy",

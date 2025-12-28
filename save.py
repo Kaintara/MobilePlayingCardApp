@@ -287,6 +287,7 @@ class SaveData():
         save.alldata['App']['unlocked_achievements'] = app.unlocked_achievements
         if app.previous_games['threes'] not in save.alldata['Games']['Previous_Games']['threes'] and save.alldata['Games']['Previous_Games']['threes']:
             save.alldata['Games']['Previous_Games']['threes'].append(app.previous_games['threes']) 
+            print(save.alldata['Games']['Previous_Games']['threes'])
             save.calc_threes_stats()
         if app.previous_games['rummy'] not in save.alldata['Games']['Previous_Games']['rummy'] and save.alldata['Games']['Previous_Games']['rummy']:
             save.alldata['Games']['Previous_Games']['rummy'].append(app.previous_games['rummy']) 

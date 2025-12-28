@@ -65,6 +65,7 @@ class Game:
         return (amount_earned, game.winner, total_delay)
     
     def end_game(game, app):
+        print("Game Over!")
         completed_game = {
             'winner': game.winner,
             'history': game.state['history'],
@@ -73,6 +74,66 @@ class Game:
         }
         app.previous_games[game.name].append(completed_game)
         app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
+        for _ in range(3):
+            app.threes.shuffled_deck = []
+            app.threes.hands = [[],[]]
+            app.threes.bottom_hands = [[],[]]
+            app.threes.top_hands = [[],[]]
+            app.threes.turn = 0
+            app.threes.winner = None
+            app.threes.state = {"name" : "threes",
+                            "deck" : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
+                            "shuffled_deck" : [],
+                            "rank_order" : {"A": 14,"K": 13,"Q": 12,"J": 11,"1": 16,"9": 9,"8": 8,"7": 7,"6": 6,"5": 5,"4": 4,"3": 3,"2": 15},
+                            "hands" : [[],[]],
+                            "discard_pile" : [],
+                            "selected_card" : "",
+                            "turn" : 0,
+                            "time_elapsed" : 0,
+                            "difficulty" : [-1,""],
+                            "winner" : None,
+                            "bottom_hands" : [[],[]],
+                            "top_hands" : [[],[]],
+                            "another" : False,
+                            "played_cards" : [],
+                            "history": []}
+            app.threes.discard_pile = []
+            app.threes.played_cards = []
+            app.rummy.shuffled_deck = []
+            app.rummy.hands = [[],[]]
+            app.rummy.turn = 0
+            app.rummy.winner = None
+            app.rummy.state = {"name" : "rummy",
+                            "deck" : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
+                            "shuffled_deck" : [],
+                            "value_map" : {"A": 1,"K": 13,"Q": 12,"J": 11,"1": 10,"9": 9,"8": 8,"7": 7,"6": 6,"5": 5,"4": 4,"3": 3,"2": 2},
+                            "hands" : [[],[]],
+                            "discard_pile" : [],
+                            "selected_card" : "",
+                            "turn" : 0,
+                            "time_elapsed" : 0,
+                            "difficulty" : [-1,""],
+                            "winner" : None,
+                            "history": []}
+            app.rummy.discard_pile = []
+            app.memory.shuffled_deck = []
+            app.memory.hands = [[],[]]
+            app.memory.turn = 0
+            app.memory.winner = None
+            app.memory.state = {"name" : "memory",
+                            "deck" : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
+                            "shuffled_deck" : [],
+                            "hands" : [[],[]],
+                            "first_selected_card" : ["y","x","card"],
+                            "second_selected_card" : ["y","x","card"],
+                            "selected_first_card" : False,
+                            "card_array" : [["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""]],
+                            "turn" : 0,
+                            "time_elapsed" : 0,
+                            "difficulty" : [-1,""],
+                            "winner" : None,
+                            "history": []}
+            app.memory.card_array = [["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""]]
         reward = game.get_reward(app.shop,app,app.save)
         app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
         Dialog = Reward_Dialog(reward,app)

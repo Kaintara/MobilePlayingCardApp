@@ -108,9 +108,9 @@ class MobilePlayingCardApp(MDApp):
         G1 = savedata['Games']['Current_Games']['threes']
         G2 = savedata['Games']['Current_Games']['rummy']
         G3 = savedata['Games']['Current_Games']['memory']
-        self.threes = threes('threes',G1['rank_order'],G1)
+        self.threes = threes('threes',G1["rank_order"],G1)
         self.rummy = rummy('rummy',G2['value_map'],G2)
-        self.memory = memory('memory',G1['rank_order'],G3)
+        self.memory = memory('memory',G1["rank_order"],G3)
         self.save.update(self)
         Games = [G1,G2,G3]
         for x in Games:
@@ -203,6 +203,7 @@ class MobilePlayingCardApp(MDApp):
         if game == 'threes':
             self.threes.selected_card = "" 
             self.threes.update_game_state()
+            print(self.threes.is_game_over())
             if self.threes.is_game_over():
                 self.threes.end_game(self)
             else:
@@ -229,6 +230,7 @@ class MobilePlayingCardApp(MDApp):
                         self.threes.apply_move(move)
                         self.threes.update_game_state()
                     self.threes.turn = self.threes.next_vaild_player(self.threes.turn,self.save)
+                    print(self.threes.turn)
                     self.save.quick_save(self)
                     if not self.threes.turn:
                         self.threes.end_game(self)
