@@ -220,6 +220,27 @@ class MobilePlayingCardApp(MDApp):
             for i in range(len(self.rummy.hands[0])):
                 hand = self.get_widget(f'hand{i + 1}', 'MDRummy')
                 hand.add_widget(Playing_Card(self.rummy.hands[0][i], 'rummy','front'))
+        elif game == "memory":
+            timer = self.get_widget('timer','MDMemory')
+            timer.text = self.s_to_mmss(self.memory.time_elapsed)
+            hand = self.get_widget('hand', 'MDMemory')
+            hand.clear_widgets()
+            for card in self.memory.hands[0]:
+                hand.add_widget(Display_Card(card,'front'))
+            Ai_hand = self.get_widget('ai_hand', 'MDMemory')
+            Ai_hand.clear_widgets()
+            for card in self.memory.hands[1]:
+                Ai_hand.add_widget(Display_Card(card,'front'))
+            for y in range(9):
+                for x in range(6):
+                    if self.memory.card_array[y][x] == '':
+                        continue
+                    else:
+                        hand = self.get_widget(f'hand{y}{x}', 'MDMemory')
+                        if (self.memory.first_selected_card[0] == y and self.memory.first_selected_card[1] == x) or (self.memory.second_selected_card[0] == y and self.memory.second_selected_card[1] == x):
+                            hand.add_widget(Playing_Card(self.memory.card_array[y][x], 'memory', 'front', y, x))
+                        else:
+                            hand.add_widget(Playing_Card(self.memory.card_array[y][x],'memory','back'))
 
     def next_turn(self,game):
         self.update_game(game)
@@ -376,6 +397,12 @@ state = {'name' : "threes",
             self.update_game(game)
             if self.rummy.turn == 1:
                 Clock.schedule_once(lambda dt: self.next_turn('rummy'), 0.5)
+        elif game == "memory":
+            if self.memory.is_game_over():
+                self.memory.end_game(self)
+            self.update_game(game)
+            if self.memory.turn == 1:
+                Clock.schedule_once(lambda dt: self.next_turn('memory'), 0.5)
             
     def start_game(self,game):
         self.save.update(self)
@@ -385,7 +412,6 @@ state = {'name' : "threes",
         elif game == "threes":
             self.new_game("threes")
         elif game == "rummy":
-            print(game)
             self.new_game("rummy")
         elif game == "memory":
             self.new_game("memory")

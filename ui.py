@@ -283,8 +283,7 @@ class Playing_Card(MDCard):
                                     game.end_game(app)
                             break
         return super().on_touch_down(touch)
-                                         
-
+    
 
 class Shop_Button(MDButton):
     def __init__(self, theme_obj, equipped=False, unlocked=False,**kwargs):

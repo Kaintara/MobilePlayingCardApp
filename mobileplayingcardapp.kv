@@ -307,14 +307,14 @@
             font_style: "cataway"
             role: "large"
             halign: "center"
-            pos_hint: {"center_y":0.9, "center_x":0.5}
+            pos_hint: {"center_y":0.95, "center_x":0.5}
             adaptive_height: True
         
         MDBoxLayout:
             orientation: "horizontal"
             id: botview
             adaptive_height: True
-            pos_hint: {"center_x": 0.5,"center_y":0.8}
+            pos_hint: {"center_x": 0.7,"center_y":0.95}
             size_hint_x: 1
             size_hint_y: 0.2
             HandLayout:
@@ -323,24 +323,292 @@
                 pos_hint: {"center_x": 0.5,"center_y":0.5}
                 width: (self.parent.width - dp(100))
 
+                # COLUMN 0
         MDRelativeLayout:
             adaptive_size: True
-            id: hand1
-            pos_hint: {"center_y":0.7, "center_x":0.4}
+            id: hand00
+            pos_hint: {"center_y": 0.9, "center_x": 1/6 - 1/12}
+
         MDRelativeLayout:
             adaptive_size: True
-            id: hand2
-            pos_hint: {"center_y":0.7, "center_x":0.5}
+            id: hand10
+            pos_hint: {"center_y": 0.8, "center_x": 1/6 - 1/12}
+
         MDRelativeLayout:
             adaptive_size: True
-            id: hand3
-            pos_hint: {"center_y":0.7, "center_x":0.6}
+            id: hand20
+            pos_hint: {"center_y": 0.7, "center_x": 1/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand30
+            pos_hint: {"center_y": 0.6, "center_x": 1/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand40
+            pos_hint: {"center_y": 0.5, "center_x": 1/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand50
+            pos_hint: {"center_y": 0.4, "center_x": 1/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand60
+            pos_hint: {"center_y": 0.3, "center_x": 1/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand70
+            pos_hint: {"center_y": 0.2, "center_x": 1/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand80
+            pos_hint: {"center_y": 0.1, "center_x": 1/6 - 1/12}
+
+
+        # COLUMN 1
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand01
+            pos_hint: {"center_y": 0.9, "center_x": 2/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand11
+            pos_hint: {"center_y": 0.8, "center_x": 2/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand21
+            pos_hint: {"center_y": 0.7, "center_x": 2/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand31
+            pos_hint: {"center_y": 0.6, "center_x": 2/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand41
+            pos_hint: {"center_y": 0.5, "center_x": 2/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand51
+            pos_hint: {"center_y": 0.4, "center_x": 2/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand61
+            pos_hint: {"center_y": 0.3, "center_x": 2/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand71
+            pos_hint: {"center_y": 0.2, "center_x": 2/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand81
+            pos_hint: {"center_y": 0.1, "center_x": 2/6 - 1/12}
+
+
+        # COLUMN 2
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand02
+            pos_hint: {"center_y": 0.9, "center_x": 3/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand12
+            pos_hint: {"center_y": 0.8, "center_x": 3/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand22
+            pos_hint: {"center_y": 0.7, "center_x": 3/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand32
+            pos_hint: {"center_y": 0.6, "center_x": 3/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand42
+            pos_hint: {"center_y": 0.5, "center_x": 3/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand52
+            pos_hint: {"center_y": 0.4, "center_x": 3/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand62
+            pos_hint: {"center_y": 0.3, "center_x": 3/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand72
+            pos_hint: {"center_y": 0.2, "center_x": 3/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand82
+            pos_hint: {"center_y": 0.1, "center_x": 3/6 - 1/12}
+
+
+        # COLUMN 3
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand03
+            pos_hint: {"center_y": 0.9, "center_x": 4/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand13
+            pos_hint: {"center_y": 0.8, "center_x": 4/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand23
+            pos_hint: {"center_y": 0.7, "center_x": 4/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand33
+            pos_hint: {"center_y": 0.6, "center_x": 4/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand43
+            pos_hint: {"center_y": 0.5, "center_x": 4/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand53
+            pos_hint: {"center_y": 0.4, "center_x": 4/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand63
+            pos_hint: {"center_y": 0.3, "center_x": 4/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand73
+            pos_hint: {"center_y": 0.2, "center_x": 4/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand83
+            pos_hint: {"center_y": 0.1, "center_x": 4/6 - 1/12}
+
+
+        # COLUMN 4
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand04
+            pos_hint: {"center_y": 0.9, "center_x": 5/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand14
+            pos_hint: {"center_y": 0.8, "center_x": 5/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand24
+            pos_hint: {"center_y": 0.7, "center_x": 5/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand34
+            pos_hint: {"center_y": 0.6, "center_x": 5/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand44
+            pos_hint: {"center_y": 0.5, "center_x": 5/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand54
+            pos_hint: {"center_y": 0.4, "center_x": 5/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand64
+            pos_hint: {"center_y": 0.3, "center_x": 5/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand74
+            pos_hint: {"center_y": 0.2, "center_x": 5/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand84
+            pos_hint: {"center_y": 0.1, "center_x": 5/6 - 1/12}
+
+
+        # COLUMN 5
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand05
+            pos_hint: {"center_y": 0.9, "center_x": 6/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand15
+            pos_hint: {"center_y": 0.8, "center_x": 6/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand25
+            pos_hint: {"center_y": 0.7, "center_x": 6/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand35
+            pos_hint: {"center_y": 0.6, "center_x": 6/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand45
+            pos_hint: {"center_y": 0.5, "center_x": 6/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand55
+            pos_hint: {"center_y": 0.4, "center_x": 6/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand65
+            pos_hint: {"center_y": 0.3, "center_x": 6/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand75
+            pos_hint: {"center_y": 0.2, "center_x": 6/6 - 1/12}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand85
+            pos_hint: {"center_y": 0.1, "center_x": 6/6 - 1/12}
 
         MDBoxLayout:
             orientation: "horizontal"
             id: playerview
             adaptive_height: True
-            pos_hint: {"center_x": 0.5,"center_y":0.1}
+            pos_hint: {"center_x": 0.3,"center_y":0.05}
             size_hint_x: 1
             size_hint_y: 0.2
             HandLayout:
