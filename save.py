@@ -312,6 +312,44 @@ class SaveData():
         save.alldata['Games']['Current_Games']['threes'] = app.threes.state
         save.alldata['Games']['Current_Games']['rummy'] = app.rummy.state
         save.alldata['Games']['Current_Games']['memory'] = app.memory.state
+        with open(r"MobilePlayingCardApp\player_data.json", "w") as f:
+            json.dump(save.alldata, f, indent=4)
+
+    def load_game_states(save, app):
+        save.load()
+        app.threes.state = save.alldata['Games']['Current_Games']['threes']
+        app.rummy.state = save.alldata['Games']['Current_Games']['rummy']
+        app.memory.state = save.alldata['Games']['Current_Games']['memory']
+        app.threes.shuffled_deck = app.threes.state['shuffled_deck']
+        app.threes.hands = app.threes.state['hands']
+        app.threes.discard_pile = app.threes.state['discard_pile']
+        app.threes.selected_card = app.threes.state['selected_card']
+        app.threes.bottom_hands = app.threes.state['bottom_hands']
+        app.threes.top_hands = app.threes.state['top_hands']
+        app.threes.played_cards = app.threes.state['played_cards']
+        app.threes.another = app.threes.state['another']
+        app.threes.turn = app.threes.state['turn']
+        app.threes.time_elapsed = app.threes.state['time_elapsed']
+        app.threes.difficulty = app.threes.state['difficulty']
+        app.threes.winner = app.threes.state['winner']
+        app.rummy.shuffled_deck = app.rummy.state['shuffled_deck']  
+        app.rummy.hands = app.rummy.state['hands'] 
+        app.rummy.discard_pile = app.rummy.state['discard_pile']
+        app.rummy.selected_card = app.rummy.state['selected_card']
+        app.rummy.turn = app.rummy.state['turn']
+        app.rummy.time_elapsed = app.rummy.state['time_elapsed']
+        app.rummy.difficulty = app.rummy.state['difficulty']
+        app.rummy.winner = app.rummy.state['winner']
+        app.memory.hands = app.memory.state['hands']
+        app.memory.shuffled_deck = app.memory.state['shuffled_deck']
+        app.memory.card_array = app.memory.state['card_array']
+        app.memory.first_selected_card = app.memory.state['first_selected_card']
+        app.memory.second_selected_card = app.memory.state['second_selected_card']
+        app.memory.selected_first_card = app.memory.state['selected_first_card']
+        app.memory.turn = app.memory.state['turn']
+        app.memory.time_elapsed = app.memory.state['time_elapsed']
+        app.memory.difficulty = app.memory.state['difficulty']
+        app.memory.winner = app.memory.state['winner']
     
     def update(save, app):
         save.load()
@@ -328,6 +366,7 @@ class SaveData():
         app.threes.state = save.alldata['Games']['Current_Games']['threes']
         app.rummy.state = save.alldata['Games']['Current_Games']['rummy']
         app.memory.state = save.alldata['Games']['Current_Games']['memory']
+        save.load_game_states(app)
 
 
 

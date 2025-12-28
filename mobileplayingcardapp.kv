@@ -98,6 +98,7 @@
                 pos_hint: {"center_x": 0.5}
                 on_release: 
                     app.sm_stacky("NewGame")
+                    app.start_game("rummy")
                     root.manager.current = "MDRummy"
                 MDButtonText:
                     text: "Rummy"
@@ -108,6 +109,7 @@
                 pos_hint: {"center_x": 0.5}
                 on_release: 
                     app.sm_stacky("NewGame")
+                    app.start_game("memory")
                     root.manager.current = "MDMemory"
                 MDButtonText:
                     text: "Memory"
@@ -199,6 +201,155 @@
                 pos_hint: {"center_x": 0.5,"center_y":0.5}
                 width: (self.parent.width - dp(100))
         
+<MDRummy>:
+    md_bg_color: self.theme_cls.surfaceColor
+    MDFloatLayout:
+        MDIconButton: #Pause Button
+            pos_hint: {"left":0.98, "top": 0.98}
+            size: dp(48), dp(48)
+            icon: "pause"
+            on_release: 
+                app.sm_stacky("MDRummy")
+                root.manager.current = "Pause"
+        MDLabel:
+            id: timer
+            text: "00:00"
+            font_style: "cataway"
+            role: "large"
+            halign: "center"
+            pos_hint: {"center_y":0.9, "center_x":0.5}
+            adaptive_height: True
+    
+        MDRelativeLayout:
+            adaptive_size: True
+            id: ai_hand1
+            pos_hint: {"center_y":0.8, "center_x":0.3}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: ai_hand2
+            pos_hint: {"center_y":0.8, "center_x":0.4}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: ai_hand3
+            pos_hint: {"center_y":0.8, "center_x":0.5}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: ai_hand4
+            pos_hint: {"center_y":0.8, "center_x":0.6}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: ai_hand5
+            pos_hint: {"center_y":0.65, "center_x":0.3}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: ai_hand6
+            pos_hint: {"center_y":0.65, "center_x":0.4}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: ai_hand7
+            pos_hint: {"center_y":0.65, "center_x":0.5}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: ai_hand8
+            pos_hint: {"center_y":0.65, "center_x":0.6}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: deck
+            pos_hint: {"center_y":0.5, "center_x":0.5}
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand1
+            pos_hint: {"center_y":0.3, "center_x":0.3}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand2
+            pos_hint: {"center_y":0.3, "center_x":0.4}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand3
+            pos_hint: {"center_y":0.3, "center_x":0.5}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand4
+            pos_hint: {"center_y":0.3, "center_x":0.6}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand5
+            pos_hint: {"center_y":0.15, "center_x":0.3}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand6
+            pos_hint: {"center_y":0.15, "center_x":0.4}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand7
+            pos_hint: {"center_y":0.15, "center_x":0.5}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand8
+            pos_hint: {"center_y":0.15, "center_x":0.6}
+
+<MDMemory>:
+    md_bg_color: self.theme_cls.surfaceColor
+    MDFloatLayout:
+        MDIconButton: #Pause Button
+            pos_hint: {"left":0.98, "top": 0.98}
+            size: dp(48), dp(48)
+            icon: "pause"
+            on_release: 
+                app.sm_stacky("MDThrees")
+                root.manager.current = "Pause"
+        MDLabel:
+            id: timer
+            text: "00:00"
+            font_style: "cataway"
+            role: "large"
+            halign: "center"
+            pos_hint: {"center_y":0.9, "center_x":0.5}
+            adaptive_height: True
+        
+        MDBoxLayout:
+            orientation: "horizontal"
+            id: botview
+            adaptive_height: True
+            pos_hint: {"center_x": 0.5,"center_y":0.8}
+            size_hint_x: 1
+            size_hint_y: 0.2
+            HandLayout:
+                id: ai_hand
+                orientation: "horizontal"
+                pos_hint: {"center_x": 0.5,"center_y":0.5}
+                width: (self.parent.width - dp(100))
+
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand1
+            pos_hint: {"center_y":0.7, "center_x":0.4}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand2
+            pos_hint: {"center_y":0.7, "center_x":0.5}
+        MDRelativeLayout:
+            adaptive_size: True
+            id: hand3
+            pos_hint: {"center_y":0.7, "center_x":0.6}
+
+        MDBoxLayout:
+            orientation: "horizontal"
+            id: playerview
+            adaptive_height: True
+            pos_hint: {"center_x": 0.5,"center_y":0.1}
+            size_hint_x: 1
+            size_hint_y: 0.2
+            HandLayout:
+                id: hand
+                orientation: "horizontal"
+                pos_hint: {"center_x": 0.5,"center_y":0.5}
+                width: (self.parent.width - dp(100))
+    
+
 <Rules>:
     md_bg_color: self.theme_cls.backgroundColor
     MDFloatLayout:
@@ -653,7 +804,7 @@
                     app.sm_stacky("NewGame")
                     root.manager.current = "MDRummy"
                 MDButtonText:
-                    text: "Rummy"
+                    text: "Resume Rummy"
                     font_style: "cataway"
                     role: "small"
             MDButton:
@@ -663,7 +814,7 @@
                     app.sm_stacky("NewGame")
                     root.manager.current = "MDMemory"
                 MDButtonText:
-                    text: "Memory"
+                    text: "Resume Memory"
                     font_style: "cataway"
                     role: "small"
             MDButton:
@@ -683,10 +834,13 @@
             icon: "arrow-left"
             on_release: 
                 app.back()
-        MDIconButton: #Settings Button
-            pos_hint: {"right":0.98, "top": 0.98}
-            size: dp(48), dp(48)
-            icon: "menu"
-            on_release: 
-                app.sm_stacky("NewGame")
-                root.manager.current = "Settings"
+        MDButton:
+            style: "tonal"
+            pos_hint: {"center_x": 0.5, "top":0.1}
+            on_release: app.stop()
+            MDButtonText:
+                text: "Exit Game"
+                font_style: "cataway"
+                role: "small"
+            MDButtonIcon:
+                icon: "exit-to-app"

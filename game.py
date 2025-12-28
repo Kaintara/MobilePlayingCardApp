@@ -24,19 +24,16 @@ class Game:
         random.shuffle(shuffled_deck)
         game.shuffled_deck = shuffled_deck
 
-    def unlocked_achievements(game,app,savedata):
+    def unlocked_achievements(game, app, savedata):
         unlocked = []
+        already_unlocked = {a[0] for a in app.unlocked_achievements}
+
         for id, name, desc, condition in app.all_achievements:
-            if app.unlocked_achievements:
-                if id not in app.unlocked_achievements[id][0] and condition(savedata) == True:
-                    unlocked.append((id, name, desc, condition))
-                    app.unlocked_achievements.append((id, name, desc, condition))
-                return unlocked
-            else:
-                if condition(savedata) == True:
-                    unlocked.append((id, name, desc, condition))
-                    app.unlocked_achievements.append((id, name, desc, condition))
-                return unlocked
+            if id not in already_unlocked and condition(savedata):
+                unlocked.append((id, name, desc, condition))
+                app.unlocked_achievements.append((id, name, desc))
+
+        return unlocked
 
     def display_achievements(game,achievement):
         Dialog = Achievement_Dialog(achievement)
@@ -73,6 +70,7 @@ class Game:
             'time': game.time_elapsed
         }
         app.previous_games[game.name].append(completed_game)
+        app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
         reward = game.get_reward(app.shop,app,app.save)
         app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
         for _ in range(3):
@@ -507,7 +505,8 @@ class rummy(Game):
             rummy.hands[player] = Sorted_hand
             return None
 
-    def get_valid_moves(rummy,player):
+    def get_valid_moves(rummy):
+        player = rummy.turn
         Moves = []
         Hand_len = len(rummy.hands[player])
         if Hand_len == 7:
@@ -533,25 +532,30 @@ class rummy(Game):
         return False
     
     def next_vaild_player(rummy,player,savedata):
+        player = rummy.turn
         if rummy.is_game_over():
-            rummy.end_game(savedata)
-        else:
-            if rummy.state['history']:
-                if rummy.state['history'][-1][0] == player and rummy.state['history'][-1][2] == 'draw':
-                    return player
-                else:
-                    if player == 1:
-                        return 0
-                    else:
-                        return 1
+            return None
+
+        history = rummy.state['history']
+
+        if not history:
+            print("Starting Player:", player)
+            return player
+
+        first_player, _, _ = history[0]
+
+        if len(history) == 1:
+            print("next player after first move", 1 - first_player)
+            return 1 - first_player
+        elif len(history) >= 2:
+            last_player, _, last_action = history[-1]
+            if last_action == 'discard':
+                return 1 - last_player
             else:
-                if player == 1:
-                    return 0
-                else:
-                    return 1
+                return last_player
         
     def apply_move(rummy,move):
-        player = rummy.turn
+        player = move[0]
         if not move:
             if rummy.is_game_over():
                 rummy.end_game()

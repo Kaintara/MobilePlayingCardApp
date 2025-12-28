@@ -90,10 +90,9 @@ class Shop_Dialog(MDDialog):
 
 class Achievement_Dialog(MDDialog):
     def __init__(self, achievement, **kwargs):
-        # Build content container
-        content = MDBoxLayout(orientation="vertical", spacing=dp(8), adaptive_height=True)
-        content.add_widget(MDDialogIcon(icon="account-circle"))
-        content.add_widget(
+        super().__init__(**kwargs)
+        self.add_widget(MDDialogIcon(icon="account-circle"))
+        self.add_widget(
             MDDialogHeadlineText(
                 text=f"Achievement Unlocked! - {achievement[1]}",
                 halign="center",
@@ -101,7 +100,7 @@ class Achievement_Dialog(MDDialog):
                 role="medium",
             )
         )
-        content.add_widget(
+        self.add_widget(
             MDDialogSupportingText(
                 text=f"{achievement[2]}",
                 halign="left",
@@ -110,8 +109,6 @@ class Achievement_Dialog(MDDialog):
                 font_size=dp(20),
             )
         )
-        # Initialize parent dialog with custom content
-        super().__init__(type="custom", content_cls=content, **kwargs)
 
 class Reward_Dialog(MDDialog):
     def __init__(self, reward, app,**kwargs):
@@ -239,27 +236,52 @@ class Playing_Card(MDCard):
                 game = app.threes
                 if game.turn == 0:
                     for move in game.get_valid_moves():
-                        for move in game.get_valid_moves():
-                            if self.suit_rank == move[1] or (move[2] == 'pickup' and self.suit_rank == game.played_cards[-1]):
-                                if game.selected_card != self:
-                                    if game.selected_card:
-                                        game.selected_card.highlight.opacity = 0
-                                    game.selected_card = self
-                                    self.selected = True
-                                    self.highlight.opacity = 1
+                        if self.suit_rank == move[1] or (move[2] == 'pickup' and self.suit_rank == game.played_cards[-1]):
+                            if game.selected_card != self:
+                                if game.selected_card:
+                                    game.selected_card.highlight.opacity = 0
+                                game.selected_card = self
+                                self.selected = True
+                                self.highlight.opacity = 1
+                            else:
+                                game.selected_card = ''
+                                game.turn = game.next_vaild_player(game.turn,app.save)
+                                print(game.turn)
+                                if game.turn is not None:
+                                    game.apply_move(move)
+                                    game.update_game_state()
+                                    app.save.quick_save(app)
+                                    Clock.schedule_once(lambda dt: app.next_turn('threes'), 0.5)
                                 else:
-                                    game.selected_card = ''
-                                    game.turn = game.next_vaild_player(game.turn,app.save)
-                                    print(game.turn)
-                                    if game.turn is not None:
-                                        game.apply_move(move)
-                                        game.update_game_state()
-                                        app.save.quick_save(app)
-                                        Clock.schedule_once(lambda dt: app.next_turn('threes'), 0.5)
-                                    else:
-                                        print('Ending game from Playing_Card on_touch_down')
-                                        game.end_game(app)
-                                break
+                                    print('Ending game from Playing_Card on_touch_down')
+                                    game.end_game(app)
+                            break
+            elif self.game == 'rummy':
+                game = app.rummy
+                if game.turn == 0:
+                    for move in game.get_valid_moves():
+                        if self.suit_rank == move[1] or ((move[1] == 'deck' and self.suit_rank == game.shuffled_deck[-1])):
+                            if game.selected_card != self:
+                                if game.selected_card:
+                                    game.selected_card.highlight.opacity = 0
+                                game.selected_card = self
+                                self.selected = True
+                                self.highlight.opacity = 1
+                            else:
+                                game.selected_card = ''
+                                game.turn = game.next_vaild_player(game.turn,app.save)
+                                print(game.turn)
+                                if game.turn is not None:
+                                    print(move)
+                                    print(game.hands[0])
+                                    game.apply_move(move)
+                                    game.update_game_state()
+                                    app.save.quick_save(app)
+                                    Clock.schedule_once(lambda dt: app.next_turn('rummy'), 0.5)
+                                else:
+                                    print('Ending game from Playing_Card on_touch_down')
+                                    game.end_game(app)
+                            break
         return super().on_touch_down(touch)
                                          
 
