@@ -117,7 +117,7 @@ class MobilePlayingCardApp(MDApp):
             print(x)
         for game in Games:
             print(game['winner'])
-            if not game['winner'] and game['history']:
+            if game['winner'] is None and game['history']:
                 return "Resume Game"
             return "New Game"
         
@@ -203,39 +203,36 @@ class MobilePlayingCardApp(MDApp):
         if game == 'threes':
             self.threes.selected_card = "" 
             self.threes.update_game_state()
-            print(self.threes.is_game_over())
-            if self.threes.is_game_over():
-                self.threes.end_game(self)
-            else:
-                if self.threes.turn == 1:
-                    if self.get_difficulty() == "Beginner":
-                        move = m_mtcs(self.threes.state,GameEnvironmentT(),0.15)
-                        print(move)
-                        self.threes.apply_move(move)
-                        self.threes.update_game_state()
-                    elif self.get_difficulty() == "Easy":
-                        move = m_mtcs(self.threes.state,GameEnvironmentT(),0.2)
-                        self.threes.apply_move(move)
-                        self.threes.update_game_state()
-                    elif self.get_difficulty() == "Medium":
-                        move = m_mtcs(self.threes.state,GameEnvironmentT(),0.25)
-                        self.threes.apply_move(move)
-                        self.threes.update_game_state()
-                    elif self.get_difficulty() == "Hard":
-                        move = m_mtcs(self.threes.state,GameEnvironmentT(),0.35)
-                        self.threes.apply_move(move)
-                        self.threes.update_game_state()
-                    elif self.get_difficulty() == "Expert":
-                        move = m_mtcs(self.threes.state,GameEnvironmentT(),0.5)
-                        self.threes.apply_move(move)
-                        self.threes.update_game_state()
-                    self.threes.turn = self.threes.next_vaild_player(self.threes.turn,self.save)
-                    print(self.threes.turn)
-                    self.save.quick_save(self)
-                    if not self.threes.turn:
-                        self.threes.end_game(self)
-                    else:
-                        Clock.schedule_once(lambda dt: self.next_turn('threes'), 0.5)
+            if self.threes.turn == 1:
+                if self.get_difficulty() == "Beginner":
+                    move = m_mtcs(self.threes.state,GameEnvironmentT(),0.15)
+                    print(move)
+                    self.threes.apply_move(move)
+                    self.threes.update_game_state()
+                elif self.get_difficulty() == "Easy":
+                    move = m_mtcs(self.threes.state,GameEnvironmentT(),0.2)
+                    self.threes.apply_move(move)
+                    self.threes.update_game_state()
+                elif self.get_difficulty() == "Medium":
+                    move = m_mtcs(self.threes.state,GameEnvironmentT(),0.25)
+                    self.threes.apply_move(move)
+                    self.threes.update_game_state()
+                elif self.get_difficulty() == "Hard":
+                    move = m_mtcs(self.threes.state,GameEnvironmentT(),0.35)
+                    self.threes.apply_move(move)
+                    self.threes.update_game_state()
+                elif self.get_difficulty() == "Expert":
+                    move = m_mtcs(self.threes.state,GameEnvironmentT(),0.5)
+                    self.threes.apply_move(move)
+                    self.threes.update_game_state()
+                self.threes.turn = self.threes.next_vaild_player(self.threes.turn,self.save)
+                print(self.threes.turn)
+                self.save.quick_save(self)
+                if self.threes.turn is None:
+                    print('Line 231 main.py reached')
+                    self.threes.end_game(self)
+                else:
+                    Clock.schedule_once(lambda dt: self.next_turn('threes'), 0.5)
 
     def new_game(self,game):
         if game == "threes":

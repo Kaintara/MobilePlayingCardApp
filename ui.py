@@ -250,16 +250,18 @@ class Playing_Card(MDCard):
                                 else:
                                     game.selected_card = ''
                                     game.turn = game.next_vaild_player(game.turn,app.save)
-                                    if game.turn:
+                                    print(game.turn)
+                                    if game.turn is not None:
                                         game.apply_move(move)
                                         game.update_game_state()
                                         app.save.quick_save(app)
                                         Clock.schedule_once(lambda dt: app.next_turn('threes'), 0.5)
                                     else:
-                                        game.end_game(self)
-                                break   # now break only after we found a matching move
+                                        print('Ending game from Playing_Card on_touch_down')
+                                        game.end_game(app)
+                                break
         return super().on_touch_down(touch)
-
+                                         
 
 
 class Shop_Button(MDButton):

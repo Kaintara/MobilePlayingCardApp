@@ -17,7 +17,7 @@ class SaveData():
                      },
             'Games' : {
                 'Stats' : {
-                    'Threes_Stats' : {
+                    'threesStats' : {
                         'General_Stats' : {
                         "games_played": 0,
                         "wins": 0,
@@ -59,7 +59,7 @@ class SaveData():
                             "last_played": None
                         },
                     },
-                    'Rummy_Stats' : {
+                    'rummy_Stats' : {
                         'General_Stats' : {
                         "games_played": 0,
                         "wins": 0,
@@ -99,7 +99,7 @@ class SaveData():
                             "last_played": None
                         },
                     },
-                    'Memory_Stats' : {
+                    'memory_Stats' : {
                         'General_Stats' : {
                         "games_played": 0,
                         "wins": 0,
@@ -200,8 +200,8 @@ class SaveData():
     def calc_threes_stats(save):  #Format of previous games = {'winner': None,'history': [],'difficulty' : (-1,""), 'time':0}
         Game = save.alldata['Games']['Previous_Games']['threes'][-1]
         difficulty = Game['difficulty'][1]
-        Difficulty_Stats = save.alldata['Games']['Stats']['Threes_Stats'][difficulty]
-        All_Stats = save.alldata['Games']['Stats']['Threes_Stats']['General_Stats']
+        Difficulty_Stats = save.alldata['Games']['Stats']['threes_Stats'][difficulty]
+        All_Stats = save.alldata['Games']['Stats']['threes_Stats']['General_Stats']
         All_Stats["games_played"] += 1
         Difficulty_Stats["games_played"] += 1
         if Game['winner'] == 0:
@@ -227,8 +227,8 @@ class SaveData():
     def calc_rummy_stats(save):
         Game = save.alldata['Games']['Previous_Games']['rummy'][-1]
         difficulty = Game['difficulty'][1]
-        Difficulty_Stats = save.alldata['Games']['Stats']['Rummy_Stats'][difficulty]
-        All_Stats = save.alldata['Games']['Stats']['Rummy_Stats']['General_Stats']
+        Difficulty_Stats = save.alldata['Games']['Stats']['rummy_Stats'][difficulty]
+        All_Stats = save.alldata['Games']['Stats']['rummy_Stats']['General_Stats']
         All_Stats["games_played"] += 1
         Difficulty_Stats["games_played"] += 1
         if Game['winner'] == 0:
@@ -248,8 +248,8 @@ class SaveData():
     def calc_memory_stats(save):
         Game = save.alldata['Games']['Previous_Games']['memory'][-1]
         difficulty = Game['difficulty'][1]
-        Difficulty_Stats = save.alldata['Games']['Stats']['Memory_Stats'][difficulty]
-        All_Stats = save.alldata['Games']['Stats']['Memory_Stats']['General_Stats']
+        Difficulty_Stats = save.alldata['Games']['Stats']['memory_Stats'][difficulty]
+        All_Stats = save.alldata['Games']['Stats']['memory_Stats']['General_Stats']
         All_Stats["games_played"] += 1
         Difficulty_Stats["games_played"] += 1
         if Game['winner'] == 0:
@@ -285,15 +285,17 @@ class SaveData():
         save.alldata['App']['timer'] = app.timer
         save.alldata['App']['score'] = app.score
         save.alldata['App']['unlocked_achievements'] = app.unlocked_achievements
-        if app.previous_games['threes'] not in save.alldata['Games']['Previous_Games']['threes'] and save.alldata['Games']['Previous_Games']['threes']:
-            save.alldata['Games']['Previous_Games']['threes'].append(app.previous_games['threes']) 
-            print(save.alldata['Games']['Previous_Games']['threes'])
+        if app.previous_games['threes']:
+            last_game = app.previous_games['threes'][-1]
+            save.alldata['Games']['Previous_Games']['threes'].append(last_game) 
             save.calc_threes_stats()
-        if app.previous_games['rummy'] not in save.alldata['Games']['Previous_Games']['rummy'] and save.alldata['Games']['Previous_Games']['rummy']:
-            save.alldata['Games']['Previous_Games']['rummy'].append(app.previous_games['rummy']) 
+        if app.previous_games['rummy']:
+            last_game = app.previous_games['rummy'][-1]
+            save.alldata['Games']['Previous_Games']['rummy'].append(last_game) 
             save.calc_rummy_stats()
-        if app.previous_games['memory'] not in save.alldata['Games']['Previous_Games']['memory'] and save.alldata['Games']['Previous_Games']['memory']:
-            save.alldata['Games']['Previous_Games']['memory'].append(app.previous_games['memory']) 
+        if app.previous_games['memory']:
+            last_game = app.previous_games['memory'][-1]
+            save.alldata['Games']['Previous_Games']['memory'].append(last_game) 
             save.calc_memory_stats()
         save.alldata['Games']['Current_Games']['threes'] = threes.state
         save.alldata['Games']['Current_Games']['rummy'] = rummy.state

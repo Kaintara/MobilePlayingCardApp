@@ -73,6 +73,7 @@ class Game:
             'time': game.time_elapsed
         }
         app.previous_games[game.name].append(completed_game)
+        reward = game.get_reward(app.shop,app,app.save)
         app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
         for _ in range(3):
             app.threes.shuffled_deck = []
@@ -134,8 +135,6 @@ class Game:
                             "winner" : None,
                             "history": []}
             app.memory.card_array = [["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""]]
-        reward = game.get_reward(app.shop,app,app.save)
-        app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
         Dialog = Reward_Dialog(reward,app)
         Clock.schedule_once(lambda dt: Dialog.open(), reward[2]) 
 
