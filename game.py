@@ -641,7 +641,8 @@ class memory(Game):
                 card = memory.shuffled_deck.pop()
                 memory.card_array[y][x] = card
 
-    def get_valid_moves(memory,player):
+    def get_valid_moves(memory):
+        player = memory.turn
         Moves = []
         for y, row in enumerate(memory.card_array):
             for x, card in enumerate(row):
@@ -680,16 +681,10 @@ class memory(Game):
                         return 0
                     else:
                         return 1
-                else:
-                    if player == 1:
-                        return 0
-                    else:
-                        return 1
+                elif memory.state['history'][-1][0] == "pick":
+                    return player
             else:
-                if player == 1:
-                    return 0
-                else:
-                    return 1
+                return player
         
     def apply_move(memory,move):
         player = memory.turn
@@ -728,7 +723,6 @@ class memory(Game):
                     memory.state["history"].append(("Missed",player,first,second))
             else:
                 memory.state["history"].append(("Missed",player,first,second))
-            memory.turn = memory.next_vaild_player(player,'savedata')
             memory.first_selected_card = ('y','x','card')
             memory.second_selected_card = ('y','x','card')
 

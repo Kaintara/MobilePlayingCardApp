@@ -78,6 +78,10 @@ class Shop:
     "JS": "MobilePlayingCardApp/assets/img/theme1/jack_of_spades.png",
     "QS": "MobilePlayingCardApp/assets/img/theme1/queen_of_spades.png",
     "KS": "MobilePlayingCardApp/assets/img/theme1/king_of_spades.png",
+
+    #Jokers
+    "RJ": "MobilePlayingCardApp/assets/img/theme1/red_joker.png",
+    "BJ": "MobilePlayingCardApp/assets/img/theme1/black_joker.png",
 }))
         themes.append(Theme(themeslst[1], 10,'assets/img/theme2/Spades 13.png','assets/img/theme2/Back Blue 1.png',{
     # Hearts (plural)
@@ -139,6 +143,10 @@ class Shop:
     "JS": "MobilePlayingCardApp/assets/img/theme2/Spades 11.png",
     "QS": "MobilePlayingCardApp/assets/img/theme2/Spades 12.png",
     "KS": "MobilePlayingCardApp/assets/img/theme2/Spades 13.png",
+
+    #Jokers
+    "RJ": "MobilePlayingCardApp/assets/img/theme1/Joker Red.png",
+    "BJ": "MobilePlayingCardApp/assets/img/theme1/Joker Black.png",
 }))
 
     def get_theme(shop,theme_name):

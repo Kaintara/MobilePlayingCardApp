@@ -5,6 +5,7 @@ from shop import *
 from treesearch import *
 from threesMTCS import GameEnvironmentT
 from rummyMTCS import GameEnvironmentR
+from memoryMTCS import GameEnvironmentM
 
 class MobilePlayingCardApp(MDApp):
     def __init__(self, **kwargs):
@@ -113,10 +114,7 @@ class MobilePlayingCardApp(MDApp):
         self.memory = memory('memory',G1["rank_order"],G3)
         self.save.update(self)
         Games = [G1,G2,G3]
-        for x in Games:
-            print(x)
         for game in Games:
-            print(game['winner'])
             if game['winner'] is None and game['history']:
                 return "Resume Game"
             return "New Game"
@@ -237,8 +235,8 @@ class MobilePlayingCardApp(MDApp):
                         continue
                     else:
                         hand = self.get_widget(f'hand{y}{x}', 'MDMemory')
-                        if (self.memory.first_selected_card[0] == y and self.memory.first_selected_card[1] == x) or (self.memory.second_selected_card[0] == y and self.memory.second_selected_card[1] == x):
-                            hand.add_widget(Playing_Card(self.memory.card_array[y][x], 'memory', 'front', y, x))
+                        if (self.memory.first_selected_card[0] == y and self.memory.first_selected_card[1] == x):
+                            hand.add_widget(Playing_Card(self.memory.card_array[y][x], 'memory', 'front'))
                         else:
                             hand.add_widget(Playing_Card(self.memory.card_array[y][x],'memory','back'))
 
@@ -311,7 +309,47 @@ class MobilePlayingCardApp(MDApp):
                 else:
                     Clock.schedule_once(lambda dt: self.next_turn('rummy'), 0.5)
         elif game == 'memory':
-            pass
+            self.memory.selected_card = "" 
+            self.memory.update_game_state()
+            print(self.memory.turn)
+            if self.memory.turn == 1:
+                if self.get_difficulty() == "Beginner":
+                    move = m_mtcs(self.memory.state,GameEnvironmentM(),0.15)
+                    print(move)
+                    self.memory.apply_move(move)
+                    self.memory.update_game_state()
+                elif self.get_difficulty() == "Easy":
+                    move = m_mtcs(self.memory.state,GameEnvironmentM(),0.2)
+                    self.memory.apply_move(move)
+                    self.memory.update_game_state()
+                elif self.get_difficulty() == "Medium":
+                    move = m_mtcs(self.memory.state,GameEnvironmentM(),0.25)
+                    self.memory.apply_move(move)
+                    self.memory.update_game_state()
+                elif self.get_difficulty() == "Hard":
+                    move = m_mtcs(self.memory.state,GameEnvironmentM(),0.35)
+                    self.memory.apply_move(move)
+                    self.memory.update_game_state()
+                elif self.get_difficulty() == "Expert":
+                    move = m_mtcs(self.memory.state,GameEnvironmentM(),0.5)
+                    self.memory.apply_move(move)
+                    self.memory.update_game_state()
+                self.memory.turn = self.memory.next_vaild_player(self.memory.turn,self.save)
+                print(self.memory.turn)
+                print(self.memory.state['history'])
+                if self.memory.state['history']:
+                    if self.memory.state['history'][-1][0] == "Missed":
+                        y = self.memory.state['history'][-1][3][0]
+                        x = self.memory.state['history'][-1][3][1]
+                        card_container = self.get_widget(f'hand{x}{y}','MDMemory')
+                        card = card_container.children[0]
+                        card.img.source = self.shop.get_theme(self.shop.equipped).asset_dict[card.suit_rank]
+                self.save.quick_save(self)
+                if self.memory.turn is None:
+                    print('Line 318 main.py reached')
+                    self.memory.end_game(self)
+                else:
+                    Clock.schedule_once(lambda dt: self.next_turn('memory'), 2.0)
 
     def new_game(self,game):
         if game == "threes":
@@ -382,6 +420,7 @@ state = {'name' : "threes",
             self.memory.update_game_state()
             self.update_game(game)
             self.memory.turn = random.randint(0,1)
+            print(self.memory.turn)
             self.next_turn(game)
     
     def resume_game(self,game):

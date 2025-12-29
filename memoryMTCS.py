@@ -3,7 +3,7 @@ import random
 from treesearch import mtcs
 import math
 
-class GameEnvironment:
+class GameEnvironmentM:
     def __init__(env):
         pass
 
@@ -244,7 +244,7 @@ state = memory_early_game = {
     ]
 }
 
-genv = GameEnvironment()
+#genv = GameEnvironmentM()
 
 #print(genv.determinization(state))
 #print(genv.get_reward(genv.determinization(state)))

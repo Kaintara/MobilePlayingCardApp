@@ -216,7 +216,7 @@ class Playing_Card(MDCard):
             img_src = theme.asset_dict[suit_rank]
         else:
             img_src = theme.back_img
-        img = Image(source=img_src)
+        self.img = Image(source=img_src)
         self.layout = RelativeLayout(
             size = ("64dp", "89dp")
         )
@@ -226,7 +226,7 @@ class Playing_Card(MDCard):
             opacity=0,
             pos_hint={"center_x": 0.5, "center_y": 0.5})
         self.layout.add_widget(self.highlight)
-        self.layout.add_widget(img)
+        self.layout.add_widget(self.img)
         self.add_widget(self.layout)
 
     def on_touch_down(self, touch):
@@ -278,6 +278,37 @@ class Playing_Card(MDCard):
                                     game.update_game_state()
                                     app.save.quick_save(app)
                                     Clock.schedule_once(lambda dt: app.next_turn('rummy'), 0.5)
+                                else:
+                                    print('Ending game from Playing_Card on_touch_down')
+                                    game.end_game(app)
+                            break
+            elif self.game == 'memory':
+                game = app.memory
+                if game.turn == 0:
+                    for move in game.get_valid_moves():
+                        if self.suit_rank == move[2][2]:
+                            if game.selected_card != self:
+                                if game.selected_card:
+                                    game.selected_card.highlight.opacity = 0
+                                game.selected_card = self
+                                self.selected = True
+                                self.highlight.opacity = 1
+                            else:
+                                game.selected_card = ''
+                                self.highlight.opacity = 0
+                                game.turn = game.next_vaild_player(game.turn,app.save)
+                                print(game.turn)
+                                if game.turn is not None:
+                                    print(move)
+                                    game.apply_move(move)
+                                    game.update_game_state()
+                                    app.save.quick_save(app)
+                                    if game.state['history']:
+                                        if game.state['history'][-1][0] == "Missed":
+                                            self.img.source = app.shop.get_theme(app.shop.equipped).asset_dict[self.suit_rank]
+                                            Clock.schedule_once(lambda dt: app.next_turn('memory'), 2.0)
+                                        else:
+                                            Clock.schedule_once(lambda dt: app.next_turn('memory'), 0.5)
                                 else:
                                     print('Ending game from Playing_Card on_touch_down')
                                     game.end_game(app)
