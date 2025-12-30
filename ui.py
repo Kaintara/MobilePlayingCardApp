@@ -296,26 +296,19 @@ class Playing_Card(MDCard):
                             else:
                                 game.selected_card = ''
                                 self.highlight.opacity = 0
-                                game.turn = game.next_vaild_player(game.turn,app.save)
-                                print(game.turn)
-                                if game.turn is not None:
-                                    print(move)
-                                    game.apply_move(move)
-                                    game.update_game_state()
-                                    app.save.quick_save(app)
-                                    if game.state['history']:
-                                        if game.state['history'][-1][0] == "Missed":
-                                            self.img.source = app.shop.get_theme(app.shop.equipped).asset_dict[self.suit_rank]
-                                            Clock.schedule_once(lambda dt: app.next_turn('memory'), 2.0)
-                                        else:
-                                            Clock.schedule_once(lambda dt: app.next_turn('memory'), 0.5)
-                                else:
-                                    print('Ending game from Playing_Card on_touch_down')
-                                    game.end_game(app)
+                                print(move)
+                                game.apply_move(move,app)
+                                game.update_game_state()
+                                app.save.quick_save(app)
+                                if game.state['history']:
+                                    if game.state['history'][-1][0] == "Missed":
+                                        self.img.source = app.shop.get_theme(app.shop.equipped).asset_dict[self.suit_rank]
+                                        Clock.schedule_once(lambda dt: app.next_turn('memory'), 2.0)
+                                    else:
+                                        Clock.schedule_once(lambda dt: app.next_turn('memory'), 0.5)
                             break
         return super().on_touch_down(touch)
     
-
 class Shop_Button(MDButton):
     def __init__(self, theme_obj, equipped=False, unlocked=False,**kwargs):
         super().__init__(**kwargs)

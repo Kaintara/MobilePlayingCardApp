@@ -76,7 +76,7 @@
                     "win_lose_ratio": "100.0%",
                     "best_time": 0,
                     "total_time": 0,
-                    "last_played": "2025-12-29 19:05:45"
+                    "last_played": "2025-12-29 21:44:36"
                 },
                 "Beginner": {
                     "games_played": 0,
@@ -88,7 +88,7 @@
                     "games_played": 2,
                     "wins": 2,
                     "best_time": 0,
-                    "last_played": "2025-12-29 19:05:45"
+                    "last_played": "2025-12-29 21:44:36"
                 },
                 "Normal": {
                     "games_played": 0,
@@ -164,33 +164,23 @@
                     "winner": 0,
                     "history": [
                         [
-                            0,
-                            "2S",
-                            "discard"
-                        ],
-                        [
                             1,
-                            "2S",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "KD",
+                            "5D",
                             "discard"
                         ],
                         [
                             0,
-                            "KD",
+                            "deck",
                             "draw"
                         ],
                         [
                             0,
-                            "KD",
+                            "KC",
                             "discard"
                         ],
                         [
                             1,
-                            "KD",
+                            "KC",
                             "draw"
                         ],
                         [
@@ -200,112 +190,12 @@
                         ],
                         [
                             0,
-                            "deck",
+                            "6S",
                             "draw"
                         ],
                         [
                             0,
-                            "6H",
-                            "discard"
-                        ],
-                        [
-                            1,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "9H",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "9H",
-                            "draw"
-                        ],
-                        [
-                            0,
-                            "7H",
-                            "discard"
-                        ],
-                        [
-                            1,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "JC",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "JC",
-                            "draw"
-                        ],
-                        [
-                            0,
-                            "9H",
-                            "discard"
-                        ],
-                        [
-                            1,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "4C",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            0,
-                            "8D",
-                            "discard"
-                        ],
-                        [
-                            1,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "KD",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            0,
-                            "7D",
-                            "discard"
-                        ],
-                        [
-                            1,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "9D",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            0,
-                            "6D",
+                            "JD",
                             "discard"
                         ],
                         [
@@ -325,7 +215,7 @@
                         ],
                         [
                             0,
-                            "6C",
+                            "AH",
                             "discard"
                         ],
                         [
@@ -335,7 +225,7 @@
                         ],
                         [
                             1,
-                            "2S",
+                            "9D",
                             "discard"
                         ],
                         [
@@ -345,27 +235,7 @@
                         ],
                         [
                             0,
-                            "1H",
-                            "discard"
-                        ],
-                        [
-                            1,
-                            "1H",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "5D",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "5D",
-                            "draw"
-                        ],
-                        [
-                            0,
-                            "1S",
+                            "7H",
                             "discard"
                         ],
                         [
@@ -375,7 +245,27 @@
                         ],
                         [
                             1,
-                            "7S",
+                            "4D",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "4D",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "3C",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "3D",
                             "discard"
                         ],
                         [
@@ -385,7 +275,47 @@
                         ],
                         [
                             0,
-                            "QS",
+                            "1C",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "1C",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "1D",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "2D",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "2D",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "KD",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "JC",
                             "discard"
                         ],
                         [
@@ -405,17 +335,157 @@
                         ],
                         [
                             0,
+                            "6C",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "QS",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "3H",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "3H",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "9S",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "9S",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "8H",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "5H",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "AC",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "AC",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "2D",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "8D",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "8D",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "5C",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "4D",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "4D",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "8D",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "4C",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "4C",
+                            "draw"
+                        ],
+                        [
+                            1,
                             "8C",
                             "discard"
                         ],
                         [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "QC",
+                            "discard"
+                        ],
+                        [
                             1,
                             "deck",
                             "draw"
                         ],
                         [
                             1,
-                            "QD",
+                            "3H",
                             "discard"
                         ],
                         [
@@ -425,12 +495,112 @@
                         ],
                         [
                             0,
+                            "JS",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "JS",
+                            "draw"
+                        ],
+                        [
+                            1,
                             "KC",
                             "discard"
                         ],
                         [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "KS",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "KS",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "JS",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "1H",
+                            "discard"
+                        ],
+                        [
                             1,
                             "deck",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "1S",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "2C",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "AC",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "KH",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "KS",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "8S",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "8S",
                             "draw"
                         ],
                         [
@@ -440,47 +610,17 @@
                         ],
                         [
                             0,
-                            "deck",
+                            "9C",
                             "draw"
                         ],
                         [
                             0,
-                            "5H",
+                            "4H",
                             "discard"
                         ],
                         [
                             1,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "KH",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            0,
-                            "AD",
-                            "discard"
-                        ],
-                        [
-                            1,
-                            "AD",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "3D",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "3D",
+                            "4H",
                             "draw"
                         ]
                     ],
@@ -494,33 +634,23 @@
                     "winner": 0,
                     "history": [
                         [
-                            0,
-                            "2S",
-                            "discard"
-                        ],
-                        [
                             1,
-                            "2S",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "KD",
+                            "5D",
                             "discard"
                         ],
                         [
                             0,
-                            "KD",
+                            "deck",
                             "draw"
                         ],
                         [
                             0,
-                            "KD",
+                            "KC",
                             "discard"
                         ],
                         [
                             1,
-                            "KD",
+                            "KC",
                             "draw"
                         ],
                         [
@@ -530,112 +660,12 @@
                         ],
                         [
                             0,
-                            "deck",
+                            "6S",
                             "draw"
                         ],
                         [
                             0,
-                            "6H",
-                            "discard"
-                        ],
-                        [
-                            1,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "9H",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "9H",
-                            "draw"
-                        ],
-                        [
-                            0,
-                            "7H",
-                            "discard"
-                        ],
-                        [
-                            1,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "JC",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "JC",
-                            "draw"
-                        ],
-                        [
-                            0,
-                            "9H",
-                            "discard"
-                        ],
-                        [
-                            1,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "4C",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            0,
-                            "8D",
-                            "discard"
-                        ],
-                        [
-                            1,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "KD",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            0,
-                            "7D",
-                            "discard"
-                        ],
-                        [
-                            1,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "9D",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            0,
-                            "6D",
+                            "JD",
                             "discard"
                         ],
                         [
@@ -655,7 +685,7 @@
                         ],
                         [
                             0,
-                            "6C",
+                            "AH",
                             "discard"
                         ],
                         [
@@ -665,7 +695,7 @@
                         ],
                         [
                             1,
-                            "2S",
+                            "9D",
                             "discard"
                         ],
                         [
@@ -675,27 +705,7 @@
                         ],
                         [
                             0,
-                            "1H",
-                            "discard"
-                        ],
-                        [
-                            1,
-                            "1H",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "5D",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "5D",
-                            "draw"
-                        ],
-                        [
-                            0,
-                            "1S",
+                            "7H",
                             "discard"
                         ],
                         [
@@ -705,7 +715,27 @@
                         ],
                         [
                             1,
-                            "7S",
+                            "4D",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "4D",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "3C",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "3D",
                             "discard"
                         ],
                         [
@@ -715,7 +745,47 @@
                         ],
                         [
                             0,
-                            "QS",
+                            "1C",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "1C",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "1D",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "2D",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "2D",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "KD",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "JC",
                             "discard"
                         ],
                         [
@@ -735,17 +805,157 @@
                         ],
                         [
                             0,
+                            "6C",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "QS",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "3H",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "3H",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "9S",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "9S",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "8H",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "5H",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "AC",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "AC",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "2D",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "8D",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "8D",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "5C",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "4D",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "4D",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "8D",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "4C",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "4C",
+                            "draw"
+                        ],
+                        [
+                            1,
                             "8C",
                             "discard"
                         ],
                         [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "QC",
+                            "discard"
+                        ],
+                        [
                             1,
                             "deck",
                             "draw"
                         ],
                         [
                             1,
-                            "QD",
+                            "3H",
                             "discard"
                         ],
                         [
@@ -755,12 +965,112 @@
                         ],
                         [
                             0,
+                            "JS",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "JS",
+                            "draw"
+                        ],
+                        [
+                            1,
                             "KC",
                             "discard"
                         ],
                         [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "KS",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "KS",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "JS",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "1H",
+                            "discard"
+                        ],
+                        [
                             1,
                             "deck",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "1S",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "2C",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "AC",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "KH",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            1,
+                            "KS",
+                            "discard"
+                        ],
+                        [
+                            0,
+                            "deck",
+                            "draw"
+                        ],
+                        [
+                            0,
+                            "8S",
+                            "discard"
+                        ],
+                        [
+                            1,
+                            "8S",
                             "draw"
                         ],
                         [
@@ -770,47 +1080,17 @@
                         ],
                         [
                             0,
-                            "deck",
+                            "9C",
                             "draw"
                         ],
                         [
                             0,
-                            "5H",
+                            "4H",
                             "discard"
                         ],
                         [
                             1,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "KH",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "deck",
-                            "draw"
-                        ],
-                        [
-                            0,
-                            "AD",
-                            "discard"
-                        ],
-                        [
-                            1,
-                            "AD",
-                            "draw"
-                        ],
-                        [
-                            1,
-                            "3D",
-                            "discard"
-                        ],
-                        [
-                            0,
-                            "3D",
+                            "4H",
                             "draw"
                         ]
                     ],
@@ -978,20 +1258,13 @@
                     "KH"
                 ],
                 "shuffled_deck": [
-                    "3S",
-                    "QC",
-                    "3C",
-                    "4H",
-                    "7C",
-                    "AC",
+                    "AD",
+                    "QD",
                     "QH",
-                    "2C",
-                    "8S",
-                    "4S",
-                    "1D",
-                    "5S",
-                    "9S",
-                    "5C"
+                    "2S",
+                    "JH",
+                    "3S",
+                    "7D"
                 ],
                 "value_map": {
                     "A": 1,
@@ -1010,52 +1283,59 @@
                 },
                 "hands": [
                     [
-                        "JH",
-                        "JD",
-                        "JC",
-                        "JS",
-                        "2D",
-                        "4D",
-                        "5D",
-                        "3D"
+                        "4S",
+                        "5S",
+                        "6S",
+                        "7S",
+                        "9H",
+                        "9S",
+                        "9C"
                     ],
                     [
+                        "4D",
+                        "4C",
+                        "4H",
                         "AS",
-                        "AH",
-                        "AD",
-                        "3H",
-                        "8H",
-                        "1H",
-                        "KS"
+                        "6H",
+                        "6D",
+                        "7C",
+                        "8S"
                     ]
                 ],
                 "discard_pile": [
-                    "6S",
-                    "6H",
-                    "7H",
-                    "9H",
-                    "4C",
-                    "8D",
-                    "KD",
-                    "7D",
-                    "9D",
-                    "6D",
+                    "5D",
+                    "JD",
                     "2H",
-                    "6C",
-                    "2S",
-                    "1S",
-                    "7S",
-                    "QS",
+                    "AH",
+                    "9D",
+                    "7H",
+                    "3C",
+                    "3D",
+                    "1D",
+                    "KD",
+                    "JC",
                     "1C",
-                    "8C",
-                    "QD",
-                    "KC",
-                    "9C",
+                    "6C",
+                    "QS",
+                    "8H",
                     "5H",
-                    "KH"
+                    "2D",
+                    "5C",
+                    "8D",
+                    "8C",
+                    "QC",
+                    "3H",
+                    "KC",
+                    "JS",
+                    "1H",
+                    "1S",
+                    "2C",
+                    "AC",
+                    "KH",
+                    "KS"
                 ],
                 "selected_card": "",
-                "turn": 0,
+                "turn": 1,
                 "time_elapsed": 0,
                 "difficulty": [
                     0,
@@ -1064,33 +1344,23 @@
                 "winner": null,
                 "history": [
                     [
-                        0,
-                        "2S",
-                        "discard"
-                    ],
-                    [
                         1,
-                        "2S",
-                        "draw"
-                    ],
-                    [
-                        1,
-                        "KD",
+                        "5D",
                         "discard"
                     ],
                     [
                         0,
-                        "KD",
+                        "deck",
                         "draw"
                     ],
                     [
                         0,
-                        "KD",
+                        "KC",
                         "discard"
                     ],
                     [
                         1,
-                        "KD",
+                        "KC",
                         "draw"
                     ],
                     [
@@ -1100,112 +1370,12 @@
                     ],
                     [
                         0,
-                        "deck",
+                        "6S",
                         "draw"
                     ],
                     [
                         0,
-                        "6H",
-                        "discard"
-                    ],
-                    [
-                        1,
-                        "deck",
-                        "draw"
-                    ],
-                    [
-                        1,
-                        "9H",
-                        "discard"
-                    ],
-                    [
-                        0,
-                        "9H",
-                        "draw"
-                    ],
-                    [
-                        0,
-                        "7H",
-                        "discard"
-                    ],
-                    [
-                        1,
-                        "deck",
-                        "draw"
-                    ],
-                    [
-                        1,
-                        "JC",
-                        "discard"
-                    ],
-                    [
-                        0,
-                        "JC",
-                        "draw"
-                    ],
-                    [
-                        0,
-                        "9H",
-                        "discard"
-                    ],
-                    [
-                        1,
-                        "deck",
-                        "draw"
-                    ],
-                    [
-                        1,
-                        "4C",
-                        "discard"
-                    ],
-                    [
-                        0,
-                        "deck",
-                        "draw"
-                    ],
-                    [
-                        0,
-                        "8D",
-                        "discard"
-                    ],
-                    [
-                        1,
-                        "deck",
-                        "draw"
-                    ],
-                    [
-                        1,
-                        "KD",
-                        "discard"
-                    ],
-                    [
-                        0,
-                        "deck",
-                        "draw"
-                    ],
-                    [
-                        0,
-                        "7D",
-                        "discard"
-                    ],
-                    [
-                        1,
-                        "deck",
-                        "draw"
-                    ],
-                    [
-                        1,
-                        "9D",
-                        "discard"
-                    ],
-                    [
-                        0,
-                        "deck",
-                        "draw"
-                    ],
-                    [
-                        0,
-                        "6D",
+                        "JD",
                         "discard"
                     ],
                     [
@@ -1225,7 +1395,7 @@
                     ],
                     [
                         0,
-                        "6C",
+                        "AH",
                         "discard"
                     ],
                     [
@@ -1235,7 +1405,7 @@
                     ],
                     [
                         1,
-                        "2S",
+                        "9D",
                         "discard"
                     ],
                     [
@@ -1245,27 +1415,7 @@
                     ],
                     [
                         0,
-                        "1H",
-                        "discard"
-                    ],
-                    [
-                        1,
-                        "1H",
-                        "draw"
-                    ],
-                    [
-                        1,
-                        "5D",
-                        "discard"
-                    ],
-                    [
-                        0,
-                        "5D",
-                        "draw"
-                    ],
-                    [
-                        0,
-                        "1S",
+                        "7H",
                         "discard"
                     ],
                     [
@@ -1275,7 +1425,27 @@
                     ],
                     [
                         1,
-                        "7S",
+                        "4D",
+                        "discard"
+                    ],
+                    [
+                        0,
+                        "4D",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "3C",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        1,
+                        "3D",
                         "discard"
                     ],
                     [
@@ -1285,7 +1455,47 @@
                     ],
                     [
                         0,
-                        "QS",
+                        "1C",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "1C",
+                        "draw"
+                    ],
+                    [
+                        1,
+                        "1D",
+                        "discard"
+                    ],
+                    [
+                        0,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "2D",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "2D",
+                        "draw"
+                    ],
+                    [
+                        1,
+                        "KD",
+                        "discard"
+                    ],
+                    [
+                        0,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "JC",
                         "discard"
                     ],
                     [
@@ -1305,17 +1515,157 @@
                     ],
                     [
                         0,
+                        "6C",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        1,
+                        "QS",
+                        "discard"
+                    ],
+                    [
+                        0,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "3H",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "3H",
+                        "draw"
+                    ],
+                    [
+                        1,
+                        "9S",
+                        "discard"
+                    ],
+                    [
+                        0,
+                        "9S",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "8H",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        1,
+                        "5H",
+                        "discard"
+                    ],
+                    [
+                        0,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "AC",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "AC",
+                        "draw"
+                    ],
+                    [
+                        1,
+                        "2D",
+                        "discard"
+                    ],
+                    [
+                        0,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "8D",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "8D",
+                        "draw"
+                    ],
+                    [
+                        1,
+                        "5C",
+                        "discard"
+                    ],
+                    [
+                        0,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "4D",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "4D",
+                        "draw"
+                    ],
+                    [
+                        1,
+                        "8D",
+                        "discard"
+                    ],
+                    [
+                        0,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "4C",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "4C",
+                        "draw"
+                    ],
+                    [
+                        1,
                         "8C",
                         "discard"
                     ],
                     [
+                        0,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "QC",
+                        "discard"
+                    ],
+                    [
                         1,
                         "deck",
                         "draw"
                     ],
                     [
                         1,
-                        "QD",
+                        "3H",
                         "discard"
                     ],
                     [
@@ -1325,12 +1675,112 @@
                     ],
                     [
                         0,
+                        "JS",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "JS",
+                        "draw"
+                    ],
+                    [
+                        1,
                         "KC",
                         "discard"
                     ],
                     [
+                        0,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "KS",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "KS",
+                        "draw"
+                    ],
+                    [
+                        1,
+                        "JS",
+                        "discard"
+                    ],
+                    [
+                        0,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "1H",
+                        "discard"
+                    ],
+                    [
                         1,
                         "deck",
+                        "draw"
+                    ],
+                    [
+                        1,
+                        "1S",
+                        "discard"
+                    ],
+                    [
+                        0,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "2C",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        1,
+                        "AC",
+                        "discard"
+                    ],
+                    [
+                        0,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "KH",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        1,
+                        "KS",
+                        "discard"
+                    ],
+                    [
+                        0,
+                        "deck",
+                        "draw"
+                    ],
+                    [
+                        0,
+                        "8S",
+                        "discard"
+                    ],
+                    [
+                        1,
+                        "8S",
                         "draw"
                     ],
                     [
@@ -1340,47 +1790,17 @@
                     ],
                     [
                         0,
-                        "deck",
+                        "9C",
                         "draw"
                     ],
                     [
                         0,
-                        "5H",
+                        "4H",
                         "discard"
                     ],
                     [
                         1,
-                        "deck",
-                        "draw"
-                    ],
-                    [
-                        1,
-                        "KH",
-                        "discard"
-                    ],
-                    [
-                        0,
-                        "deck",
-                        "draw"
-                    ],
-                    [
-                        0,
-                        "AD",
-                        "discard"
-                    ],
-                    [
-                        1,
-                        "AD",
-                        "draw"
-                    ],
-                    [
-                        1,
-                        "3D",
-                        "discard"
-                    ],
-                    [
-                        0,
-                        "3D",
+                        "4H",
                         "draw"
                     ]
                 ]
@@ -1459,183 +1879,86 @@
                 "selected_first_card": false,
                 "card_array": [
                     [
-                        "QH",
-                        "6D",
-                        "5D",
-                        "9H",
-                        "2D",
-                        "5S"
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
                     ],
                     [
-                        "2C",
-                        "8H",
-                        "4D",
-                        "2H",
-                        "6H",
-                        "6C"
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
                     ],
                     [
-                        "8C",
-                        "AC",
-                        "1D",
-                        "8S",
-                        "BJ",
-                        "8D"
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
                     ],
                     [
-                        "JD",
-                        "AH",
-                        "AS",
-                        "7H",
-                        "5C",
-                        "3C"
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
                     ],
                     [
-                        "KS",
-                        "4C",
-                        "JH",
-                        "JS",
-                        "1H",
-                        "JC"
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
                     ],
                     [
-                        "QS",
-                        "QC",
-                        "9S",
-                        "4S",
-                        "RJ",
-                        "3H"
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
                     ],
                     [
-                        "7S",
-                        "7C",
-                        "5H",
-                        "9D",
-                        "KH",
-                        "1S"
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
                     ],
                     [
-                        "KC",
-                        "3D",
-                        "1C",
-                        "2S",
-                        "QD",
-                        "3S"
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
                     ],
                     [
-                        "7D",
-                        "9C",
-                        "AD",
-                        "6S",
-                        "KD",
-                        "4H"
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
                     ]
                 ],
-                "turn": 1,
+                "turn": 0,
                 "time_elapsed": 0,
                 "difficulty": [
-                    0,
-                    "Easy"
+                    -1,
+                    ""
                 ],
                 "winner": null,
-                "history": [
-                    [
-                        "pick",
-                        0,
-                        [
-                            4,
-                            3,
-                            "JS"
-                        ]
-                    ],
-                    [
-                        "pick",
-                        0,
-                        [
-                            4,
-                            1,
-                            "4C"
-                        ]
-                    ],
-                    [
-                        "Missed",
-                        0,
-                        [
-                            4,
-                            3,
-                            "JS"
-                        ],
-                        [
-                            4,
-                            1,
-                            "4C"
-                        ]
-                    ],
-                    [
-                        "pick",
-                        0,
-                        [
-                            5,
-                            2,
-                            "9S"
-                        ]
-                    ],
-                    [
-                        "pick",
-                        1,
-                        [
-                            4,
-                            3,
-                            "JS"
-                        ]
-                    ],
-                    [
-                        "Missed",
-                        1,
-                        [
-                            5,
-                            2,
-                            "9S"
-                        ],
-                        [
-                            4,
-                            3,
-                            "JS"
-                        ]
-                    ],
-                    [
-                        "pick",
-                        0,
-                        [
-                            3,
-                            3,
-                            "7H"
-                        ]
-                    ],
-                    [
-                        "pick",
-                        1,
-                        [
-                            5,
-                            2,
-                            "9S"
-                        ]
-                    ],
-                    [
-                        "Missed",
-                        1,
-                        [
-                            3,
-                            3,
-                            "7H"
-                        ],
-                        [
-                            5,
-                            2,
-                            "9S"
-                        ]
-                    ]
-                ]
+                "history": []
             }
         }
     }

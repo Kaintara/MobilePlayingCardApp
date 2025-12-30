@@ -112,12 +112,12 @@ class MobilePlayingCardApp(MDApp):
         self.threes = threes('threes',G1["rank_order"],G1)
         self.rummy = rummy('rummy',G2['value_map'],G2)
         self.memory = memory('memory',G1["rank_order"],G3)
-        self.save.update(self)
         Games = [G1,G2,G3]
         for game in Games:
+            print(game['winner'],game['history'])
             if game['winner'] is None and game['history']:
                 return "Resume Game"
-            return "New Game"
+        return "New Game"
         
     def get_difficulty(self):
         Carou = self.get_widget("carou","Settings")
@@ -231,7 +231,9 @@ class MobilePlayingCardApp(MDApp):
                 Ai_hand.add_widget(Display_Card(card,'front'))
             for y in range(9):
                 for x in range(6):
-                    if self.memory.card_array[y][x] == '':
+                    hand = self.get_widget(f'hand{y}{x}', 'MDMemory')
+                    hand.clear_widgets()
+                    if not self.memory.card_array[y][x]:
                         continue
                     else:
                         hand = self.get_widget(f'hand{y}{x}', 'MDMemory')
@@ -316,38 +318,35 @@ class MobilePlayingCardApp(MDApp):
                 if self.get_difficulty() == "Beginner":
                     move = m_mtcs(self.memory.state,GameEnvironmentM(),0.15)
                     print(move)
-                    self.memory.apply_move(move)
+                    self.memory.apply_move(move,self)
                     self.memory.update_game_state()
                 elif self.get_difficulty() == "Easy":
                     move = m_mtcs(self.memory.state,GameEnvironmentM(),0.2)
-                    self.memory.apply_move(move)
+                    self.memory.apply_move(move,self)
                     self.memory.update_game_state()
                 elif self.get_difficulty() == "Medium":
                     move = m_mtcs(self.memory.state,GameEnvironmentM(),0.25)
-                    self.memory.apply_move(move)
+                    self.memory.apply_move(move,self)
                     self.memory.update_game_state()
                 elif self.get_difficulty() == "Hard":
                     move = m_mtcs(self.memory.state,GameEnvironmentM(),0.35)
-                    self.memory.apply_move(move)
+                    self.memory.apply_move(move,self)
                     self.memory.update_game_state()
                 elif self.get_difficulty() == "Expert":
                     move = m_mtcs(self.memory.state,GameEnvironmentM(),0.5)
-                    self.memory.apply_move(move)
+                    self.memory.apply_move(move,self)
                     self.memory.update_game_state()
-                self.memory.turn = self.memory.next_vaild_player(self.memory.turn,self.save)
-                print(self.memory.turn)
                 print(self.memory.state['history'])
                 if self.memory.state['history']:
                     if self.memory.state['history'][-1][0] == "Missed":
                         y = self.memory.state['history'][-1][3][0]
                         x = self.memory.state['history'][-1][3][1]
-                        card_container = self.get_widget(f'hand{x}{y}','MDMemory')
+                        card_container = self.get_widget(f'hand{y}{x}','MDMemory')
                         card = card_container.children[0]
                         card.img.source = self.shop.get_theme(self.shop.equipped).asset_dict[card.suit_rank]
                 self.save.quick_save(self)
-                if self.memory.turn is None:
-                    print('Line 318 main.py reached')
-                    self.memory.end_game(self)
+                if self.memory.is_game_over():
+                    print('Game OVERRE')
                 else:
                     Clock.schedule_once(lambda dt: self.next_turn('memory'), 2.0)
 
@@ -424,22 +423,24 @@ state = {'name' : "threes",
             self.next_turn(game)
     
     def resume_game(self,game):
+        self.save.update(self)
+        self.update_game(game)
+        print("Resuming Game State:")
+        print(self.memory.card_array)
         if game == "threes":
             if self.threes.is_game_over():
                 self.threes.end_game(self)
-            self.update_game(game)
             if self.threes.turn == 1:
                 Clock.schedule_once(lambda dt: self.next_turn('threes'), 0.5)
         elif game == "rummy":
             if self.rummy.is_game_over():
                 self.rummy.end_game(self)
-            self.update_game(game)
             if self.rummy.turn == 1:
                 Clock.schedule_once(lambda dt: self.next_turn('rummy'), 0.5)
         elif game == "memory":
             if self.memory.is_game_over():
+                print("is it here?")
                 self.memory.end_game(self)
-            self.update_game(game)
             if self.memory.turn == 1:
                 Clock.schedule_once(lambda dt: self.next_turn('memory'), 0.5)
             

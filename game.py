@@ -27,12 +27,11 @@ class Game:
     def unlocked_achievements(game, app, savedata):
         unlocked = []
         already_unlocked = {a[0] for a in app.unlocked_achievements}
-
         for id, name, desc, condition in app.all_achievements:
             if id not in already_unlocked and condition(savedata):
                 unlocked.append((id, name, desc, condition))
                 app.unlocked_achievements.append((id, name, desc))
-
+        print("unlocked achievements:", unlocked)
         return unlocked
 
     def display_achievements(game,achievement):
@@ -646,15 +645,13 @@ class memory(Game):
         Moves = []
         for y, row in enumerate(memory.card_array):
             for x, card in enumerate(row):
-                # Skip empty slots (None) and already-matched cards
                 if card is not None and card != '':
-                    if memory.first_selected_card[2] != 'card':  # First card has been picked
+                    if memory.first_selected_card[2] != 'card':
                         if card == memory.first_selected_card[2]:
-                            continue  # Can't pick the same card twice
+                            continue
                         else:
                             Moves.append(("pick",player,(y,x,card)))
                     else:
-                        # First card not yet picked, any valid card works
                         Moves.append(("pick",player,(y,x,card)))
         return Moves
     
@@ -669,9 +666,9 @@ class memory(Game):
             memory.winner = 0
         return True
 
-    def next_vaild_player(memory,player,savedata):
+    def next_vaild_player(memory,player,app):
         if memory.is_game_over():
-            memory.end_game(savedata)
+            memory.end_game(app)
         else:
             if memory.state['history']:
                 if memory.state['history'][-1][0] == "Matched":
@@ -686,14 +683,17 @@ class memory(Game):
             else:
                 return player
         
-    def apply_move(memory,move):
+    def apply_move(memory,move,app):
         player = memory.turn
         if not move:
             if memory.is_game_over():
-                memory.end_game()
+                memory.end_game(app)
+                return
+            elif len(memory.hands[0]) + len(memory.hands[1]) == 52:
+                memory.end_game(app)
                 return
             else:
-                memory.turn = memory.next_vaild_player(player,'savedata')
+                memory.turn = memory.next_vaild_player(player,app)
                 return
         memory.state["history"].append(move)
         if memory.selected_first_card == False:
@@ -725,6 +725,7 @@ class memory(Game):
                 memory.state["history"].append(("Missed",player,first,second))
             memory.first_selected_card = ('y','x','card')
             memory.second_selected_card = ('y','x','card')
+            memory.turn = memory.next_vaild_player(player,app)
 
     def update_game_state(memory):
         memory.state['shuffled_deck'] = memory.shuffled_deck
