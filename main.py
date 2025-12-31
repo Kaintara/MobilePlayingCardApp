@@ -114,7 +114,7 @@ class MobilePlayingCardApp(MDApp):
         self.memory = memory('memory',G1["rank_order"],G3)
         Games = [G1,G2,G3]
         for game in Games:
-            print(game['winner'],game['history'])
+            print(game['winner'],game['history'][-1] if game['history'] else "No History")
             if game['winner'] is None and game['history']:
                 return "Resume Game"
         return "New Game"
@@ -445,7 +445,6 @@ state = {'name' : "threes",
                 Clock.schedule_once(lambda dt: self.next_turn('memory'), 0.5)
             
     def start_game(self,game):
-        self.save.update(self)
         if self.resume_game_check() == "Resume Game":
             print(game)
             self.resume_game(game)
@@ -455,6 +454,9 @@ state = {'name' : "threes",
             self.new_game("rummy")
         elif game == "memory":
             self.new_game("memory")
+
+    def on_start(self):
+        self.save.update(self)
 
 if __name__ == "__main__":
     MobilePlayingCardApp().run()

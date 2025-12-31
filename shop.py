@@ -154,28 +154,33 @@ class Shop:
             if theme_name == theme.name:
                 return theme
 
-    def update(shop):
+    def update(shop,app):
+        shop.filling_shop_inventory(app)
+        app.save.quick_save(app)
         print("Shop has been updated!")
 
-    def equip_theme(shop,theme):
+    def equip_theme(shop,theme,app):
+        print(theme)
+        print(shop.unlocked_inventory)
         if theme in shop.unlocked_inventory:
+            print(f"Equipped theme: {theme}")
             shop.equipped = theme
-            shop.update()
+            shop.update(app)
     
-    def buy_theme(shop,theme):
-        theme = shop.get_theme(theme)
-        if theme.name not in shop.unlocked_inventory:
+    def buy_theme(shop,theme_name,app):
+        theme = shop.get_theme(theme_name)
+        if theme_name not in shop.unlocked_inventory:
             if theme.cost <= shop.coin_count:
                 shop.unlocked_inventory.append(theme.name)
                 shop.coin_count -= theme.cost
-                shop.update()
+                shop.update(app)
             else:
-                pass
                 Dialog = Shop_Dialog(theme.cost,shop.coin_count)
                 Dialog.open()
 
     def filling_shop_inventory(shop,app):
         grid = app.get_widget("grid","MDShop")
+        grid.clear_widgets()
         for theme_ in shop.inventory:
             display = Shop_Card(theme_)
             grid.add_widget(display)

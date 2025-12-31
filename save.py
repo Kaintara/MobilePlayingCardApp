@@ -310,6 +310,9 @@ class SaveData():
         return save.alldata
     
     def quick_save(save,app):
+        save.alldata['Shop']['equipped'] = app.shop.equipped
+        save.alldata['Shop']['unlocked_inventory'] = app.shop.unlocked_inventory
+        save.alldata['Shop']['coin_count'] = app.shop.coin_count
         save.alldata['Games']['Current_Games']['threes'] = app.threes.state
         save.alldata['Games']['Current_Games']['rummy'] = app.rummy.state
         save.alldata['Games']['Current_Games']['memory'] = app.memory.state

@@ -316,6 +316,7 @@ class Shop_Button(MDButton):
         self.theme_name = theme_obj.name
         self.size_hint = (1, None)
         self.height = dp(32)
+        self.width = dp(120)
         self.radius = [16]
         self.elevation = 0
         self.equipped = equipped
@@ -349,12 +350,17 @@ class Shop_Button(MDButton):
         )
     
     def on_touch_down(self, touch):
+        print('pressed shop button', self.theme_name, self.unlocked,self.equipped)
         if self.collide_point(*touch.pos):
             app = MDApp.get_running_app()
+            print(app.shop.unlocked_inventory)
+            print(app.shop.equipped)
             if not self.unlocked:
-                app.shop.buy_theme(self.theme_name)
+                app.shop.buy_theme(self.theme_name,app)
+                print("Attempting to buy theme:", self.theme_name)
             else:
-                app.shop.equip_theme(self.theme_name)
+                app.shop.equip_theme(self.theme_name,app)
+                print("Attempting to equip theme:", self.theme_name)
         return super().on_touch_down(touch)
 
 class Shop_Card(MDCard):
@@ -373,7 +379,7 @@ class Shop_Card(MDCard):
 
         layout = MDBoxLayout(
             orientation="vertical",
-            spacing=dp(10),
+            spacing=dp(5),
             adaptive_height=True
         )
 
@@ -402,7 +408,13 @@ class Shop_Card(MDCard):
         card_stack.add_widget(card_back)
         card_stack.add_widget(card_front)
         
-        button = Shop_Button(theme_name)
+        if theme_name.name in MDApp.get_running_app().shop.unlocked_inventory:
+            if theme_name.name == MDApp.get_running_app().shop.equipped:
+                button = Shop_Button(theme_name, equipped=True)
+            else:
+                button = Shop_Button(theme_name, unlocked=True)
+        else:
+            button = Shop_Button(theme_name, unlocked=False)
 
         layout.add_widget(card_stack)
         layout.add_widget(button)

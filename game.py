@@ -60,8 +60,7 @@ class Game:
             amount_earned += 10
         return (amount_earned, game.winner, total_delay)
     
-    def end_game(game, app):
-        print("Game Over!")
+    def end_game(game, app): #Write in NEA
         completed_game = {
             'winner': game.winner,
             'history': game.state['history'],
@@ -72,7 +71,7 @@ class Game:
         app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
         reward = game.get_reward(app.shop,app,app.save)
         app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
-        for _ in range(3):
+        if game.name == "threes":
             app.threes.shuffled_deck = []
             app.threes.hands = [[],[]]
             app.threes.bottom_hands = [[],[]]
@@ -97,6 +96,7 @@ class Game:
                             "history": []}
             app.threes.discard_pile = []
             app.threes.played_cards = []
+        elif game.name == "rummy":
             app.rummy.shuffled_deck = []
             app.rummy.hands = [[],[]]
             app.rummy.turn = 0
@@ -114,6 +114,7 @@ class Game:
                             "winner" : None,
                             "history": []}
             app.rummy.discard_pile = []
+        elif game.name == "memory":
             app.memory.shuffled_deck = []
             app.memory.hands = [[],[]]
             app.memory.turn = 0
@@ -132,6 +133,7 @@ class Game:
                             "winner" : None,
                             "history": []}
             app.memory.card_array = [["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""]]
+        app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
         Dialog = Reward_Dialog(reward,app)
         Clock.schedule_once(lambda dt: Dialog.open(), reward[2]) 
 
@@ -187,7 +189,7 @@ class threes(Game):
             if idx < len(temp_hand):
                 Valid_Cards += temp_hand[idx:]
             for card in Valid_Cards:
-                if card not in [m[1] for m in Moves]:  # Avoid duplicate moves
+                if card not in [m[1] for m in Moves]:
                     Moves.append((player,card,"play"))
         else:
             for card in Hand:
@@ -227,7 +229,6 @@ class threes(Game):
         player = move[0]
         if not move:
             if threes.is_game_over():
-                #threes.end_game()
                 return
             else:
                 threes.turn = threes.next_vaild_player(threes.turn, 'savedata')
