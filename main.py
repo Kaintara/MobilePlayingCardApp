@@ -200,10 +200,11 @@ class MobilePlayingCardApp(MDApp):
         elif game == "rummy":
             timer = self.get_widget('timer','MDRummy')
             timer.text = self.s_to_mmss(self.rummy.time_elapsed)
-            for i in range(len(self.rummy.hands[1])):
+            for i in range(8):
                 Ai_hand = self.get_widget(f'ai_hand{i + 1}', 'MDRummy')
                 Ai_hand.clear_widgets()
-                Ai_hand.add_widget(Display_Card(self.rummy.hands[1][i], 'back'))
+                if i < len(self.rummy.hands[1]):
+                    Ai_hand.add_widget(Display_Card(self.rummy.hands[1][i], 'back'))
             deck = self.get_widget('deck', 'MDRummy')
             deck.clear_widgets()
             if self.rummy.discard_pile:
@@ -250,23 +251,38 @@ class MobilePlayingCardApp(MDApp):
             if self.threes.turn == 1:
                 if self.get_difficulty() == "Beginner":
                     move = m_mtcs(self.threes.state,GameEnvironmentT(),0.15)
+                    moves = self.threes.get_valid_moves()
+                    if all(m[2] == 'try' for m in moves):
+                            move = random.choice(moves)
                     print(move)
                     self.threes.apply_move(move)
                     self.threes.update_game_state()
                 elif self.get_difficulty() == "Easy":
                     move = m_mtcs(self.threes.state,GameEnvironmentT(),0.2)
+                    moves = self.threes.get_valid_moves()
+                    if all(m[2] == 'try' for m in moves):
+                            move = random.choice(moves)
                     self.threes.apply_move(move)
                     self.threes.update_game_state()
                 elif self.get_difficulty() == "Medium":
                     move = m_mtcs(self.threes.state,GameEnvironmentT(),0.25)
+                    moves = self.threes.get_valid_moves()
+                    if all(m[2] == 'try' for m in moves):
+                            move = random.choice(moves)
                     self.threes.apply_move(move)
                     self.threes.update_game_state()
                 elif self.get_difficulty() == "Hard":
                     move = m_mtcs(self.threes.state,GameEnvironmentT(),0.35)
+                    moves = self.threes.get_valid_moves()
+                    if all(m[2] == 'try' for m in moves):
+                            move = random.choice(moves)
                     self.threes.apply_move(move)
                     self.threes.update_game_state()
                 elif self.get_difficulty() == "Expert":
                     move = m_mtcs(self.threes.state,GameEnvironmentT(),0.5)
+                    moves = self.threes.get_valid_moves()
+                    if all(m[2] == 'try' for m in moves):
+                            move = random.choice(moves)
                     self.threes.apply_move(move)
                     self.threes.update_game_state()
                 self.threes.turn = self.threes.next_vaild_player(self.threes.turn,self.save)
@@ -302,22 +318,21 @@ class MobilePlayingCardApp(MDApp):
                     move = m_mtcs(self.rummy.state,GameEnvironmentR(),0.5)
                     self.rummy.apply_move(move)
                     self.rummy.update_game_state()
-                self.rummy.turn = self.rummy.next_vaild_player(self.rummy.turn,self.save)
-                print(self.rummy.turn)
+                self.rummy.turn = self.rummy.next_vaild_player(self.rummy.turn)
                 self.save.quick_save(self)
                 if self.rummy.turn is None:
-                    print('Line 276 main.py reached')
+                    print('Line 308 main.py reached')
                     self.rummy.end_game(self)
                 else:
                     Clock.schedule_once(lambda dt: self.next_turn('rummy'), 0.5)
         elif game == 'memory':
             self.memory.selected_card = "" 
             self.memory.update_game_state()
-            print(self.memory.turn)
+            print("Turn: ",self.memory.turn)
             if self.memory.turn == 1:
                 if self.get_difficulty() == "Beginner":
                     move = m_mtcs(self.memory.state,GameEnvironmentM(),0.15)
-                    print(move)
+                    print("Move: ",move)
                     self.memory.apply_move(move,self)
                     self.memory.update_game_state()
                 elif self.get_difficulty() == "Easy":
@@ -418,31 +433,32 @@ state = {'name' : "threes",
             self.memory.distribute_cards()
             self.memory.update_game_state()
             self.update_game(game)
-            self.memory.turn = random.randint(0,1)
+            self.memory.turn = 1#random.randint(0,1)
             print(self.memory.turn)
             self.next_turn(game)
     
     def resume_game(self,game):
         self.save.update(self)
         self.update_game(game)
-        print("Resuming Game State:")
-        print(self.memory.card_array)
-        if game == "threes":
+        if game == "threes" and self.threes.state['history'] and self.threes.winner is None:
             if self.threes.is_game_over():
                 self.threes.end_game(self)
             if self.threes.turn == 1:
                 Clock.schedule_once(lambda dt: self.next_turn('threes'), 0.5)
-        elif game == "rummy":
+        elif game == "rummy" and self.rummy.state['history'] and self.rummy.winner is None:
+            print("Resuming Rummy Game")
+            print(self.rummy.is_game_over())
             if self.rummy.is_game_over():
                 self.rummy.end_game(self)
             if self.rummy.turn == 1:
                 Clock.schedule_once(lambda dt: self.next_turn('rummy'), 0.5)
-        elif game == "memory":
+        elif game == "memory" and self.memory.state['history'] and self.memory.winner is None:
             if self.memory.is_game_over():
-                print("is it here?")
                 self.memory.end_game(self)
             if self.memory.turn == 1:
                 Clock.schedule_once(lambda dt: self.next_turn('memory'), 0.5)
+        else:
+            self.new_game(game)
             
     def start_game(self,game):
         if self.resume_game_check() == "Resume Game":

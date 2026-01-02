@@ -306,7 +306,6 @@ class SaveData():
     def load(save):
         with open(r"MobilePlayingCardApp\player_data.json", "r") as f:
             save.alldata = json.load(f)
-        print(save.alldata)
         return save.alldata
     
     def quick_save(save,app):

@@ -145,10 +145,10 @@ class Shop:
     "KS": "MobilePlayingCardApp/assets/img/theme2/Spades 13.png",
 
     #Jokers
-    "RJ": "MobilePlayingCardApp/assets/img/theme1/Joker Red.png",
-    "BJ": "MobilePlayingCardApp/assets/img/theme1/Joker Black.png",
+    "RJ": "MobilePlayingCardApp/assets/img/theme2/Joker Red.png",
+    "BJ": "MobilePlayingCardApp/assets/img/theme2/Joker Black.png",
 }))
-
+        #themes.append(Theme(''))
     def get_theme(shop,theme_name):
         for theme in shop.inventory:
             if theme_name == theme.name:
@@ -157,13 +157,9 @@ class Shop:
     def update(shop,app):
         shop.filling_shop_inventory(app)
         app.save.quick_save(app)
-        print("Shop has been updated!")
 
     def equip_theme(shop,theme,app):
-        print(theme)
-        print(shop.unlocked_inventory)
         if theme in shop.unlocked_inventory:
-            print(f"Equipped theme: {theme}")
             shop.equipped = theme
             shop.update(app)
     

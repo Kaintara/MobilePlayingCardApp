@@ -32,6 +32,7 @@ class GameEnvironmentT:
             for card in threes['played_cards']:
                 public_cards.append(card)
         unknown_cards = [c for c in threes['deck'] if c not in public_cards]
+        print(f'Unknown Cards: {unknown_cards}')
         if not threes["history"]:
             threes['hands'][1] = []
             for _ in range(0,3):
@@ -52,16 +53,19 @@ class GameEnvironmentT:
                 for card in threes['history'][-1][1]:
                     if card in unknown_cards:
                         Player_hand.append(card)
-            while len(threes['hands'][0]) != len(Player_hand):
-                Player_hand.append(unknown_cards.pop())
             threes['bottom_hands'][1] = []
             for _ in range(len(state['bottom_hands'][1])):
-                card1 = unknown_cards.pop()
-                threes["bottom_hands"][1].append(card1)
+                #if unknown_cards:
+                    card1 = unknown_cards.pop()
+                    threes["bottom_hands"][1].append(card1)
             threes['bottom_hands'][0] = []
             for _ in range(len(state['bottom_hands'][0])):
-                card2 = unknown_cards.pop()
-                threes["bottom_hands"][0].append(card2)
+                #if unknown_cards:
+                    card2 = unknown_cards.pop()
+                    threes["bottom_hands"][0].append(card2)
+            for _ in range(len(threes['hands'][0]) - len(Player_hand)):
+                #if unknown_cards:
+                    Player_hand.append(unknown_cards.pop())
             threes['shuffled_deck'] = unknown_cards
             threes['hands'][0] = Player_hand
         return threes
@@ -218,7 +222,6 @@ class GameEnvironmentT:
             return moves[0]
         else:
             rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 15}
-            #scores = []
             best_move = moves[0]
             for move in moves:
                 player, card, action = move

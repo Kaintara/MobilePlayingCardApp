@@ -8,21 +8,15 @@ This is just a TO DO list lol
 - Add a pause button in the game screens so the game can be stopped when this is touched
 imperative that you fix the turns!!
 
-FOR NEA YOU NEED TO FINISH THIS BEFORE JAN!!!
-
-PLEASE DO THIS INSTEAD OF BG3 :pray:
-
-Start doing section reviews!!
-
-One section review to ensure code is working solely THEN a review to make sure code is working externally.
+Whenever a working prototype of a section is made do a section review
 
 
 
 reset save data here:
 
 {
-            "Shop" : {"equipped" : "Classic",
-                     "unlocked_inventory" : ["Classic"],
+            "Shop" : {"equipped" : "Blue_Classic",
+                     "unlocked_inventory" : ["Classic","Blue_Classic"],
                      "coin_count" : 0
                        },
             "App" : {"sm_stack" : [],

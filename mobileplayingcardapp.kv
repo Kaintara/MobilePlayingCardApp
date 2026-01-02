@@ -1060,6 +1060,7 @@
                 pos_hint: {"center_x": 0.5}
                 on_release: 
                     app.sm_stacky("NewGame")
+                    app.resume_game('threes')
                     root.manager.current = "MDThrees"
                 MDButtonText:
                     text: "Resume Threes"
@@ -1070,6 +1071,7 @@
                 pos_hint: {"center_x": 0.5}
                 on_release: 
                     app.sm_stacky("NewGame")
+                    app.resume_game('rummy')
                     root.manager.current = "MDRummy"
                 MDButtonText:
                     text: "Resume Rummy"
@@ -1080,6 +1082,7 @@
                 pos_hint: {"center_x": 0.5}
                 on_release: 
                     app.sm_stacky("NewGame")
+                    app.resume_game('memory')
                     root.manager.current = "MDMemory"
                 MDButtonText:
                     text: "Resume Memory"

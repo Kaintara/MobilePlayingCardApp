@@ -29,7 +29,7 @@ class GameEnvironmentM:
         for y, row in enumerate(state.get('card_array', [])):
            for x, card in enumerate(row):
               if not card:
-                    memory['card_array'][y][x] = 'Blank'
+                    memory['card_array'][y][x] = 'Empty_Space'
         if memory['history']:
             for move in memory['history']:
                 if move[0] == 'Missed':
@@ -58,7 +58,7 @@ class GameEnvironmentM:
                 #if not memory['card_array'][y][x]:
                     #if not memory['deck']:
                         #raise ValueError("Deck exhausted while determinizing")
-                    #memory['card_array'][y][x] = 'Blank'
+                    #memory['card_array'][y][x] = 'Empty_Space'
         return memory
  
     def get_vaild_moves(env,state):
@@ -66,7 +66,7 @@ class GameEnvironmentM:
         Moves = []
         for y, row in enumerate(state['card_array']):
             for x, card in enumerate(row):
-                if card and card != 'Blank':
+                if card and card != 'Empty_Space':
                     if card == state.get('first_selected_card')[2]:
                             continue
                     else:
@@ -148,7 +148,7 @@ class GameEnvironmentM:
         for y, row in enumerate(state.get('card_array', [])):
            for x, card in enumerate(row):
               if not card:
-                    memory['card_array'][y][x] = 'Blank'
+                    memory['card_array'][y][x] = 'Empty_Space'
         if memory['history']:
             for move in memory['history']:
                 if move[0] == 'Missed':

@@ -269,12 +269,9 @@ class Playing_Card(MDCard):
                                 self.highlight.opacity = 1
                             else:
                                 game.selected_card = ''
-                                game.turn = game.next_vaild_player(game.turn,app.save)
-                                print(game.turn)
+                                game.apply_move(move)
+                                game.turn = game.next_vaild_player(game.turn)
                                 if game.turn is not None:
-                                    print(move)
-                                    print(game.hands[0])
-                                    game.apply_move(move)
                                     game.update_game_state()
                                     app.save.quick_save(app)
                                     Clock.schedule_once(lambda dt: app.next_turn('rummy'), 0.5)

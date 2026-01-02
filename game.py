@@ -135,7 +135,7 @@ class Game:
             app.memory.card_array = [["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""]]
         app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
         Dialog = Reward_Dialog(reward,app)
-        Clock.schedule_once(lambda dt: Dialog.open(), reward[2]) 
+        Clock.schedule_once(lambda dt: Dialog.open(), (reward[2]*2)) 
 
 class threes(Game):
     def __init__(threes, name, rank_order, state):
@@ -239,12 +239,17 @@ class threes(Game):
         else:
             Top_card = '2H'
         if move[2] == "try":
+            print("selecting card to play:", move[1])
             if Top_card[0] == '2':
                 threes.apply_move((player,move[1],"play"))
             else:
                 Card_rank = threes.rank_order[move[1][0]]
+                print("Top card rank:", threes.rank_order[Top_card[0]])
+                print("Selected card rank:", Card_rank)
                 if Card_rank >= threes.rank_order[Top_card[0]]:
+                    print("hands before: ",threes.bottom_hands[player])
                     threes.apply_move((player,move[1],"play"))
+                    print("hands after: ",threes.bottom_hands[player])
                 else:
                     threes.apply_move((player,threes.played_cards,"pickup"))
                     return
@@ -531,30 +536,36 @@ class rummy(Game):
             return True
         return False
     
-    def next_vaild_player(rummy,player,savedata):
+    def next_vaild_player(rummy,player):
         player = rummy.turn
+        print(rummy.is_game_over())
         if rummy.is_game_over():
             return None
-
-        history = rummy.state['history']
-
-        if not history:
-            print("Starting Player:", player)
-            return player
-
-        first_player, _, _ = history[0]
-
-        if len(history) == 1:
-            print("next player after first move", 1 - first_player)
-            return 1 - first_player
-        elif len(history) >= 2:
-            last_player, _, last_action = history[-1]
-            if last_action == 'discard':
-                return 1 - last_player
+        else:
+            if rummy.state['history']:
+                last_move = rummy.state['history'][-1]
+                if last_move[2] == "draw":
+                    return player
+                elif last_move[2] == "discard":
+                    if player == 1:
+                        return 0
+                    else:
+                        return 1
+                else:
+                    if player == 1:
+                        return 0
+                    else:
+                        return 1
             else:
-                return last_player
+                if player == 1:
+                    return 0
+                else:
+                    return 1
         
     def apply_move(rummy,move):
+        print("Turn:", rummy.turn)
+        print("HANDS BEFORE MOVE:", rummy.hands)
+        print("APPLY MOVE:", move)
         player = move[0]
         if not move:
             if rummy.is_game_over():
@@ -574,8 +585,7 @@ class rummy(Game):
         elif move[2] == "discard":
             rummy.discard_pile.append(move[1])
             rummy.hands[player].remove(move[1])
-            print(rummy.turn)
-            rummy.turn = 1 - rummy.turn
+        print("HANDS AFTER MOVE:", rummy.hands)
     
     def update_game_state(rummy):
         rummy.state['shuffled_deck'] = rummy.shuffled_deck
@@ -654,6 +664,7 @@ class memory(Game):
                             Moves.append(("pick",player,(y,x,card)))
                     else:
                         Moves.append(("pick",player,(y,x,card)))
+        print("VALID MOVES:", Moves)
         return Moves
     
     def is_game_over(memory):
@@ -667,7 +678,7 @@ class memory(Game):
             memory.winner = 0
         return True
 
-    def next_vaild_player(memory,player,app):
+    def next_vaild_player(memory,player,app): #Write in NEA
         if memory.is_game_over():
             memory.end_game(app)
         else:
@@ -684,7 +695,7 @@ class memory(Game):
             else:
                 return player
         
-    def apply_move(memory,move,app):
+    def apply_move(memory,move,app): #Write in NEA
         player = memory.turn
         if not move:
             if memory.is_game_over():

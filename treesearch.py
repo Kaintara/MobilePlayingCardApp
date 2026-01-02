@@ -49,6 +49,10 @@ def is_time_over(time_limit,time_elapsed):
 def m_mtcs(root_state,game_env,time_limit, debug=False):
     #Determinize
     det_root = game_env.determinization(root_state)
+    if root_state['name'] == "memory" and det_root['card_array'] == [['' for _ in range(6)] for _ in range(9)]:
+        moves = game_env.get_vaild_moves(root_state)
+        random_move = random.choice(moves)
+        return random_move  
     # Preserve the current player's turn from the root state when determinizing.
     det_root['turn'] = 1
     root_node = Node(det_root,None,None)
