@@ -132,18 +132,43 @@ class MobilePlayingCardApp(MDApp):
             return "Hard"
         elif difficulty == "Expert":
             return "Expert"
-        
+
+    def determine_contents(self,content):
+        conditionalcarou = self.get_widget("conditionalcarou","Stats")
+        if content == "All_Time Stats" or content == "Achievements":
+            conditionalcarou.clear_widgets()
+            conditionalcarou.add_widget(MDLabel(text="N/A",font_style="cataway",role="small",halign="center",valign="center"))
+            bl = self.get_widget("bottom_left","Stats")
+            br = self.get_widget("bottom_right","Stats")
+            bl.disabled = True
+            br.disabled = True
+        elif content == "Threes":
+            conditionalcarou.clear_widgets()
+            conditionalcarou.add_widget(MDLabel(text="N/A",font_style="cataway",role="small",halign="center",valign="center"))
+            bl = self.get_widget("bottom_left","Stats")
+            br = self.get_widget("bottom_right","Stats")
+            bl.disabled = False
+            br.disabled = False
+        elif content == "Rummy":
+            pass
+        elif content == "Memory":
+            pass
+
     def left(self,Screen):
         Carou = self.get_widget("carou",Screen)
-        if Screen == "Stats":
-            pass
         Carou.load_previous()
+        if Screen == "Stats":
+            content = Carou.current_slide.text
+            self.determine_contents(content)
+        
 
     def right(self,Screen):
         Carou = self.get_widget("carou",Screen)
-        if Screen == "Stats":
-            pass
         Carou.load_next()
+        if Screen == "Stats":
+            content = Carou.current_slide.text
+            self.determine_contents(content)
+        
 
     def on_start(self):
         pass
@@ -473,6 +498,7 @@ state = {'name' : "threes",
 
     def on_start(self):
         self.save.update(self)
+        self.determine_contents("All_Time Stats")
 
 if __name__ == "__main__":
     MobilePlayingCardApp().run()

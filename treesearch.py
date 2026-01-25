@@ -73,7 +73,6 @@ def m_mtcs(root_state,game_env,time_limit, debug=False):
         if node is None:
             iterations += 1
             continue
-
         #Expansion
         if node.depth < 2:
             if node.untried_moves is None:
