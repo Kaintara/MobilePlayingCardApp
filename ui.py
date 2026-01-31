@@ -416,3 +416,19 @@ class Shop_Card(MDCard):
         layout.add_widget(card_stack)
         layout.add_widget(button)
         self.add_widget(layout)
+
+class Text(MDLabel):
+    def __init__(self, text, **kwargs):
+        super().__init__(**kwargs)
+        self.text = text
+        self.font_style="cataway"
+        self.role="small"
+        self.halign="center"
+        self.valign="center"
+
+class Achievement_Container(MDBoxLayout):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.orientation = "horizontal"
+        self.size_hint_x = 1
+        self.pos_hint_x = 0.5

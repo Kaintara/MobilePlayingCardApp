@@ -133,40 +133,73 @@ class MobilePlayingCardApp(MDApp):
         elif difficulty == "Expert":
             return "Expert"
 
+    def fill_carou(self,content):
+        scroll_box = self.get_widget('stats',"Stats")
+        scroll_box.clear_widgets()
+        if content == "All_Time Stats":
+            scroll_box.add_widget(Text(text="Favourite Game:____"))
+            scroll_box.add_widget(Text(text="Favourite Difficulty"))
+            scroll_box.add_widget(Text(text="Best Time~ --:--"))
+            scroll_box.add_widget(Text(text="Wins: 999"))
+            scroll_box.add_widget(Text(text="W/L Ratio: 1.5"))
+            scroll_box.add_widget(Text(text="Last Played"))
+            scroll_box.add_widget(Text(text="Total Games"))
+        elif content == "Achievements":
+            for x in enumerate(self.all_achievements):
+                text = Text(x[1][1])
+                if x in self.unlocked_achievements:
+                    icon = MDIconButton(icon='trophy')
+                else:
+                    icon = MDIconButton(icon='trophy-outline')
+                container = Achievement_Container()
+                container.add_widget(text)
+                container.add_widget(icon)
+                scroll_box.add_widget(container)
+
     def determine_contents(self,content):
         conditionalcarou = self.get_widget("conditionalcarou","Stats")
         if content == "All_Time Stats" or content == "Achievements":
             conditionalcarou.clear_widgets()
-            conditionalcarou.add_widget(MDLabel(text="N/A",font_style="cataway",role="small",halign="center",valign="center"))
+            conditionalcarou.add_widget(Text(text="N/A"))
             bl = self.get_widget("bottom_left","Stats")
             br = self.get_widget("bottom_right","Stats")
             bl.disabled = True
             br.disabled = True
-        elif content == "Threes":
+        elif content == "Threes" or content == "Rummy" or content == "Memory":
             conditionalcarou.clear_widgets()
-            conditionalcarou.add_widget(MDLabel(text="N/A",font_style="cataway",role="small",halign="center",valign="center"))
+            conditionalcarou.add_widget(Text(text="Overview"))
+            conditionalcarou.add_widget(Text(text="Beginner"))
+            conditionalcarou.add_widget(Text(text="Easy"))
+            conditionalcarou.add_widget(Text(text="Normal"))
+            conditionalcarou.add_widget(Text(text="Hard"))
+            conditionalcarou.add_widget(Text(text="Expert"))
             bl = self.get_widget("bottom_left","Stats")
             br = self.get_widget("bottom_right","Stats")
             bl.disabled = False
             br.disabled = False
-        elif content == "Rummy":
-            pass
-        elif content == "Memory":
-            pass
+        self.fill_carou(content)
 
     def left(self,Screen):
-        Carou = self.get_widget("carou",Screen)
+        if Screen == "Con_Stats":
+            ID = 'conditionalcarou'
+        else:
+            ID = "carou"
+        Carou = self.get_widget(ID,Screen)
         Carou.load_previous()
         if Screen == "Stats":
-            content = Carou.current_slide.text
+            content = Carou.previous_slide.text
             self.determine_contents(content)
         
 
     def right(self,Screen):
-        Carou = self.get_widget("carou",Screen)
+        if Screen == "Con_Stats":
+            ID = 'conditionalcarou'
+        else:
+            ID = "carou"
+        Carou = self.get_widget(ID,Screen)
         Carou.load_next()
         if Screen == "Stats":
-            content = Carou.current_slide.text
+            content = Carou.next_slide.text
             self.determine_contents(content)
         
 
