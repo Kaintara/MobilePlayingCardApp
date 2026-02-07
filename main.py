@@ -114,7 +114,7 @@ class MobilePlayingCardApp(MDApp):
         self.memory = memory('memory',G1["rank_order"],G3)
         Games = [G1,G2,G3]
         for game in Games:
-            print(game['winner'],game['history'][-1] if game['history'] else "No History")
+            #print(game['winner'],game['history'][-1] if game['history'] else "No History")
             if game['winner'] is None and game['history']:
                 return "Resume Game"
         return "New Game"
@@ -308,11 +308,12 @@ class MobilePlayingCardApp(MDApp):
             self.threes.update_game_state()
             if self.threes.turn == 1:
                 if self.get_difficulty() == "Beginner":
-                    move = m_mtcs(self.threes.state,GameEnvironmentT(),0.15)
+                    move = m_mtcs(self.threes.state,GameEnvironmentT(),0.15,True)
                     moves = self.threes.get_valid_moves()
                     if all(m[2] == 'try' for m in moves):
                             move = random.choice(moves)
                     print(move)
+                    print(self.threes.hands[1])
                     self.threes.apply_move(move)
                     self.threes.update_game_state()
                 elif self.get_difficulty() == "Easy":
@@ -347,10 +348,11 @@ class MobilePlayingCardApp(MDApp):
                 print(self.threes.turn)
                 self.save.quick_save(self)
                 if self.threes.turn is None:
-                    print('Line 231 main.py reached')
+                    print('Line 351 main.py reached')
                     self.threes.end_game(self)
-                else:
+                elif self.threes.turn == 1:
                     Clock.schedule_once(lambda dt: self.next_turn('threes'), 0.5)
+                self.update_game(game)
         elif game == 'rummy':
             self.rummy.selected_card = "" 
             self.rummy.update_game_state()
@@ -389,7 +391,7 @@ class MobilePlayingCardApp(MDApp):
             print("Turn: ",self.memory.turn)
             if self.memory.turn == 1:
                 if self.get_difficulty() == "Beginner":
-                    move = m_mtcs(self.memory.state,GameEnvironmentM(),0.15)
+                    move = m_mtcs(self.memory.state,GameEnvironmentM(),0.15,True)
                     print("Move: ",move)
                     self.memory.apply_move(move,self)
                     self.memory.update_game_state()
@@ -406,10 +408,10 @@ class MobilePlayingCardApp(MDApp):
                     self.memory.apply_move(move,self)
                     self.memory.update_game_state()
                 elif self.get_difficulty() == "Expert":
-                    move = m_mtcs(self.memory.state,GameEnvironmentM(),0.5)
+                    move = m_mtcs(self.memory.state,GameEnvironmentM(),0.5,True)
                     self.memory.apply_move(move,self)
                     self.memory.update_game_state()
-                print(self.memory.state['history'])
+                #print(self.memory.state['history'])
                 if self.memory.state['history']:
                     if self.memory.state['history'][-1][0] == "Missed":
                         y = self.memory.state['history'][-1][3][0]
@@ -517,7 +519,6 @@ state = {'name' : "threes",
                 Clock.schedule_once(lambda dt: self.next_turn('memory'), 0.5)
         else:
             self.new_game(game)
-            
     def start_game(self,game):
         if self.resume_game_check() == "Resume Game":
             print(game)

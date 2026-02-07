@@ -16,7 +16,7 @@ class Shop:
         shop.coin_count = 0
 
     def set_all_themes(shop):
-        themeslst = ['Classic','Blue_Classic']
+        themeslst = ['Classic','Blue_Classic','Dark-Red']
         themes = shop.inventory
         themes.append(Theme(themeslst[0], 0, 'assets/img/theme1/king_of_clubs2.png', 'assets/img/theme1/card_back_red.png',{
     # Hearts
@@ -148,6 +148,7 @@ class Shop:
     "RJ": "MobilePlayingCardApp/assets/img/theme2/Joker Red.png",
     "BJ": "MobilePlayingCardApp/assets/img/theme2/Joker Black.png",
 }))
+        themes.append(Theme(themeslst[2],50,''))
         #themes.append(Theme(''))
     def get_theme(shop,theme_name):
         for theme in shop.inventory:
@@ -157,6 +158,7 @@ class Shop:
     def update(shop,app):
         shop.filling_shop_inventory(app)
         app.save.quick_save(app)
+        print("Shop has been updated!")
 
     def equip_theme(shop,theme,app):
         if theme in shop.unlocked_inventory:

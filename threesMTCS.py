@@ -223,6 +223,7 @@ class GameEnvironmentT:
         else:
             rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 15}
             best_move = moves[0]
+            scores = []
             for move in moves:
                 player, card, action = move
                 if action == 'pickup':
@@ -232,10 +233,10 @@ class GameEnvironmentT:
                     best_move_rank = best_move[1][0]
                     if rank_order[rank] < rank_order[best_move_rank[0]]:
                         best_move = move
-                '''
+            '''
                 score = 0.0
                 if action == 'pickup':
-                    score -= 10
+                    continue
                 elif action == 'play':
                     score += 10
                     rank = card[0]

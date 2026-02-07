@@ -35,6 +35,8 @@ class Game:
         return unlocked
 
     def display_achievements(game,achievement):
+        print(achievement[1])
+        print(achievement[2])
         Dialog = Achievement_Dialog(achievement)
         Dialog.open()
         Clock.schedule_once(lambda dt: Dialog.dismiss(), 5)
@@ -49,15 +51,17 @@ class Game:
             shop.coin_count += 5*len(Unlocked_achievement)
             amount_earned += 5*len(Unlocked_achievement)
             for index, achievement in enumerate(Unlocked_achievement):
-                delay = index * 5
+                delay = (index+1) * 5
                 total_delay += delay
-                Clock.schedule_once(lambda dt: game.display_achievements(achievement), delay) 
+                print(achievement)
+                Clock.schedule_once(lambda dt, achieve=achievement: game.display_achievements(achieve), delay) 
         if game.winner == 0:
             shop.coin_count += (30 + game.difficulty[0]*5)
             amount_earned += (30 + game.difficulty[0]*5)
         else:
             shop.coin_count += 10
             amount_earned += 10
+        print(amount_earned, game.winner, total_delay)
         return (amount_earned, game.winner, total_delay)
     
     def end_game(game, app): #Write in NEA
@@ -68,9 +72,7 @@ class Game:
             'time': game.time_elapsed
         }
         app.previous_games[game.name].append(completed_game)
-        app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
         reward = game.get_reward(app.shop,app,app.save)
-        app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
         if game.name == "threes":
             app.threes.shuffled_deck = []
             app.threes.hands = [[],[]]
@@ -134,6 +136,8 @@ class Game:
                             "history": []}
             app.memory.card_array = [["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""]]
         app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
+        print(app.save.alldata["Games"]["Stats"]["threes_Stats"]["General_Stats"])
+        print(app.threes.state["history"])
         Dialog = Reward_Dialog(reward,app)
         Clock.schedule_once(lambda dt: Dialog.open(), (reward[2]*2)) 
 

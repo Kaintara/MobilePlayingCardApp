@@ -52,13 +52,13 @@ class GameEnvironmentM:
                         memory['deck'].remove(first[2])
                     if second[2] in memory['deck']:
                        memory['deck'].remove(second[2])
-        #random.shuffle(memory['deck'])
-        #for y in range(9):
-            #for x in range(6):
-                #if not memory['card_array'][y][x]:
-                    #if not memory['deck']:
-                        #raise ValueError("Deck exhausted while determinizing")
-                    #memory['card_array'][y][x] = 'Empty_Space'
+        random.shuffle(memory['deck'])
+        for _ in range(5):
+            x = random.randint(0,5)
+            y = random.randint(0,8)
+            if not memory['card_array'][y][x] or memory['card_array'][y][x] == 'Empty_Space':
+              if memory['deck']:
+                memory['card_array'][y][x] = memory['deck'].pop()
         return memory
  
     def get_vaild_moves(env,state):
@@ -112,9 +112,9 @@ class GameEnvironmentM:
         return state
     
     def get_reward(env,state):
-        reward = len(state['hands'][1]) * 0.5
         if env.is_terminal(state):
             return 10 if state['winner'] == 1 else -10
+        reward = len(state['hands'][1]) * 0.5
         return reward
     
     def rollout_policy(env,moves,state):
