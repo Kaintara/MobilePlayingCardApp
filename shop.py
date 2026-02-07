@@ -16,7 +16,7 @@ class Shop:
         shop.coin_count = 0
 
     def set_all_themes(shop):
-        themeslst = ['Classic','Blue_Classic','Dark-Red']
+        themeslst = ['Classic','Blue_Classic','Dark-Red','Light-Red','Faded']
         themes = shop.inventory
         themes.append(Theme(themeslst[0], 0, 'assets/img/theme1/king_of_clubs2.png', 'assets/img/theme1/card_back_red.png',{
     # Hearts
@@ -83,7 +83,7 @@ class Shop:
     "RJ": "MobilePlayingCardApp/assets/img/theme1/red_joker.png",
     "BJ": "MobilePlayingCardApp/assets/img/theme1/black_joker.png",
 }))
-        themes.append(Theme(themeslst[1], 10,'assets/img/theme2/Spades 13.png','assets/img/theme2/Back Blue 1.png',{
+        themes.append(Theme(themeslst[1], 50,'assets/img/theme2/Spades 13.png','assets/img/theme2/Back Blue 1.png',{
     # Hearts (plural)
     "AH": "MobilePlayingCardApp/assets/img/theme2/Hearts 1.png",
     "2H": "MobilePlayingCardApp/assets/img/theme2/Hearts 2.png",
@@ -148,8 +148,202 @@ class Shop:
     "RJ": "MobilePlayingCardApp/assets/img/theme2/Joker Red.png",
     "BJ": "MobilePlayingCardApp/assets/img/theme2/Joker Black.png",
 }))
-        themes.append(Theme(themeslst[2],50,''))
-        #themes.append(Theme(''))
+        themes.append(Theme(themeslst[2],100,'assets/img/theme3/ClubsQueen.png','assets/img/theme3/BackGrey1.png',{
+    # Hearts
+    "AH": "MobilePlayingCardApp/assets/img/theme3/HeartsA.png",
+    "2H": "MobilePlayingCardApp/assets/img/theme3/Hearts2.png",
+    "3H": "MobilePlayingCardApp/assets/img/theme3/Hearts3.png",
+    "4H": "MobilePlayingCardApp/assets/img/theme3/Hearts4.png",
+    "5H": "MobilePlayingCardApp/assets/img/theme3/Hearts5.png",
+    "6H": "MobilePlayingCardApp/assets/img/theme3/Hearts6.png",
+    "7H": "MobilePlayingCardApp/assets/img/theme3/Hearts7.png",
+    "8H": "MobilePlayingCardApp/assets/img/theme3/Hearts8.png",
+    "9H": "MobilePlayingCardApp/assets/img/theme3/Hearts9.png",
+    "1H": "MobilePlayingCardApp/assets/img/theme3/Hearts10.png",
+    "JH": "MobilePlayingCardApp/assets/img/theme3/HeartsJack.png",
+    "QH": "MobilePlayingCardApp/assets/img/theme3/HeartsQueen.png",
+    "KH": "MobilePlayingCardApp/assets/img/theme3/HeartsKing.png",
+
+    # Diamonds
+    "AD": "MobilePlayingCardApp/assets/img/theme3/DiamondA.png",
+    "2D": "MobilePlayingCardApp/assets/img/theme3/Diamond2.png",
+    "3D": "MobilePlayingCardApp/assets/img/theme3/Diamond3.png",
+    "4D": "MobilePlayingCardApp/assets/img/theme3/Diamond4.png",
+    "5D": "MobilePlayingCardApp/assets/img/theme3/Diamond5.png",
+    "6D": "MobilePlayingCardApp/assets/img/theme3/Diamond6.png",
+    "7D": "MobilePlayingCardApp/assets/img/theme3/Diamond7.png",
+    "8D": "MobilePlayingCardApp/assets/img/theme3/Diamond8.png",
+    "9D": "MobilePlayingCardApp/assets/img/theme3/Diamond9.png",
+    "1D": "MobilePlayingCardApp/assets/img/theme3/Diamond10.png",
+    "JD": "MobilePlayingCardApp/assets/img/theme3/DiamondJack.png",
+    "QD": "MobilePlayingCardApp/assets/img/theme3/DiamondQueen.png",
+    "KD": "MobilePlayingCardApp/assets/img/theme3/DiamondKing.png",
+
+    # Clubs
+    "AC": "MobilePlayingCardApp/assets/img/theme3/ClubsA.png",
+    "2C": "MobilePlayingCardApp/assets/img/theme3/Clubs2.png",
+    "3C": "MobilePlayingCardApp/assets/img/theme3/Clubs3.png",
+    "4C": "MobilePlayingCardApp/assets/img/theme3/Clubs4.png",
+    "5C": "MobilePlayingCardApp/assets/img/theme3/Clubs5.png",
+    "6C": "MobilePlayingCardApp/assets/img/theme3/Clubs6.png",
+    "7C": "MobilePlayingCardApp/assets/img/theme3/Clubs7.png",
+    "8C": "MobilePlayingCardApp/assets/img/theme3/Clubs8.png",
+    "9C": "MobilePlayingCardApp/assets/img/theme3/Clubs9.png",
+    "1C": "MobilePlayingCardApp/assets/img/theme3/Clubs10.png",
+    "JC": "MobilePlayingCardApp/assets/img/theme3/ClubsJack.png",
+    "QC": "MobilePlayingCardApp/assets/img/theme3/ClubsQueen.png",
+    "KC": "MobilePlayingCardApp/assets/img/theme3/ClubsKing.png",
+
+    # Spades
+    "AS": "MobilePlayingCardApp/assets/img/theme3/SpadesA.png",
+    "2S": "MobilePlayingCardApp/assets/img/theme3/Spades2.png",
+    "3S": "MobilePlayingCardApp/assets/img/theme3/Spades3.png",
+    "4S": "MobilePlayingCardApp/assets/img/theme3/Spades4.png",
+    "5S": "MobilePlayingCardApp/assets/img/theme3/Spades5.png",
+    "6S": "MobilePlayingCardApp/assets/img/theme3/Spades6.png",
+    "7S": "MobilePlayingCardApp/assets/img/theme3/Spades7.png",
+    "8S": "MobilePlayingCardApp/assets/img/theme3/Spades8.png",
+    "9S": "MobilePlayingCardApp/assets/img/theme3/Spades9.png",
+    "1S": "MobilePlayingCardApp/assets/img/theme3/Spades10.png",
+    "JS": "MobilePlayingCardApp/assets/img/theme3/SpadesJack.png",
+    "QS": "MobilePlayingCardApp/assets/img/theme3/SpadesQueen.png",
+    "KS": "MobilePlayingCardApp/assets/img/theme3/SpadesKing.png",
+
+    # Jokers
+    "RJ": "MobilePlayingCardApp/assets/img/theme2/Joker Red.png",
+    "BJ": "MobilePlayingCardApp/assets/img/theme2/Joker Black.png",
+}))
+        themes.append(Theme(themeslst[3],100,'assets/img/theme4/ClubsJack.png','assets/img/theme4/Back Red 2.png',{
+    # Hearts
+    "AH": "MobilePlayingCardApp/assets/img/theme4/HeartsA.png",
+    "2H": "MobilePlayingCardApp/assets/img/theme4/Hearts2.png",
+    "3H": "MobilePlayingCardApp/assets/img/theme4/Hearts3.png",
+    "4H": "MobilePlayingCardApp/assets/img/theme4/Hearts4.png",
+    "5H": "MobilePlayingCardApp/assets/img/theme4/Hearts5.png",
+    "6H": "MobilePlayingCardApp/assets/img/theme4/Hearts6.png",
+    "7H": "MobilePlayingCardApp/assets/img/theme4/Hearts7.png",
+    "8H": "MobilePlayingCardApp/assets/img/theme4/Hearts8.png",
+    "9H": "MobilePlayingCardApp/assets/img/theme4/Hearts9.png",
+    "1H": "MobilePlayingCardApp/assets/img/theme4/Hearts10.png",
+    "JH": "MobilePlayingCardApp/assets/img/theme4/HeartsJack.png",
+    "QH": "MobilePlayingCardApp/assets/img/theme4/HeartsQueen.png",
+    "KH": "MobilePlayingCardApp/assets/img/theme4/HeartsKing.png",
+
+    # Diamonds
+    "AD": "MobilePlayingCardApp/assets/img/theme4/DiamondsA.png",
+    "2D": "MobilePlayingCardApp/assets/img/theme4/Diamonds2.png",
+    "3D": "MobilePlayingCardApp/assets/img/theme4/Diamonds3.png",
+    "4D": "MobilePlayingCardApp/assets/img/theme4/Diamonds4.png",
+    "5D": "MobilePlayingCardApp/assets/img/theme4/Diamonds5.png",
+    "6D": "MobilePlayingCardApp/assets/img/theme4/Diamonds6.png",
+    "7D": "MobilePlayingCardApp/assets/img/theme4/Diamonds7.png",
+    "8D": "MobilePlayingCardApp/assets/img/theme4/Diamonds8.png",
+    "9D": "MobilePlayingCardApp/assets/img/theme4/Diamonds9.png",
+    "1D": "MobilePlayingCardApp/assets/img/theme4/Diamonds10.png",
+    "JD": "MobilePlayingCardApp/assets/img/theme4/DiamondsJack.png",
+    "QD": "MobilePlayingCardApp/assets/img/theme4/DiamondsQueen.png",
+    "KD": "MobilePlayingCardApp/assets/img/theme4/DiamondsKing.png",
+
+    # Clubs
+    "AC": "MobilePlayingCardApp/assets/img/theme4/ClubsA.png",
+    "2C": "MobilePlayingCardApp/assets/img/theme4/Clubs2.png",
+    "3C": "MobilePlayingCardApp/assets/img/theme4/Clubs3.png",
+    "4C": "MobilePlayingCardApp/assets/img/theme4/Clubs4.png",
+    "5C": "MobilePlayingCardApp/assets/img/theme4/Clubs5.png",
+    "6C": "MobilePlayingCardApp/assets/img/theme4/Clubs6.png",
+    "7C": "MobilePlayingCardApp/assets/img/theme4/Clubs7.png",
+    "8C": "MobilePlayingCardApp/assets/img/theme4/Clubs8.png",
+    "9C": "MobilePlayingCardApp/assets/img/theme4/Clubs9.png",
+    "1C": "MobilePlayingCardApp/assets/img/theme4/Clubs10.png",
+    "JC": "MobilePlayingCardApp/assets/img/theme4/ClubsJack.png",
+    "QC": "MobilePlayingCardApp/assets/img/theme4/ClubsQueen.png",
+    "KC": "MobilePlayingCardApp/assets/img/theme4/ClubsKing.png",
+
+    # Spades
+    "AS": "MobilePlayingCardApp/assets/img/theme4/SpadesA.png",
+    "2S": "MobilePlayingCardApp/assets/img/theme4/Spades2.png",
+    "3S": "MobilePlayingCardApp/assets/img/theme4/Spades3.png",
+    "4S": "MobilePlayingCardApp/assets/img/theme4/Spades4.png",
+    "5S": "MobilePlayingCardApp/assets/img/theme4/Spades5.png",
+    "6S": "MobilePlayingCardApp/assets/img/theme4/Spades6.png",
+    "7S": "MobilePlayingCardApp/assets/img/theme4/Spades7.png",
+    "8S": "MobilePlayingCardApp/assets/img/theme4/Spades8.png",
+    "9S": "MobilePlayingCardApp/assets/img/theme4/Spades9.png",
+    "1S": "MobilePlayingCardApp/assets/img/theme4/Spades10.png",
+    "JS": "MobilePlayingCardApp/assets/img/theme4/SpadesJack.png",
+    "QS": "MobilePlayingCardApp/assets/img/theme4/SpadesQueen.png",
+    "KS": "MobilePlayingCardApp/assets/img/theme4/SpadesKing.png",
+
+    # Jokers
+    "RJ": "MobilePlayingCardApp/assets/img/theme2/Joker Red.png",
+    "BJ": "MobilePlayingCardApp/assets/img/theme2/Joker Black.png",
+}))
+        themes.append(Theme(themeslst[4],300,'assets/img/theme5/Hearts/Joker.png','assets/img/theme5/CardBackBlue.png',{
+          # Hearts
+    "AH": "MobilePlayingCardApp/assets/img/theme5/Hearts/Ace.png",
+    "2H": "MobilePlayingCardApp/assets/img/theme5/Hearts/2.png",
+    "3H": "MobilePlayingCardApp/assets/img/theme5/Hearts/3.png",
+    "4H": "MobilePlayingCardApp/assets/img/theme5/Hearts/4.png",
+    "5H": "MobilePlayingCardApp/assets/img/theme5/Hearts/5.png",
+    "6H": "MobilePlayingCardApp/assets/img/theme5/Hearts/6.png",
+    "7H": "MobilePlayingCardApp/assets/img/theme5/Hearts/7.png",
+    "8H": "MobilePlayingCardApp/assets/img/theme5/Hearts/8.png",
+    "9H": "MobilePlayingCardApp/assets/img/theme5/Hearts/9.png",
+    "1H": "MobilePlayingCardApp/assets/img/theme5/Hearts/10.png",
+    "JH": "MobilePlayingCardApp/assets/img/theme5/Hearts/Jack.png",
+    "QH": "MobilePlayingCardApp/assets/img/theme5/Hearts/Queen.png",
+    "KH": "MobilePlayingCardApp/assets/img/theme5/Hearts/King.png",
+
+    # Diamonds
+    "AD": "MobilePlayingCardApp/assets/img/theme5/Diamonds/Ace.png",
+    "2D": "MobilePlayingCardApp/assets/img/theme5/Diamonds/2.png",
+    "3D": "MobilePlayingCardApp/assets/img/theme5/Diamonds/3.png",
+    "4D": "MobilePlayingCardApp/assets/img/theme5/Diamonds/4.png",
+    "5D": "MobilePlayingCardApp/assets/img/theme5/Diamonds/5.png",
+    "6D": "MobilePlayingCardApp/assets/img/theme5/Diamonds/6.png",
+    "7D": "MobilePlayingCardApp/assets/img/theme5/Diamonds/7.png",
+    "8D": "MobilePlayingCardApp/assets/img/theme5/Diamonds/8.png",
+    "9D": "MobilePlayingCardApp/assets/img/theme5/Diamonds/9.png",
+    "1D": "MobilePlayingCardApp/assets/img/theme5/Diamonds/10.png",
+    "JD": "MobilePlayingCardApp/assets/img/theme5/Diamonds/Jack.png",
+    "QD": "MobilePlayingCardApp/assets/img/theme5/Diamonds/Queen.png",
+    "KD": "MobilePlayingCardApp/assets/img/theme5/Diamonds/King.png",
+
+    # Clubs
+    "AC": "MobilePlayingCardApp/assets/img/theme5/Clubs/Ace.png",
+    "2C": "MobilePlayingCardApp/assets/img/theme5/Clubs/2.png",
+    "3C": "MobilePlayingCardApp/assets/img/theme5/Clubs/3.png",
+    "4C": "MobilePlayingCardApp/assets/img/theme5/Clubs/4.png",
+    "5C": "MobilePlayingCardApp/assets/img/theme5/Clubs/5.png",
+    "6C": "MobilePlayingCardApp/assets/img/theme5/Clubs/6.png",
+    "7C": "MobilePlayingCardApp/assets/img/theme5/Clubs/7.png",
+    "8C": "MobilePlayingCardApp/assets/img/theme5/Clubs/8.png",
+    "9C": "MobilePlayingCardApp/assets/img/theme5/Clubs/9.png",
+    "1C": "MobilePlayingCardApp/assets/img/theme5/Clubs/10.png",
+    "JC": "MobilePlayingCardApp/assets/img/theme5/Clubs/Jack.png",
+    "QC": "MobilePlayingCardApp/assets/img/theme5/Clubs/Queen.png",
+    "KC": "MobilePlayingCardApp/assets/img/theme5/Clubs/King.png",
+
+    # Spades
+    "AS": "MobilePlayingCardApp/assets/img/theme4/Spades/Ace.png",
+    "2S": "MobilePlayingCardApp/assets/img/theme4/Spades/2.png",
+    "3S": "MobilePlayingCardApp/assets/img/theme4/Spades/3.png",
+    "4S": "MobilePlayingCardApp/assets/img/theme4/Spades/4.png",
+    "5S": "MobilePlayingCardApp/assets/img/theme4/Spades/5.png",
+    "6S": "MobilePlayingCardApp/assets/img/theme4/Spades/6.png",
+    "7S": "MobilePlayingCardApp/assets/img/theme4/Spades/7.png",
+    "8S": "MobilePlayingCardApp/assets/img/theme4/Spades/8.png",
+    "9S": "MobilePlayingCardApp/assets/img/theme4/Spades/9.png",
+    "1S": "MobilePlayingCardApp/assets/img/theme4/Spades/10.png",
+    "JS": "MobilePlayingCardApp/assets/img/theme4/Spades/Jack.png",
+    "QS": "MobilePlayingCardApp/assets/img/theme4/Spades/Queen.png",
+    "KS": "MobilePlayingCardApp/assets/img/theme4/Spades/King.png",
+
+    # Jokers
+    "RJ": "MobilePlayingCardApp/assets/img/theme5/Hearts/Joker.png",
+    "BJ": "MobilePlayingCardApp/assets/img/theme5/Clubs/Joker.png",  
+        }))
+        print(shop.inventory[0].name,shop.inventory[1].name,shop.inventory[2].name,shop.inventory[3].name,shop.inventory[4].name)
     def get_theme(shop,theme_name):
         for theme in shop.inventory:
             if theme_name == theme.name:
@@ -158,7 +352,6 @@ class Shop:
     def update(shop,app):
         shop.filling_shop_inventory(app)
         app.save.quick_save(app)
-        print("Shop has been updated!")
 
     def equip_theme(shop,theme,app):
         if theme in shop.unlocked_inventory:

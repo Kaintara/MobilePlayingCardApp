@@ -114,7 +114,7 @@ class MobilePlayingCardApp(MDApp):
         self.memory = memory('memory',G1["rank_order"],G3)
         Games = [G1,G2,G3]
         for game in Games:
-            #print(game['winner'],game['history'][-1] if game['history'] else "No History")
+            print(game['winner'],game['history'][-1] if game['history'] else "No History")
             if game['winner'] is None and game['history']:
                 return "Resume Game"
         return "New Game"
@@ -209,7 +209,6 @@ class MobilePlayingCardApp(MDApp):
     def set_up_shop(self):
         self.shop.filling_shop_inventory(self)
         Grid = self.get_widget("grid",'MDShop')
-        print("outputted card")
 
     def s_to_mmss(self,total_seconds):
         minutes = total_seconds // 60
