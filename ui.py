@@ -427,8 +427,27 @@ class Text(MDLabel):
         self.valign="center"
 
 class Achievement_Container(MDBoxLayout):
-    def __init__(self, *args, **kwargs):
+    def __init__(self,achievement, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.orientation = "horizontal"
-        self.size_hint_x = 1
-        self.pos_hint_x = 0.5
+        self.orientation = "vertical"
+        self.spacing = dp(20)
+        self.padding = dp(30)
+        id, name, desc, condition = achievement
+        layout = MDBoxLayout(
+            orientation="horizontal",
+            height = dp(40)
+        )
+        layout.add_widget(Text(text=name))
+        app = MDApp.get_running_app()
+        if condition(app.save):
+            icon = MDIconButton(icon='trophy')
+        else:
+            icon = MDIconButton(icon='trophy-outline')
+        layout.add_widget(icon)
+        self.add_widget(layout)
+        self.add_widget(MDLabel(text = desc,
+        font_style="cataway",
+        role="medium",
+        halign="center",
+        valign="center",
+        height = dp(60)))

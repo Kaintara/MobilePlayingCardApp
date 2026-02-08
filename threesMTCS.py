@@ -32,7 +32,7 @@ class GameEnvironmentT:
             for card in threes['played_cards']:
                 public_cards.append(card)
         unknown_cards = [c for c in threes['deck'] if c not in public_cards]
-        print(f'Unknown Cards: {unknown_cards}')
+        #print(f'Unknown Cards: {unknown_cards}')
         if not threes["history"]:
             threes['hands'][1] = []
             for _ in range(0,3):

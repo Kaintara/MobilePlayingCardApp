@@ -10,6 +10,7 @@
             size: "250dp", "250dp"
             fit_mode: "scale-down"
         MDBoxLayout:
+            id: test
             orientation: 'vertical'
             pos_hint: {'center_x': .5, 'center_y': .4}
             adaptive_size: True
@@ -148,7 +149,7 @@
             icon: "pause"
             on_release: 
                 app.sm_stacky("MDThrees")
-                root.manager.current = "Pause"
+                root.manager.current = "Settings"
         MDLabel:
             id: timer
             text: "00:00"
@@ -210,7 +211,7 @@
             icon: "pause"
             on_release: 
                 app.sm_stacky("MDRummy")
-                root.manager.current = "Pause"
+                root.manager.current = "Settings"
         MDLabel:
             id: timer
             text: "00:00"
@@ -300,7 +301,7 @@
             icon: "pause"
             on_release: 
                 app.sm_stacky("MDThrees")
-                root.manager.current = "Pause"
+                root.manager.current = "Settings"
         MDLabel:
             id: timer
             text: "00:00"
@@ -920,10 +921,9 @@
             MDBoxLayout:
                 id: stats
                 orientation: "vertical"
-                padding: dp(20)
-                spacing: dp(30)
-                size_hint_y: None
-                height: self.minimum_height
+                padding: dp(30)
+                spacing: dp(60)
+                adaptive_height: True
         MDIconButton: #Back button
             pos_hint: {"left":0.98, "top": 0.98}
             size: dp(48), dp(48)
@@ -942,9 +942,9 @@
     md_bg_color: self.theme_cls.backgroundColor
     MDFloatLayout:
         MDLabel:
-            text: "Bot Difficulty"
+            text: "Settings"
             adaptive_height: True
-            pos_hint: {"center_x":0.5, "top":0.9}
+            pos_hint: {"center_x":0.5, "top":1}
             font_style: "cataway"
             role: "large"
             halign: "center"
@@ -955,11 +955,17 @@
             size_hint_x: 0.8
             size_hint_y: 0.1
             spacing: dp(5)
-            pos_hint: {"center_x":0.5, "top":0.6}
+            pos_hint: {"center_x":0.5, "top":0.8}
+            MDLabel:
+                text: "Bot Difficulty"
+                font_style: "cataway"
+                role: "small"
+                halign: "left"
+                valign: "center"
             MDIconButton:
-                style: "tonal"
+                style: "standard"
                 icon: "chevron-double-left"
-                pos_hint: {"center_x":0.2}
+                pos_hint: {"center_y":0.5}
                 on_release: app.left("Settings")
             Carousel:
                 id: carou
@@ -969,38 +975,70 @@
                 MDLabel:
                     text: "Beginner"
                     font_style: "cataway"
-                    role: "small"
+                    role: "medium"
                     halign: "center"
                     valign: "center"
                 MDLabel:
                     text: "Easy"
                     font_style: "cataway"
-                    role: "small"
+                    role: "medium"
                     halign: "center"
                     valign: "center"
                 MDLabel:
                     text: "Medium"
                     font_style: "cataway"
-                    role: "small"
+                    role: "medium"
                     halign: "center"
                     valign: "center"
                 MDLabel:
                     text: "Hard"
                     font_style: "cataway"
-                    role: "small"
+                    role: "medium"
                     halign: "center"
                     valign: "center"
                 MDLabel:
                     text: "Expert"
                     font_style: "cataway"
-                    role: "small"
+                    role: "medium"
                     halign: "center"
                     valign: "center"
             MDIconButton:
-                style: "tonal"
+                style: "standard"
                 icon: "chevron-double-right"
-                pos_hint: {"center_x":0.8}
+                pos_hint: {"center_y":0.5}
                 on_release: app.right("Settings")
+        MDBoxLayout:
+            orientation: "horizontal"
+            adaptive_height: True
+            size_hint_x: 0.8
+            size_hint_y: 0.1
+            spacing: dp(5)
+            pos_hint: {"center_x":0.5, "top":0.6}
+            MDLabel:
+                text: "Sfx"
+                font_style: "cataway"
+                role: "small"
+                halign: "left"
+                valign: "center"
+            MDSwitch:
+                id: sfx
+                pos_hint: {"center_x":0.5, "top":0.5}
+        MDBoxLayout:
+            orientation: "horizontal"
+            adaptive_height: True
+            size_hint_x: 0.8
+            size_hint_y: 0.1
+            spacing: dp(0)
+            pos_hint: {"center_x":0.5, "top":0.5}
+            MDLabel:
+                text: "Timer"
+                font_style: "cataway"
+                role: "small"
+                halign: "left"
+                valign: "center"
+            MDSwitch:
+                id: timer
+                pos_hint: {"center_x":0.5, "top":0.5}
         MDBoxLayout:
             orientation: "horizontal"
             adaptive_height: True
@@ -1050,84 +1088,3 @@
             icon: "backburger"
             on_release: app.back()
 
-<Pause>:
-    md_bg_color: self.theme_cls.surfaceColor
-    MDFloatLayout:
-        MDLabel:
-            text: "Pause Menu"
-            font_style: "cataway"
-            role: "large"
-            halign: "center"
-            pos_hint: {"center_y":0.9, "center_x":0.5}
-            adaptive_height: True
-        Image: #NewGame Icon
-            source: "assets/img/NewGame_Icon.png"
-            pos_hint: {"center_x": 0.5, "center_y": 0.8}
-            size_hint: None, None
-            size: "250dp", "250dp"
-            fit_mode: "scale-down"
-        MDBoxLayout:
-            orientation: 'vertical'
-            pos_hint: {'center_x': .5, 'center_y': .4}
-            adaptive_size: True
-            spacing: dp(20)
-            MDButton:
-                style: "tonal"
-                pos_hint: {"center_x": 0.5}
-                on_release: 
-                    app.sm_stacky("NewGame")
-                    app.resume_game('threes')
-                    root.manager.current = "MDThrees"
-                MDButtonText:
-                    text: "Resume Threes"
-                    font_style: "cataway"
-                    role: "small"
-            MDButton:
-                style: "tonal"
-                pos_hint: {"center_x": 0.5}
-                on_release: 
-                    app.sm_stacky("NewGame")
-                    app.resume_game('rummy')
-                    root.manager.current = "MDRummy"
-                MDButtonText:
-                    text: "Resume Rummy"
-                    font_style: "cataway"
-                    role: "small"
-            MDButton:
-                style: "tonal"
-                pos_hint: {"center_x": 0.5}
-                on_release: 
-                    app.sm_stacky("NewGame")
-                    app.resume_game('memory')
-                    root.manager.current = "MDMemory"
-                MDButtonText:
-                    text: "Resume Memory"
-                    font_style: "cataway"
-                    role: "small"
-            MDButton:
-                style: "tonal"
-                pos_hint: {"center_x": 0.5}
-                on_release: 
-                    app.sm_stacky("NewGame")
-                    root.manager.current = "Rules"
-                MDButtonText:
-                    text: "Rules"
-                    font_style: "cataway"
-                    role: "small"
-
-        MDIconButton: #Back button
-            pos_hint: {"left":0.98, "top": 0.98}
-            size: dp(48), dp(48)
-            icon: "arrow-left"
-            on_release: 
-                app.back()
-        MDButton:
-            style: "tonal"
-            pos_hint: {"center_x": 0.5, "top":0.1}
-            on_release: app.stop()
-            MDButtonText:
-                text: "Exit Game"
-                font_style: "cataway"
-                role: "small"
-            MDButtonIcon:
-                icon: "exit-to-app"

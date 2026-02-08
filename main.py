@@ -12,6 +12,13 @@ class MobilePlayingCardApp(MDApp):
         self.sm_stack = []
         self.sfx = True
         self.ai_difficulty = "Beginner"
+        self.ai_difficulty_map = {
+            "Beginner" : 0.15,
+            "Easy" : 0.2,
+            "Medium" : 0.25,
+            "Hard" : 0.35,
+            "Expert" : 0.5
+        }
         self.timer = True
         self.score = True
         self.all_achievements = [
@@ -58,9 +65,9 @@ class MobilePlayingCardApp(MDApp):
                 "font-size": sp(50),
             },
             "medium": {
-                "line-height": 1.52,
+                "line-height": 1.2,
                 "font-name": "cataway",
-                "font-size": sp(45),
+                "font-size": sp(20),
             },
             "small": {
                 "line-height": 1.44,
@@ -79,7 +86,6 @@ class MobilePlayingCardApp(MDApp):
         sm.add_widget(Settings(name="Settings"))
         sm.add_widget(MDShop(name="MDShop"))
         sm.add_widget(Stats(name="Stats"))
-        sm.add_widget(Pause(name="Pause"))
         sm.current = "Menu"
         return sm
     
@@ -133,30 +139,114 @@ class MobilePlayingCardApp(MDApp):
         elif difficulty == "Expert":
             return "Expert"
 
-    def fill_carou(self,content):
+    def calc_all_time_stats(self):
+        self.save.load()
+        stats = self.save.alldata["Games"]["Stats"]
+        fav_game = None
+        fav_game_count = 0
+        total_time = 0
+        total_wins = 0
+        total_games = 0
+        best_time = None
+        for game, game_stats in stats.items():
+            gen = game_stats["General_Stats"]
+            if gen["games_played"] > fav_game_count:
+                fav_game = game
+            total_games += gen["games_played"]
+            if best_time is None or gen["best_time"] < best_time:
+                best_time = gen["best_time"]
+            total_time += gen["total_time"]
+            total_wins += gen["wins"]
+        if fav_game == "rummy_Stats":
+            fav_game = "Rummy"
+        elif fav_game == "threes_Stats":
+            fav_game = "Threes"
+        elif fav_game == "memory_Stats":
+            fav_game = "Memory"
+        wl_ratio = round(total_wins / total_games, 2) if total_games else 0
+        if not best_time:
+            best_time = 0
+        return {
+            "Fav_Game": fav_game or "-",
+            "Wins" : total_wins,
+            "Best_Time": self.s_to_mmss(best_time),
+            "WLRatio" : wl_ratio,
+            "Total_Time": self.s_to_mmss(total_time),
+            "Total_Games": total_games
+        }
+    
+    def fill_carou(self,content,extra_content):
         scroll_box = self.get_widget('stats',"Stats")
+        scroll_box.padding = sp(30)
         scroll_box.clear_widgets()
         if content == "All_Time Stats":
-            scroll_box.add_widget(Text(text="Favourite Game:____"))
-            scroll_box.add_widget(Text(text="Favourite Difficulty"))
-            scroll_box.add_widget(Text(text="Best Time~ --:--"))
-            scroll_box.add_widget(Text(text="Wins: 999"))
-            scroll_box.add_widget(Text(text="W/L Ratio: 1.5"))
-            scroll_box.add_widget(Text(text="Last Played"))
-            scroll_box.add_widget(Text(text="Total Games"))
+            stats = self.calc_all_time_stats()
+            scroll_box.add_widget(Text(text=f"Favourite Game: {stats["Fav_Game"]}"))
+            scroll_box.add_widget(Text(text=f"Best Time ~ {stats["Best_Time"]}"))
+            scroll_box.add_widget(Text(text=f"Wins: {stats["Wins"]}"))
+            scroll_box.add_widget(Text(text=f"W/L Ratio: {stats["WLRatio"]}"))
+            scroll_box.add_widget(Text(text=f"Total Time ~ {stats["Total_Time"]}"))
+            scroll_box.add_widget(Text(text=f"Total Games: {stats["Total_Games"]}"))
         elif content == "Achievements":
-            for x in enumerate(self.all_achievements):
-                text = Text(x[1][1])
-                if x in self.unlocked_achievements:
-                    icon = MDIconButton(icon='trophy')
-                else:
-                    icon = MDIconButton(icon='trophy-outline')
-                container = Achievement_Container()
-                container.add_widget(text)
-                container.add_widget(icon)
-                scroll_box.add_widget(container)
+            scroll_box.padding = sp(100)
+            for x in self.all_achievements:
+                scroll_box.add_widget(Achievement_Container(x))
+        elif content == "Threes":
+            self.save.load()
+            if extra_content == "Overview":
+                stats = self.save.alldata["Games"]["Stats"]["threes_Stats"]["General_Stats"]
+                scroll_box.add_widget(Text(text=f"Times Won With a 3: {stats["won_with_3"]}"))
+                scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
+                scroll_box.add_widget(Text(text=f"Total Amount of Pickups: {stats["amount_of_pickups"]}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {stats["best_time"]}"))
+                scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
+                scroll_box.add_widget(Text(text=f"W/L Ratio: {stats["win_lose_ratio"]}"))
+                scroll_box.add_widget(Text(text=f"Total Time ~ {stats["total_time"]}"))
+                scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
+            else:
+                stats = self.save.alldata["Games"]["Stats"]["threes_Stats"][extra_content]
+                scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
+                scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {stats["best_time"]}"))
+                scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
+        elif content == "Rummy":
+            self.save.load()
+            if extra_content == "Overview":
+                stats = self.save.alldata["Games"]["Stats"]["rummy_Stats"]["General_Stats"]
+                scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {stats["best_time"]}"))
+                scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
+                scroll_box.add_widget(Text(text=f"W/L Ratio: {stats["win_lose_ratio"]}"))
+                scroll_box.add_widget(Text(text=f"Total Time ~ {stats["total_time"]}"))
+                scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
+            else:
+                stats = self.save.alldata["Games"]["Stats"]["rummy_Stats"][extra_content]
+                scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
+                scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {stats["best_time"]}"))
+                scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
+        elif content == "Memory":
+            self.save.load()
+            if extra_content == "Overview":
+                stats = self.save.alldata["Games"]["Stats"]["memory_Stats"]["General_Stats"]
+                scroll_box.add_widget(Text(text=f"Most Pairs: {stats["most_pairs"]}"))
+                scroll_box.add_widget(Text(text=f"Total Pairs: {stats["all_pairs"]}"))
+                scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {stats["best_time"]}"))
+                scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
+                scroll_box.add_widget(Text(text=f"W/L Ratio: {stats["win_lose_ratio"]}"))
+                scroll_box.add_widget(Text(text=f"Total Time ~ {stats["total_time"]}"))
+                scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
+            else:
+                stats = self.save.alldata["Games"]["Stats"]["memory_Stats"][extra_content]
+                scroll_box.add_widget(Text(text=f"Most Pairs: {stats["most_pairs"]}"))
+                scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
+                scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {stats["best_time"]}"))
+                scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
 
     def determine_contents(self,content):
+        extra = "Overview"
         conditionalcarou = self.get_widget("conditionalcarou","Stats")
         if content == "All_Time Stats" or content == "Achievements":
             conditionalcarou.clear_widgets()
@@ -177,34 +267,36 @@ class MobilePlayingCardApp(MDApp):
             br = self.get_widget("bottom_right","Stats")
             bl.disabled = False
             br.disabled = False
-        self.fill_carou(content)
+        elif content in ["Beginner","Easy","Normal","Hard","Expert","Overview"]:
+            extra = content
+            content = self.get_widget('carou','Stats').current_slide.text
+        self.fill_carou(content,extra)
 
     def left(self,Screen):
         if Screen == "Con_Stats":
             ID = 'conditionalcarou'
+            screen = "Stats"
         else:
             ID = "carou"
-        Carou = self.get_widget(ID,Screen)
+            screen = Screen
+        Carou = self.get_widget(ID,screen)
         Carou.load_previous()
-        if Screen == "Stats":
+        if Screen == "Stats" or Screen == "Con_Stats":
             content = Carou.previous_slide.text
             self.determine_contents(content)
         
-
     def right(self,Screen):
         if Screen == "Con_Stats":
             ID = 'conditionalcarou'
+            screen = "Stats"
         else:
             ID = "carou"
-        Carou = self.get_widget(ID,Screen)
+            screen = Screen
+        Carou = self.get_widget(ID,screen)
         Carou.load_next()
-        if Screen == "Stats":
+        if Screen == "Stats" or Screen == "Con_Stats":
             content = Carou.next_slide.text
             self.determine_contents(content)
-        
-
-    def on_start(self):
-        pass
 
     def set_up_shop(self):
         self.shop.filling_shop_inventory(self)
@@ -306,45 +398,16 @@ class MobilePlayingCardApp(MDApp):
             self.threes.selected_card = "" 
             self.threes.update_game_state()
             if self.threes.turn == 1:
-                if self.get_difficulty() == "Beginner":
-                    move = m_mtcs(self.threes.state,GameEnvironmentT(),0.15,True)
-                    moves = self.threes.get_valid_moves()
-                    if all(m[2] == 'try' for m in moves):
-                            move = random.choice(moves)
-                    print(move)
-                    print(self.threes.hands[1])
-                    self.threes.apply_move(move)
-                    self.threes.update_game_state()
-                elif self.get_difficulty() == "Easy":
-                    move = m_mtcs(self.threes.state,GameEnvironmentT(),0.2)
-                    moves = self.threes.get_valid_moves()
-                    if all(m[2] == 'try' for m in moves):
-                            move = random.choice(moves)
-                    self.threes.apply_move(move)
-                    self.threes.update_game_state()
-                elif self.get_difficulty() == "Medium":
-                    move = m_mtcs(self.threes.state,GameEnvironmentT(),0.25)
-                    moves = self.threes.get_valid_moves()
-                    if all(m[2] == 'try' for m in moves):
-                            move = random.choice(moves)
-                    self.threes.apply_move(move)
-                    self.threes.update_game_state()
-                elif self.get_difficulty() == "Hard":
-                    move = m_mtcs(self.threes.state,GameEnvironmentT(),0.35)
-                    moves = self.threes.get_valid_moves()
-                    if all(m[2] == 'try' for m in moves):
-                            move = random.choice(moves)
-                    self.threes.apply_move(move)
-                    self.threes.update_game_state()
-                elif self.get_difficulty() == "Expert":
-                    move = m_mtcs(self.threes.state,GameEnvironmentT(),0.5)
-                    moves = self.threes.get_valid_moves()
-                    if all(m[2] == 'try' for m in moves):
-                            move = random.choice(moves)
-                    self.threes.apply_move(move)
-                    self.threes.update_game_state()
+                move = m_mtcs(self.threes.state,GameEnvironmentT(),self.threes.difficulty[0])
+                moves = self.threes.get_valid_moves()
+                if all(m[2] == 'try' for m in moves):
+                    move = random.choice(moves)
+                print(f"Move{move}")
+                print(self.threes.hands[1])
+                self.threes.apply_move(move)
+                self.threes.update_game_state()
                 self.threes.turn = self.threes.next_vaild_player(self.threes.turn,self.save)
-                print(self.threes.turn)
+                print(f"Turn: {self.threes.turn}")
                 self.save.quick_save(self)
                 if self.threes.turn is None:
                     print('Line 351 main.py reached')
@@ -356,28 +419,12 @@ class MobilePlayingCardApp(MDApp):
             self.rummy.selected_card = "" 
             self.rummy.update_game_state()
             if self.rummy.turn == 1:
-                if self.get_difficulty() == "Beginner":
-                    move = m_mtcs(self.rummy.state,GameEnvironmentR(),0.15)
-                    print(move)
-                    self.rummy.apply_move(move)
-                    self.rummy.update_game_state()
-                elif self.get_difficulty() == "Easy":
-                    move = m_mtcs(self.rummy.state,GameEnvironmentR(),0.2)
-                    self.rummy.apply_move(move)
-                    self.rummy.update_game_state()
-                elif self.get_difficulty() == "Medium":
-                    move = m_mtcs(self.rummy.state,GameEnvironmentR(),0.25)
-                    self.rummy.apply_move(move)
-                    self.rummy.update_game_state()
-                elif self.get_difficulty() == "Hard":
-                    move = m_mtcs(self.rummy.state,GameEnvironmentR(),0.35)
-                    self.rummy.apply_move(move)
-                    self.rummy.update_game_state()
-                elif self.get_difficulty() == "Expert":
-                    move = m_mtcs(self.rummy.state,GameEnvironmentR(),0.5)
-                    self.rummy.apply_move(move)
-                    self.rummy.update_game_state()
+                move = m_mtcs(self.rummy.state,GameEnvironmentR(),self.threes.difficulty[0])
+                print(f"Move{move}")
+                self.rummy.apply_move(move)
+                self.rummy.update_game_state()
                 self.rummy.turn = self.rummy.next_vaild_player(self.rummy.turn)
+                print(f"Turn: {self.rummy.turn}")
                 self.save.quick_save(self)
                 if self.rummy.turn is None:
                     print('Line 308 main.py reached')
@@ -389,30 +436,12 @@ class MobilePlayingCardApp(MDApp):
             self.memory.update_game_state()
             print("Turn: ",self.memory.turn)
             if self.memory.turn == 1:
-                if self.get_difficulty() == "Beginner":
-                    move = m_mtcs(self.memory.state,GameEnvironmentM(),0.15,True)
-                    print("Move: ",move)
-                    self.memory.apply_move(move,self)
-                    self.memory.update_game_state()
-                elif self.get_difficulty() == "Easy":
-                    move = m_mtcs(self.memory.state,GameEnvironmentM(),0.2)
-                    self.memory.apply_move(move,self)
-                    self.memory.update_game_state()
-                elif self.get_difficulty() == "Medium":
-                    move = m_mtcs(self.memory.state,GameEnvironmentM(),0.25)
-                    self.memory.apply_move(move,self)
-                    self.memory.update_game_state()
-                elif self.get_difficulty() == "Hard":
-                    move = m_mtcs(self.memory.state,GameEnvironmentM(),0.35)
-                    self.memory.apply_move(move,self)
-                    self.memory.update_game_state()
-                elif self.get_difficulty() == "Expert":
-                    move = m_mtcs(self.memory.state,GameEnvironmentM(),0.5,True)
-                    self.memory.apply_move(move,self)
-                    self.memory.update_game_state()
-                #print(self.memory.state['history'])
+                move = m_mtcs(self.memory.state,GameEnvironmentM(),self.memory.difficulty[0])
+                print("Move: ",move)
+                self.memory.apply_move(move,self)
+                self.memory.update_game_state()
                 if self.memory.state['history']:
-                    if self.memory.state['history'][-1][0] == "Missed":
+                    if self.memory.state['history'][-1][0] == "Missed" or self.memory.state['history'][-1][0] == "Matched":
                         y = self.memory.state['history'][-1][3][0]
                         x = self.memory.state['history'][-1][3][1]
                         card_container = self.get_widget(f'hand{y}{x}','MDMemory')
@@ -445,10 +474,12 @@ state = {'name' : "threes",
         'another' : False,
         'played_cards' : [],
         'history': []})
+            self.threes.difficulty = (self.ai_difficulty_map[self.get_difficulty()],self.get_difficulty())
             self.threes.shuffle_cards()
             self.threes.distribute_cards()
             self.threes.update_game_state()
             self.update_game(game)
+            print(f"Threes State: {self.threes.state}")
             self.threes.turn = random.randint(0,1)
             self.next_turn(game)
         elif game == "rummy":
@@ -466,12 +497,12 @@ state = {'name' : "threes",
         'difficulty' : (-1,""),
         'winner' : None,
         'history': []})
+            self.rummy.difficulty = (self.ai_difficulty_map[self.get_difficulty()],self.get_difficulty())
             self.rummy.shuffle_cards()
             self.rummy.turn = random.randint(0,1)
             self.rummy.distribute_cards()
             self.rummy.update_game_state()
-            print("Rummy State:")
-            print(self.rummy.state)
+            print(f"Rummy State: {self.rummy.state}")
             self.update_game(game)
             self.next_turn(game)
         elif game == "memory":
@@ -488,12 +519,13 @@ state = {'name' : "threes",
         'difficulty' : (-1,""),
         'winner' : None,
         'history': []})
+            self.memory.difficulty = (self.ai_difficulty_map[self.get_difficulty()],self.get_difficulty())
             self.memory.shuffle_cards()
             self.memory.distribute_cards()
             self.memory.update_game_state()
             self.update_game(game)
-            self.memory.turn = 1#random.randint(0,1)
-            print(self.memory.turn)
+            self.memory.turn = random.randint(0,1)
+            print(f"Memory State: {self.memory.state}")
             self.next_turn(game)
     
     def resume_game(self,game):
@@ -505,8 +537,6 @@ state = {'name' : "threes",
             if self.threes.turn == 1:
                 Clock.schedule_once(lambda dt: self.next_turn('threes'), 0.5)
         elif game == "rummy" and self.rummy.state['history'] and self.rummy.winner is None:
-            print("Resuming Rummy Game")
-            print(self.rummy.is_game_over())
             if self.rummy.is_game_over():
                 self.rummy.end_game(self)
             if self.rummy.turn == 1:
