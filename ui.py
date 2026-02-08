@@ -8,6 +8,7 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.graphics import PushMatrix, PopMatrix, Rotate, Scale, Translate
 from kivy.clock import Clock
 from kivy.uix.image import Image
+from kivy.core.audio import SoundLoader
 
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager

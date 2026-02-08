@@ -11,6 +11,13 @@ class MobilePlayingCardApp(MDApp):
     def __init__(self, **kwargs):
         self.sm_stack = []
         self.sfx = True
+        self.card_flip = None #SoundLoader.load() 
+        self.card_draw = None
+        self.card_place = None #SoundLoader.load() 
+        self.button_noise = None
+        self.win_noise = None
+        self.lose_noise = None
+        self.achievement_noise = None
         self.ai_difficulty = "Beginner"
         self.ai_difficulty_map = {
             "Beginner" : 0.15,
@@ -20,7 +27,7 @@ class MobilePlayingCardApp(MDApp):
             "Expert" : 0.5
         }
         self.timer = True
-        self.score = True
+        self.timer_event = None
         self.all_achievements = [
             (0,'The memory of a goldfish','Play your first game of memory',lambda save : save.alldata['Games']['Stats']['memory_Stats']['General_Stats']["games_played"] >= 1),
             (1,'Only Three?','Play your first game of threes',lambda save : save.alldata['Games']['Stats']['threes_Stats']['General_Stats']["games_played"] >= 1),
@@ -562,6 +569,13 @@ state = {'name' : "threes",
     def on_start(self):
         self.save.update(self)
         self.determine_contents("All_Time Stats")
+
+    def update_timer(self,game, dt):
+        game.time_elapsed += dt
+        
+    def start_timer(self,game):
+        if not self.timer_event:
+            self.timer_event = Clock.schedule_interval(lambda dt: self.update_timer(game, dt),1)
 
 if __name__ == "__main__":
     MobilePlayingCardApp().run()
