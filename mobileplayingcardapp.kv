@@ -139,7 +139,7 @@
             icon: "menu"
             on_release: 
                 app.sm_stacky("NewGame")
-                root.manager.current = "Pause"
+                root.manager.current = "Settings"
 <MDThrees>:
     md_bg_color: self.theme_cls.surfaceColor
     MDFloatLayout:
@@ -149,6 +149,7 @@
             icon: "pause"
             on_release: 
                 app.sm_stacky("MDThrees")
+                app.threes.stop_timer()
                 root.manager.current = "Settings"
         MDLabel:
             id: timer
@@ -1022,6 +1023,7 @@
                 valign: "center"
             MDSwitch:
                 id: sfx
+                on_active: app.toggle(self,"sfx")
                 pos_hint: {"center_x":0.5, "top":0.5}
         MDBoxLayout:
             orientation: "horizontal"
@@ -1038,6 +1040,7 @@
                 valign: "center"
             MDSwitch:
                 id: timer
+                on_active: app.toggle(self,"timer")
                 pos_hint: {"center_x":0.5, "top":0.5}
         MDBoxLayout:
             orientation: "horizontal"

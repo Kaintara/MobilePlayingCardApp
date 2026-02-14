@@ -1,5 +1,5 @@
 import random
-from ui import Achievement_Dialog, Reward_Dialog
+from ui import Achievement_Dialog, Reward_Dialog, MDApp
 from kivy.clock import Clock
 from threesMTCS import genv
 from treesearch import mtcs
@@ -18,6 +18,7 @@ class Game:
         game.time_elapsed = 0
         game.difficulty = (0,"Easy")
         game.winner = None
+        game.timer_event = None
 
     def shuffle_cards(game):
         shuffled_deck = game.deck[:]
@@ -64,7 +65,7 @@ class Game:
         print(amount_earned, game.winner, total_delay)
         return (amount_earned, game.winner, total_delay)
     
-    def end_game(game, app): #Write in NEA
+    def end_game(game, app):
         completed_game = {
             'winner': game.winner,
             'history': game.state['history'],
@@ -140,6 +141,24 @@ class Game:
         print(app.threes.state["history"])
         Dialog = Reward_Dialog(reward,app)
         Clock.schedule_once(lambda dt: Dialog.open(), (reward[2]*2)) 
+
+    def update_timer(game,dt):
+        game.time_elapsed += dt
+        app = MDApp.get_running_app()
+        app.update_timer(game.name)
+        print(game.time_elapsed)
+        print("time has been updated")
+        
+    def start_timer(game):
+        if not game.timer_event:
+            print("started timer")
+            game.timer_event = Clock.schedule_interval(lambda dt: game.update_timer(dt),1)
+
+    def stop_timer(game):
+        if game.timer_event:
+            game.timer_event.cancel()
+            game.timer_event = None
+        print("timer has been stopped")
 
 class threes(Game):
     def __init__(threes, name, rank_order, state):

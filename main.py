@@ -27,7 +27,6 @@ class MobilePlayingCardApp(MDApp):
             "Expert" : 0.5
         }
         self.timer = True
-        self.timer_event = None
         self.all_achievements = [
             (0,'The memory of a goldfish','Play your first game of memory',lambda save : save.alldata['Games']['Stats']['memory_Stats']['General_Stats']["games_played"] >= 1),
             (1,'Only Three?','Play your first game of threes',lambda save : save.alldata['Games']['Stats']['threes_Stats']['General_Stats']["games_played"] >= 1),
@@ -100,7 +99,7 @@ class MobilePlayingCardApp(MDApp):
     def get_widget(self, widget, screen):
         return self.root.get_screen(screen).ids[widget]
 
-    def back(self): #Back button
+    def back(self): #Back button Write in NEA
         sm = self.root
         if self.sm_stack[0] == sm.current:
             self.sm_stack.remove(sm.current)
@@ -109,6 +108,10 @@ class MobilePlayingCardApp(MDApp):
             sm.current = self.sm_stack[0]
         else:
             sm.current = "Menu"
+        if sm.current == "MDThrees":
+            print("Restarted Timer")
+            self.threes.start_timer()
+        
 
     def sm_stacky(self,widget): #Stores order of screens visited for back button
         if widget in self.sm_stack:
@@ -310,14 +313,41 @@ class MobilePlayingCardApp(MDApp):
         Grid = self.get_widget("grid",'MDShop')
 
     def s_to_mmss(self,total_seconds):
-        minutes = total_seconds // 60
-        seconds = total_seconds % 60
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
         return f"{minutes:02d}:{seconds:02d}"
 
+    def update_timer(self,game): #Write in NEA
+        if self.timer:
+            if game == "threes":
+                timer = self.get_widget('timer','MDThrees')
+                timer.text = self.s_to_mmss(self.threes.time_elapsed)
+            elif game == "rummy":
+                timer = self.get_widget('timer','MDRummy')
+                timer.text = self.s_to_mmss(self.rummy.time_elapsed)
+            elif game == "memory":
+                timer = self.get_widget('timer','MDMemory')
+                timer.text = self.s_to_mmss(self.memory.time_elapsed)
+        else:
+            if game == "threes":
+                timer = self.get_widget('timer','MDThrees')
+                timer.text = ''
+            elif game == "rummy":
+                timer = self.get_widget('timer','MDRummy')
+                timer.text = ''
+            elif game == "memory":
+                timer = self.get_widget('timer','MDMemory')
+                timer.text = ''
+
+    def toggle(self,widget,name):
+        if name == 'timer':
+            self.timer = widget.active
+            print(self.timer)
+        elif name == 'sfx':
+            self.sfx = widget.active 
+    
     def update_game(self,game):
         if game == "threes":
-            timer = self.get_widget('timer','MDThrees')
-            timer.text = self.s_to_mmss(self.threes.time_elapsed)
             for i in range(3):
                 Ai_hand = self.get_widget(f'ai_hand{i + 1}', 'MDThrees')
                 Ai_hand.clear_widgets()
@@ -488,6 +518,7 @@ state = {'name' : "threes",
             self.update_game(game)
             print(f"Threes State: {self.threes.state}")
             self.threes.turn = random.randint(0,1)
+            self.threes.start_timer()
             self.next_turn(game)
         elif game == "rummy":
             self.rummy = rummy('rummy',{'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,
@@ -543,6 +574,7 @@ state = {'name' : "threes",
                 self.threes.end_game(self)
             if self.threes.turn == 1:
                 Clock.schedule_once(lambda dt: self.next_turn('threes'), 0.5)
+            self.threes.start_timer()
         elif game == "rummy" and self.rummy.state['history'] and self.rummy.winner is None:
             if self.rummy.is_game_over():
                 self.rummy.end_game(self)
@@ -568,14 +600,11 @@ state = {'name' : "threes",
 
     def on_start(self):
         self.save.update(self)
+        timer = self.get_widget('timer','Settings')
+        timer.active = self.timer
+        sfx = self.get_widget('sfx','Settings')
+        sfx.active = self.sfx
         self.determine_contents("All_Time Stats")
-
-    def update_timer(self,game, dt):
-        game.time_elapsed += dt
-        
-    def start_timer(self,game):
-        if not self.timer_event:
-            self.timer_event = Clock.schedule_interval(lambda dt: self.update_timer(game, dt),1)
 
 if __name__ == "__main__":
     MobilePlayingCardApp().run()
