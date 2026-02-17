@@ -1,10 +1,10 @@
 import random
-from ui import Achievement_Dialog, Reward_Dialog, MDApp
+from ui import Achievement_Dialog, Reward_Dialog, MDApp, SoundLoader
 from kivy.clock import Clock
 from threesMTCS import genv
 from treesearch import mtcs
 
-class Game: 
+class Game: #Write in NEA
     def __init__(game, name, rank_order,state):
         game.name = name
         game.deck = ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"]
@@ -19,6 +19,9 @@ class Game:
         game.difficulty = (0,"Easy")
         game.winner = None
         game.timer_event = None
+        game.win_noise = SoundLoader.load('assets/sound/win_noise.mp3')
+        game.lose_noise = SoundLoader.load('assets/sound/lose_noise.mp3')
+        game.achievement_noise = SoundLoader.load('assets/sound/iykyk.mp3')
 
     def shuffle_cards(game):
         shuffled_deck = game.deck[:]
@@ -35,14 +38,15 @@ class Game:
         print("unlocked achievements:", unlocked)
         return unlocked
 
-    def display_achievements(game,achievement):
+    def display_achievements(game,achievement): #Write in NEA
         print(achievement[1])
         print(achievement[2])
         Dialog = Achievement_Dialog(achievement)
+        game.achievement_noise.play()
         Dialog.open()
         Clock.schedule_once(lambda dt: Dialog.dismiss(), 5)
     
-    def get_reward(game,shop,app,savedata):
+    def get_reward(game,shop,app,savedata): #Write in NEA
         amount_earned = 0
         shop.coin_count += (game.difficulty[0]*5)
         amount_earned += game.difficulty[0]*5
@@ -57,15 +61,18 @@ class Game:
                 print(achievement)
                 Clock.schedule_once(lambda dt, achieve=achievement: game.display_achievements(achieve), delay) 
         if game.winner == 0:
+            Clock.schedule_once(lambda dt: game.win_noise.play(), total_delay)
             shop.coin_count += (30 + game.difficulty[0]*5)
             amount_earned += (30 + game.difficulty[0]*5)
         else:
+            Clock.schedule_once(lambda dt: game.lose_noise.play(), total_delay)
             shop.coin_count += 10
             amount_earned += 10
         print(amount_earned, game.winner, total_delay)
         return (amount_earned, game.winner, total_delay)
     
-    def end_game(game, app):
+    def end_game(game, app): #Write in NEA
+        game.stop_timer()
         completed_game = {
             'winner': game.winner,
             'history': game.state['history'],

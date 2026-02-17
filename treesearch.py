@@ -116,7 +116,9 @@ def m_mtcs(root_state,game_env,time_limit, debug=False):
 
     best = root_node.best_child(1.4)
     if best is None:
-        return None
+        moves = game_env.get_vaild_moves(root_state)
+        random_move = random.choice(moves)
+        return random_move
     return best.previous_move
 
 def mtcs(root_state,game_env,time_limit, debug=False):

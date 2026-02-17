@@ -11,13 +11,9 @@ class MobilePlayingCardApp(MDApp):
     def __init__(self, **kwargs):
         self.sm_stack = []
         self.sfx = True
-        self.card_flip = None #SoundLoader.load() 
-        self.card_draw = None
-        self.card_place = None #SoundLoader.load() 
-        self.button_noise = None
-        self.win_noise = None
-        self.lose_noise = None
-        self.achievement_noise = None
+        self.card_flip = SoundLoader.load('assets/sound/card_flip.mp3') 
+        self.card_draw = SoundLoader.load('assets/sound/card_draw.mp3')
+        self.card_place = SoundLoader.load('assets/sound/card_place.mp3')
         self.ai_difficulty = "Beginner"
         self.ai_difficulty_map = {
             "Beginner" : 0.15,
@@ -120,7 +116,7 @@ class MobilePlayingCardApp(MDApp):
         else:
             self.sm_stack.insert(0, widget)
     
-    def resume_game_check(self):
+    def resume_game_check(self): # Write in NEA
         savedata = self.save.load()
         G1 = savedata['Games']['Current_Games']['threes']
         G2 = savedata['Games']['Current_Games']['rummy']
@@ -128,6 +124,7 @@ class MobilePlayingCardApp(MDApp):
         self.threes = threes('threes',G1["rank_order"],G1)
         self.rummy = rummy('rummy',G2['value_map'],G2)
         self.memory = memory('memory',G1["rank_order"],G3)
+        self.all_sounds = [self.card_flip,self.card_draw,self.card_place,self.threes.win_noise,self.threes.lose_noise,self.threes.achievement_noise,self.rummy.win_noise,self.rummy.lose_noise,self.rummy.achievement_noise,self.memory.win_noise,self.memory.lose_noise,self.memory.achievement_noise]
         Games = [G1,G2,G3]
         for game in Games:
             print(game['winner'],game['history'][-1] if game['history'] else "No History")
@@ -163,8 +160,9 @@ class MobilePlayingCardApp(MDApp):
             if gen["games_played"] > fav_game_count:
                 fav_game = game
             total_games += gen["games_played"]
-            if best_time is None or gen["best_time"] < best_time:
-                best_time = gen["best_time"]
+            if gen['best_time']:
+                if best_time is None or gen["best_time"] < best_time:
+                    best_time = gen["best_time"]
             total_time += gen["total_time"]
             total_wins += gen["wins"]
         if fav_game == "rummy_Stats":
@@ -317,7 +315,7 @@ class MobilePlayingCardApp(MDApp):
         seconds = int(total_seconds % 60)
         return f"{minutes:02d}:{seconds:02d}"
 
-    def update_timer(self,game): #Write in NEA
+    def update_timer(self,game):
         if self.timer:
             if game == "threes":
                 timer = self.get_widget('timer','MDThrees')
@@ -344,7 +342,8 @@ class MobilePlayingCardApp(MDApp):
             self.timer = widget.active
             print(self.timer)
         elif name == 'sfx':
-            self.sfx = widget.active 
+            self.sfx = widget.active
+            self.adjust_sfx()
     
     def update_game(self,game):
         if game == "threes":
@@ -429,7 +428,7 @@ class MobilePlayingCardApp(MDApp):
                         else:
                             hand.add_widget(Playing_Card(self.memory.card_array[y][x],'memory','back'))
 
-    def next_turn(self,game):
+    def next_turn(self,game): #Write in NEA
         self.update_game(game)
         if game == 'threes':
             self.threes.selected_card = "" 
@@ -440,6 +439,10 @@ class MobilePlayingCardApp(MDApp):
                 if all(m[2] == 'try' for m in moves):
                     move = random.choice(moves)
                 print(f"Move{move}")
+                if move[2] == 'pickup':
+                    self.card_draw.play()
+                else:
+                    self.card_place.play()
                 print(self.threes.hands[1])
                 self.threes.apply_move(move)
                 self.threes.update_game_state()
@@ -457,7 +460,11 @@ class MobilePlayingCardApp(MDApp):
             self.rummy.update_game_state()
             if self.rummy.turn == 1:
                 move = m_mtcs(self.rummy.state,GameEnvironmentR(),self.threes.difficulty[0])
-                print(f"Move{move}")
+                print(f"Move: {move}")
+                if move[2] == 'draw':
+                    self.card_draw.play()
+                else:
+                    self.card_place.play()
                 self.rummy.apply_move(move)
                 self.rummy.update_game_state()
                 self.rummy.turn = self.rummy.next_vaild_player(self.rummy.turn)
@@ -474,6 +481,7 @@ class MobilePlayingCardApp(MDApp):
             print("Turn: ",self.memory.turn)
             if self.memory.turn == 1:
                 move = m_mtcs(self.memory.state,GameEnvironmentM(),self.memory.difficulty[0])
+                self.card_flip.play()
                 print("Move: ",move)
                 self.memory.apply_move(move,self)
                 self.memory.update_game_state()
@@ -542,6 +550,7 @@ state = {'name' : "threes",
             self.rummy.update_game_state()
             print(f"Rummy State: {self.rummy.state}")
             self.update_game(game)
+            self.rummy.start_timer()
             self.next_turn(game)
         elif game == "memory":
             self.memory = memory("memory",'rank',{'name' : "memory",
@@ -564,6 +573,7 @@ state = {'name' : "threes",
             self.update_game(game)
             self.memory.turn = random.randint(0,1)
             print(f"Memory State: {self.memory.state}")
+            self.memory.start_timer()
             self.next_turn(game)
     
     def resume_game(self,game):
@@ -580,11 +590,13 @@ state = {'name' : "threes",
                 self.rummy.end_game(self)
             if self.rummy.turn == 1:
                 Clock.schedule_once(lambda dt: self.next_turn('rummy'), 0.5)
+            self.rummy.start_timer()
         elif game == "memory" and self.memory.state['history'] and self.memory.winner is None:
             if self.memory.is_game_over():
                 self.memory.end_game(self)
             if self.memory.turn == 1:
                 Clock.schedule_once(lambda dt: self.next_turn('memory'), 0.5)
+            self.memory.start_timer
         else:
             self.new_game(game)
     def start_game(self,game):
@@ -598,12 +610,20 @@ state = {'name' : "threes",
         elif game == "memory":
             self.new_game("memory")
 
+    def adjust_sfx(self):
+        for sound in self.all_sounds:
+            if self.sfx:
+                sound.volume = 1.0
+            else:
+                sound.volume = 0.0
+
     def on_start(self):
         self.save.update(self)
         timer = self.get_widget('timer','Settings')
         timer.active = self.timer
         sfx = self.get_widget('sfx','Settings')
         sfx.active = self.sfx
+        self.adjust_sfx()
         self.determine_contents("All_Time Stats")
 
 if __name__ == "__main__":

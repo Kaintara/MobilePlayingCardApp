@@ -250,6 +250,10 @@ class Playing_Card(MDCard):
                                 print(game.turn)
                                 if game.turn is not None:
                                     game.apply_move(move)
+                                    if move[2] == 'pickup':
+                                        app.card_draw.play()
+                                    else:
+                                        app.card_place.play()
                                     game.update_game_state()
                                     app.save.quick_save(app)
                                     Clock.schedule_once(lambda dt: app.next_turn('threes'), 0.5)
@@ -271,6 +275,10 @@ class Playing_Card(MDCard):
                             else:
                                 game.selected_card = ''
                                 game.apply_move(move)
+                                if move[2] == 'draw':
+                                    app.card_draw.play()
+                                else:
+                                    app.card_place.play()
                                 game.turn = game.next_vaild_player(game.turn)
                                 if game.turn is not None:
                                     game.update_game_state()
@@ -295,6 +303,7 @@ class Playing_Card(MDCard):
                                 game.selected_card = ''
                                 self.highlight.opacity = 0
                                 print(move)
+                                app.card_flip.play()
                                 game.apply_move(move,app)
                                 game.update_game_state()
                                 app.save.quick_save(app)
