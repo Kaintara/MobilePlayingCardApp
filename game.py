@@ -1,12 +1,10 @@
 import random
 from ui import Achievement_Dialog, Reward_Dialog, MDApp, SoundLoader
 from kivy.clock import Clock
-from threesMTCS import genv
-from treesearch import mtcs
 
-class Game: #Write in NEA
+class Game: #Main Game Class
     def __init__(game, name, rank_order,state):
-        game.name = name
+        game.name = name #Sets an id for each game
         game.deck = ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"]
         game.shuffled_deck = []
         game.rank_order = rank_order
@@ -19,68 +17,70 @@ class Game: #Write in NEA
         game.difficulty = (0,"Easy")
         game.winner = None
         game.timer_event = None
-        game.win_noise = SoundLoader.load('assets/sound/win_noise.mp3')
+        #Loads in sounds that to be accessed later
+        game.win_noise = SoundLoader.load('assets/sound/win_noise.mp3') 
         game.lose_noise = SoundLoader.load('assets/sound/lose_noise.mp3')
         game.achievement_noise = SoundLoader.load('assets/sound/iykyk.mp3')
 
     def shuffle_cards(game):
-        shuffled_deck = game.deck[:]
-        random.shuffle(shuffled_deck)
+        shuffled_deck = game.deck[:] #Makes a copy of the deck
+        random.shuffle(shuffled_deck) #Shuffles the deck
         game.shuffled_deck = shuffled_deck
 
-    def unlocked_achievements(game, app, savedata):
+    def unlocked_achievements(game, app, savedata): #Checks for any unlocked achievements and returns a list of them
         unlocked = []
-        already_unlocked = {a[0] for a in app.unlocked_achievements}
-        for id, name, desc, condition in app.all_achievements:
-            if id not in already_unlocked and condition(savedata):
-                unlocked.append((id, name, desc, condition))
-                app.unlocked_achievements.append((id, name, desc))
-        print("unlocked achievements:", unlocked)
+        already_unlocked = {a[0] for a in app.unlocked_achievements} #Creates a dictionary of already unlocked achievements
+        for id, name, desc, condition in app.all_achievements: #Iterates through each possible achievement
+            if id not in already_unlocked and condition(savedata): #Checks achievement condition has been met and it has not already been unlocked
+                unlocked.append((id, name, desc, condition)) #Adds achievement to list of unlocked to be returned
+                app.unlocked_achievements.append((id, name, desc)) #Adds achievement to list of unlocked to be saved
         return unlocked
 
-    def display_achievements(game,achievement): #Write in NEA
-        print(achievement[1])
-        print(achievement[2])
-        Dialog = Achievement_Dialog(achievement)
-        game.achievement_noise.play()
-        Dialog.open()
-        Clock.schedule_once(lambda dt: Dialog.dismiss(), 5)
+    def display_achievements(game,achievement):
+        Dialog = Achievement_Dialog(achievement) #Creates an achievement Dialog with achievement passed through
+        game.achievement_noise.play() #Plays the achievement noise
+        Dialog.open() #Displays the Dialog
+        Clock.schedule_once(lambda dt: Dialog.dismiss(), 5) #Schedules an auto close of the dialog after five seconds
     
-    def get_reward(game,shop,app,savedata): #Write in NEA
+    def get_reward(game,shop,app,savedata):
         amount_earned = 0
-        shop.coin_count += (game.difficulty[0]*5)
-        amount_earned += game.difficulty[0]*5
-        Unlocked_achievement = game.unlocked_achievements(app,savedata)
+        #Adds five times the game's difficulty to coin total and recorded amount earned
+        shop.coin_count += (game.difficulty[0]*5) 
+        amount_earned += game.difficulty[0]*5 
+        Unlocked_achievement = game.unlocked_achievements(app,savedata) #Saves all unlocked achievements
         total_delay = 0
-        if Unlocked_achievement:
+        if Unlocked_achievement: #Checks if achievements have been unlocked
+        #Adds five times the amount of unlocked achievements to coin total and recorded amount earned
             shop.coin_count += 5*len(Unlocked_achievement)
             amount_earned += 5*len(Unlocked_achievement)
-            for index, achievement in enumerate(Unlocked_achievement):
-                delay = (index+1) * 5
+            for index, achievement in enumerate(Unlocked_achievement): #Iterates through each all unlocked achievements to calculate delay to display Achievement Dialogs and the reward dialog
+                delay = (index+1) * 2
                 total_delay += delay
-                print(achievement)
                 Clock.schedule_once(lambda dt, achieve=achievement: game.display_achievements(achieve), delay) 
-        if game.winner == 0:
-            Clock.schedule_once(lambda dt: game.win_noise.play(), total_delay)
+        if game.winner == 0: #Checks if the player won
+            Clock.schedule_once(lambda dt: game.win_noise.play(), total_delay) #Plays winner noise with the Reward Dialog
+            #Adds 30 plus five times the game's difficulty to coin total and recorded amount earned
             shop.coin_count += (30 + game.difficulty[0]*5)
             amount_earned += (30 + game.difficulty[0]*5)
         else:
-            Clock.schedule_once(lambda dt: game.lose_noise.play(), total_delay)
+            Clock.schedule_once(lambda dt: game.lose_noise.play(), total_delay) #Plays loser noise with the Reward Dialog
+            #Adds 10 to coin total and recorded amount earned
             shop.coin_count += 10
             amount_earned += 10
-        print(amount_earned, game.winner, total_delay)
         return (amount_earned, game.winner, total_delay)
     
-    def end_game(game, app): #Write in NEA
+    def end_game(game, app):
         game.stop_timer()
+        #Formats the data of the completed game
         completed_game = {
             'winner': game.winner,
             'history': game.state['history'],
             'difficulty' : game.difficulty,
             'time': game.time_elapsed
         }
-        app.previous_games[game.name].append(completed_game)
-        reward = game.get_reward(app.shop,app,app.save)
+        app.previous_games[game.name].append(completed_game) #Adds game to list of completed games
+        reward = game.get_reward(app.shop,app,app.save) #Returns the game reward and displays achievements if any have been unlocked
+        #Resets all of the game's attributes for the next game
         if game.name == "threes":
             app.threes.shuffled_deck = []
             app.threes.hands = [[],[]]
@@ -143,85 +143,88 @@ class Game: #Write in NEA
                             "winner" : None,
                             "history": []}
             app.memory.card_array = [["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""]]
-        app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop)
-        print(app.save.alldata["Games"]["Stats"]["threes_Stats"]["General_Stats"])
-        print(app.threes.state["history"])
-        Dialog = Reward_Dialog(reward,app)
-        Clock.schedule_once(lambda dt: Dialog.open(), (reward[2]*2)) 
+        app.save.savedata(app, app.threes, app.rummy, app.memory, app.shop) #Saves the entire game's data
+        Dialog = Reward_Dialog(reward,app) #Creates a Reward Dialog
+        Clock.schedule_once(lambda dt: Dialog.open(), (reward[2]+1)) #Schedules the display of the reward dialog based on returned delay
 
     def update_timer(game,dt):
-        game.time_elapsed += dt
-        app = MDApp.get_running_app()
-        app.update_timer(game.name)
+        game.time_elapsed += dt #Adds change of time to the time elapsed
+        app = MDApp.get_running_app() #Returns the App class
+        app.update_timer(game.name) #Updates the UI with the new time
         print(game.time_elapsed)
         print("time has been updated")
         
     def start_timer(game):
-        if not game.timer_event:
+        if not game.timer_event: #Checks that there is no current timer running already
             print("started timer")
-            game.timer_event = Clock.schedule_interval(lambda dt: game.update_timer(dt),1)
+            game.timer_event = Clock.schedule_interval(lambda dt: game.update_timer(dt),1) #Schedules an repeat-event which calls game.update_timer every second
 
     def stop_timer(game):
-        if game.timer_event:
-            game.timer_event.cancel()
-            game.timer_event = None
+        if game.timer_event: #Checks there is a timer currently running
+            game.timer_event.cancel() #Cancels the clock schedule interval event
+            game.timer_event = None #Removes the timer event so that start_timer acknowledges there is no timer running
         print("timer has been stopped")
 
-class threes(Game):
+class threes(Game): #Threes Game Class
     def __init__(threes, name, rank_order, state):
-        super().__init__(name, rank_order, state)
+        super().__init__(name, rank_order, state) #Sets all the attributes as done in the Parent Game Class
+        #Adds addtional neccessary attributes
         threes.bottom_hands = [[],[]]
         threes.top_hands = [[],[]]
         threes.played_cards = []
         threes.another = False
 
     def distribute_cards(threes):
-        Hands = [threes.hands,threes.bottom_hands,threes.top_hands]
-        for hand in Hands:
-            for i in range(0,6):
-                if (i % 2) == 0:
+        Hands = [threes.hands,threes.bottom_hands,threes.top_hands] #Makes a list of each type of hand
+        for hand in Hands: #Iterates through each hand
+            for i in range(0,6): #Iterates from 0 to 5
+            #If i is divisable by 2 cards are dealt to first player, else they are dealt to the second player
+                if (i % 2) == 0: 
                     card = threes.shuffled_deck.pop()
                     hand[0].append(card)
                 else:
                     card = threes.shuffled_deck.pop()
                     hand[1].append(card)
 
-    def sort_cards(threes):
+    def sort_cards(threes): #Uses the rank_order dictionary as a key to sort the list of the player's main hand
         threes.hands[0].sort(key=(lambda a : threes.rank_order[a[0]]))
         threes.hands[1].sort(key=(lambda a : threes.rank_order[a[0]]))
 
-    def get_valid_moves(threes):
-        player = threes.turn
+    def get_valid_moves(threes): #Returns all valid moves
+        player = threes.turn 
         Moves = []
         Valid_Cards = []
+        #Checks which hand the player is currently using
         if threes.hands[player]:
             Hand = threes.hands[player]
         elif threes.top_hands[player]:
             Hand = threes.top_hands[player]
         else:
             Hand = threes.bottom_hands[player]
+            #If the secret hand is being used only vaild moves are trying those cards so these moves are returned
             for card in Hand:
                 Moves.append((player,card,"try"))   
             return Moves
-        if threes.played_cards:
-            Moves.append((player,threes.played_cards[:],"pickup"))
-            Top_card = threes.played_cards[-1]
-            if Top_card[0] == '2':
+        if threes.played_cards: #Checks if there are cards in the middle that can be picked up
+            Moves.append((player,threes.played_cards[:],"pickup")) #Adds the pickup move to the list of vaild moves
+            Top_card = threes.played_cards[-1] #Finds the most recently played card which the player needs to beat
+            if Top_card[0] == '2': #Checks if the top card is 2 if it is the player can beat it with any card so returns a play move for every card
                 for card in Hand:
                     Moves.append((player,card,"play"))
                 return Moves
-            for card in Hand:
-                if card[0] == Top_card[0]:
+            for card in Hand: #Iterates through each card
+                if card[0] == Top_card[0]: #Checks if the top card has the same rank as the card in hand, if so then that card is added to the vaild card list
                     Valid_Cards.append(card)
             temp_hand = Hand[:] + [Top_card]
-            temp_hand.sort(key=lambda a: rank_order[a[0]])
+            temp_hand.sort(key=lambda a: threes.rank_order[a[0]])
             idx = temp_hand.index(Top_card) + 1
             if idx < len(temp_hand):
                 Valid_Cards += temp_hand[idx:]
-            for card in Valid_Cards:
-                if card not in [m[1] for m in Moves]:
+            for card in Valid_Cards: #Iterates through all vaild cards and adds a play move for each card
+                if card not in [m[1] for m in Moves]: #Checks the cards' rank has not already been added to the vaild moves
                     Moves.append((player,card,"play"))
         else:
+            #As there is no card to beat all moves are vaild so iterates through player's hand and adds a play move for each card
             for card in Hand:
                 Moves.append((player,card,"play"))
         return Moves
@@ -229,12 +232,14 @@ class threes(Game):
     def is_game_over(threes):
         Player_hands = []
         Ai_hands = []
+        #Adds cards to the respective player's hand
         Player_hands += threes.hands[0]
         Player_hands += threes.top_hands[0]
         Player_hands += threes.bottom_hands[0]
         Ai_hands += threes.hands[1]
         Ai_hands += threes.top_hands[1]
         Ai_hands += threes.bottom_hands[1]
+        #Checks if any player has no cards, if they do then they win otherwise False is returned
         if not Player_hands:
             threes.winner = 0
             return True
@@ -244,12 +249,13 @@ class threes(Game):
         return False
 
     def next_vaild_player(threes,player,savedata):
-        if threes.is_game_over():
+        if threes.is_game_over(): #Checks if the game is over
             return None
         else:
-            if threes.another == True:
-                threes.another = False
+            if threes.another == True: #Checks if the player gets another turn and returns the player if they do
+                threes.another = False #Sets it so the player doesn't get another turn next turn
                 return player
+            #Changes player's turn from 1 to 0 or 0 to 1
             if player == 1:
                 return 0
             else:
@@ -257,17 +263,17 @@ class threes(Game):
     
     def apply_move(threes,move):
         player = move[0]
-        if not move:
-            if threes.is_game_over():
+        if not move: #Checks if the move exists 
+            if threes.is_game_over(): #Checks if the game is over
                 return
             else:
-                threes.turn = threes.next_vaild_player(threes.turn, 'savedata')
+                threes.turn = threes.next_vaild_player(threes.turn, 'savedata') #Changes turn to the next vaild player
                 return
-        threes.state["history"].append(move)
-        if threes.played_cards:
+        threes.state["history"].append(move) #Adds move to history
+        if threes.played_cards: #Checks if there are cards in the middle that can be picked up
             Top_card = threes.played_cards[-1]
         else:
-            Top_card = '2H'
+            Top_card = '2H' #If no card in the middle sets to 2H to use to compare 
         if move[2] == "try":
             print("selecting card to play:", move[1])
             if Top_card[0] == '2':
@@ -337,7 +343,7 @@ class threes(Game):
                         threes.hands[player].append(card)
             threes.played_cards = []
     
-    def update_game_state(threes):
+    def update_game_state(threes): #Updates the game state
         threes.state['selected_card'] = threes.selected_card
         threes.state['shuffled_deck'] = threes.shuffled_deck
         threes.state['hands'] = threes.hands
@@ -350,81 +356,6 @@ class threes(Game):
         threes.state['time_elapsed'] = threes.time_elapsed
         threes.state['difficulty'] = threes.difficulty
         threes.state['winner'] = threes.winner
-
-    def test_run(threes):
-        threes.shuffle_cards()
-        threes.distribute_cards()
-        threes.turn = 0
-        while not threes.is_game_over():
-            if threes.turn == 1:
-                chosen_move = mtcs(threes.state, genv, 0.3, True)
-            else:
-                moves = threes.get_valid_moves()
-                # No moves at all – skip or break the game
-                if not moves:
-                    threes.turn = threes.next_vaild_player(threes.turn, 'save')
-                    print("No valid moves – skipping turn")
-                    continue
-                # Filter moves
-                play_moves = [m for m in moves if m[2] != "pickup"]
-                pickup_moves = [m for m in moves if m[2] == "pickup"]
-                # Decide which move to apply
-                if play_moves:
-                    # Choose the first non-pickup move
-                    chosen_move = play_moves[0]
-                else:
-                    # Only pickup available
-                    chosen_move = pickup_moves[0]
-            # Apply the chosen move
-            threes.apply_move(chosen_move)
-            print("HANDS:", threes.hands)
-            print("CARDS LEFT:", threes.state['bottom_hands'])
-            print("DECK:", threes.shuffled_deck)
-            threes.update_game_state()
-            print("HISTORY:",threes.state['history'][-1])
-            threes.turn = threes.next_vaild_player(threes.turn, 'save')
-            #input()
-        print("game over")
-
-rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,
-'5': 5,'4': 4,'3': 3,'2': 15}
-
-state = {'name' : "threes",
-        'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
-        'shuffled_deck' : [],
-        'rank_order' : {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,
-'5': 5,'4': 4,'3': 3,'2': 15},
-        'hands' : [[],[]],
-        'discard_pile' : [],
-        'selected_card' : '',
-        'turn' : 0,
-        'time_elapsed' : 0,
-        'difficulty' : (-1,""),
-        'winner' : None,
-        'bottom_hands' : [[],[]],
-        'top_hands' : [[],[]],
-        'another' : False,
-        'played_cards' : [],
-        'history': []}
-
-'''
-threes_game = threes("threes",rank_order,state)
-counts = 0
-for _ in range(3):
-    threes_game.test_run()
-    counts += 1 if threes_game.winner == 1 else 0
-    # reset
-    threes_game.shuffled_deck = []
-    threes_game.hands = [[],[]]
-    threes_game.bottom_hands = [[],[]]
-    threes_game.top_hands = [[],[]]
-    threes_game.turn = 0
-    threes_game.winner = None
-    threes_game.history = []
-    threes_game.state = state
-
-print(f"threes AI wins {counts*33}%")
-'''
 
 class rummy(Game):
     def __init__(rummy, name, rank_order, state):
@@ -627,43 +558,6 @@ class rummy(Game):
         rummy.state['difficulty'] = rummy.difficulty
         rummy.state['winner'] = rummy.winner
 
-    def test_run(rummy):
-        rummy.shuffle_cards()
-        rummy.distribute_cards()
-        rummy.turn = 0
-        while not rummy.is_game_over():
-            moves = rummy.get_valid_moves(rummy.turn)
-            if not moves:
-                rummy.turn = rummy.next_vaild_player(rummy.turn, 'save')
-                print("No valid moves – skipping turn")
-                continue
-            mo = [m for m in enumerate(moves)]
-            print(mo)
-            rummy.apply_move(moves[int(input())])
-            print("HANDS:", rummy.hands)
-            print("HISTORY:", rummy.state['history'])
-            print("DECK:", rummy.shuffled_deck)
-            rummy.update_game_state()
-            print(rummy.turn)
-        print("game over")
-    
-state = {'name' : "rummy",
-        'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
-        'shuffled_deck' : [],
-        'value_map' : {'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,
-'5': 5,'4': 4,'3': 3,'2': 2},
-        'hands' : [[],[]],
-        'discard_pile' : [],
-        'selected_card' : '',
-        'turn' : 0,
-        'time_elapsed' : 0,
-        'difficulty' : (-1,""),
-        'winner' : None,
-        'history': []}
-
-#rummy = rummy("rummy",{'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 2},state)
-
-#rummy.test_run()
 
 class memory(Game):
     def __init__(memory, name, rank_order, state):
@@ -780,55 +674,4 @@ class memory(Game):
         memory.state['time_elapsed'] = memory.time_elapsed
         memory.state['difficulty'] = memory.difficulty
         memory.state['winner'] = memory.winner
-
-    def test_run(memory):
-        memory.shuffle_cards()
-        memory.distribute_cards()
-        memory.turn = 0
-        while not memory.is_game_over():
-            moves = memory.get_valid_moves(memory.turn)
-            if not moves:
-                memory.turn = memory.next_vaild_player(memory.turn, 'save')
-                print("No valid moves – skipping turn")
-                continue
-            if memory.turn == 1:
-                chosen_move = mtcs(memory.state,genv,0.5,True)
-            else:
-                chosen_move = random.choice(moves)
-            memory.apply_move(chosen_move)
-            print("PAIRS:", memory.hands)
-            print("HISTORY:", memory.state['history'][-1])
-            print("CARD ARRAY:", memory.card_array)
-            memory.update_game_state()
-        print("game over")
-        return memory.winner
-    
-'''
-state = {'name' : "memory",
-        'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
-        'shuffled_deck' : [],
-        'hands' : [[],[]],
-        'first_selected_card' : ('y','x','card'),
-        'second_selected_card' : ('y','x','card'),
-        'selected_first_card' : False,
-        'card_array' : [['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','',''],['','','','','','']],
-        'turn' : 0,
-        'time_elapsed' : 0,
-        'difficulty' : (-1,""),
-        'winner' : None,
-        'history': []}
-
-memory = memory('memory','rank',state)
-counts = 0
-for _ in range(5):
-    counts += memory.test_run()
-    memory.shuffled_deck = []
-    memory.hands = [[],[]]
-    memory.turn = 0
-    memory.winner = None
-    memory.history = []
-    memory.state = state
-print(f"Wins {counts*20}%")
-
-'''
 
