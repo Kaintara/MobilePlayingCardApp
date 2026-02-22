@@ -651,9 +651,9 @@
                     do_scroll_x: False
                     do_scroll_y: True
                     MDBoxLayout:
-                        orientation: 'vertical'
-                        padding: "20dp"
-                        spacing: "20dp"
+                        orientation: "vertical"
+                        padding: dp(30)
+                        spacing: dp(60)
                         adaptive_height: True
                         size_hint_y: None
                         MDLabel:
@@ -681,13 +681,96 @@
                             theme_font_size: "Custom"
                             font_size: dp(30)
                             shorten: False
+                        MDLabel:
+                            text: "How to win"
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
+                            theme_font_size: "Custom"
+                            font_size: dp(25)
+                        MDLabel:
+                            text: "The aim of the game is to be the first player to get rid of all your cards."
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
+                        MDLabel:
+                            text: "Card Ranking"
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
+                            theme_font_size: "Custom"
+                            font_size: dp(25)
+                        MDLabel:
+                            text: "Cards rank from lowest to highest: 3, 4, 5, 6, 7, 8, 9, Jack, Queen, King, Ace."
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
+                        MDLabel:
+                            text: "Ace is the highest normal card."
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
+                        MDLabel:
+                            text: "How to Play"
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
+                            theme_font_size: "Custom"
+                            font_size: dp(25)
+                        MDLabel:
+                            text: "Players take turns placing a card onto the discard pile."
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
+                        MDLabel:
+                            text: "You must play a card equal to or higher than the top card on the pile."
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
+                        MDLabel:
+                            text: "If you cannot play, you must pick up the entire discard pile and add it to your hand."
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
+                        MDLabel:
+                            text: "If you can play you draw a card from the deck to maintain three cards until the deck is gone."
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
+                        MDLabel:
+                            text: "All cards of the same rank are played together apart from a 10 or a 2."
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
+                        MDLabel:
+                            text: "If four of the same cards are played together it acts as a 10."
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
+                        MDLabel:
+                            text: "Special Cards"
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
+                            theme_font_size: "Custom"
+                            font_size: dp(25)
+                        MDLabel:
+                            text: "2 - Reset Card: A 2 can be played on any card and resets the pile. The next player can play any card."
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
+                        MDLabel:
+                            text: "10 - Burn Card: A 10 can be played on any card and burns the pile, removing it from the game. The same player starts a new pile."
+                            halign: "left"
+                            font_style: "cataway"
+                            role: "medium"
                 MDScrollView:
                     do_scroll_x: False
                     do_scroll_y: True
                     MDBoxLayout:
-                        orientation: 'vertical'
-                        padding: "20dp"
-                        spacing: "20dp"
+                        orientation: "vertical"
+                        padding: dp(30)
+                        spacing: dp(60)
                         adaptive_height: True
                         size_hint_y: None
                         MDLabel:
@@ -715,13 +798,77 @@
                             theme_font_size: "Custom"
                             font_size: dp(30)
                             shorten: False
+                            MDLabel:
+                                text: "How to Win"
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+                                theme_font_size: "Custom"
+                                font_size: dp(25)
+                            MDLabel:
+                                text: "The first player to gain both a set AND a run using seven cards wins the game."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+                            MDLabel:
+                                text: "A set is three or four cards of the same rank."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+                            MDLabel:
+                                text: "A run is three or four consecutive cards of the same suit."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+                            MDLabel:
+                                text: "Turn Structure"
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+                                theme_font_size: "Custom"
+                                font_size: dp(25)
+                            MDLabel:
+                                text: "Each player has two actions per round."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+                            MDLabel:
+                                text: "First, you must draw a card."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+                            MDLabel:
+                                text: "Then, you must discard one card from your hand."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+
+                            MDLabel:
+                                text: "Extra Hint!"
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+                                theme_font_size: "Custom"
+                                font_size: dp(25)
+
+                            MDLabel:
+                                text: "When your opponent discards a card, you have only one immediate opportunity to take that card."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+
+                            MDLabel:
+                                text: "If you do not take it on that turn, it is no longer available to you."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
                 MDScrollView:
                     do_scroll_x: False
                     do_scroll_y: True
                     MDBoxLayout:
-                        orientation: 'vertical'
-                        padding: "20dp"
-                        spacing: "20dp"
+                        orientation: "vertical"
+                        padding: dp(30)
+                        spacing: dp(60)
                         adaptive_height: True
                         size_hint_y: None
                         MDLabel:
@@ -749,6 +896,71 @@
                             theme_font_size: "Custom"
                             font_size: dp(30)
                             shorten: False
+                            MDLabel:
+                                text: "How to Win"
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+                                theme_font_size: "Custom"
+                                font_size: dp(25)
+
+                            MDLabel:
+                                text: "The aim of the game is to collect the most matching pairs of cards."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+
+                            MDLabel:
+                                text: "How to Match"
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+                                theme_font_size: "Custom"
+                                font_size: dp(25)
+
+                            MDLabel:
+                                text: "All cards are shuffled and placed face down in a grid."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+
+                            MDLabel:
+                                text: "Each card has exactly one matching pair as it has the same rank and colour."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+
+                            MDLabel:
+                                text: "Players take turns flipping over two cards."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+
+                            MDLabel:
+                                text: "If the two cards match, the player keeps the pair and takes another turn."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+
+                            MDLabel:
+                                text: "If the cards do not match, they are turned face down again and the turn passes to the next player."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+
+                            MDLabel:
+                                text: "Game End"
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
+                                theme_font_size: "Custom"
+                                font_size: dp(25)
+
+                            MDLabel:
+                                text: "The game ends when all pairs have been found."
+                                halign: "left"
+                                font_style: "cataway"
+                                role: "medium"
             MDIconButton:
                 style: "tonal"
                 icon: "chevron-double-right"

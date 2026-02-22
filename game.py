@@ -201,7 +201,7 @@ class threes(Game): #Threes Game Class
             Hand = threes.top_hands[player]
         else:
             Hand = threes.bottom_hands[player]
-            #If the secret hand is being used only vaild moves are trying those cards so these moves are returned
+            #If the unseen hand is being used only vaild moves are trying those cards so these moves are returned
             for card in Hand:
                 Moves.append((player,card,"try"))   
             return Moves
@@ -273,26 +273,21 @@ class threes(Game): #Threes Game Class
         if threes.played_cards: #Checks if there are cards in the middle that can be picked up
             Top_card = threes.played_cards[-1]
         else:
-            Top_card = '2H' #If no card in the middle sets to 2H to use to compare 
+            Top_card = '2H' #If no card in the middle sets to 2H to use to compare so that all moves are vaild
         if move[2] == "try":
-            print("selecting card to play:", move[1])
             if Top_card[0] == '2':
                 threes.apply_move((player,move[1],"play"))
-            else:
+            else: #Checks that the attempted card is higher then previously played card if not the player pickups
                 Card_rank = threes.rank_order[move[1][0]]
-                print("Top card rank:", threes.rank_order[Top_card[0]])
-                print("Selected card rank:", Card_rank)
                 if Card_rank >= threes.rank_order[Top_card[0]]:
-                    print("hands before: ",threes.bottom_hands[player])
                     threes.apply_move((player,move[1],"play"))
-                    print("hands after: ",threes.bottom_hands[player])
                 else:
                     threes.apply_move((player,threes.played_cards,"pickup"))
                     return
         elif move[2] == "play":
             Hands = [threes.hands[player],threes.bottom_hands[player],threes.top_hands[player]]
             played_rank = move[1][0]
-            if played_rank in ('1','2'):
+            if played_rank in ('1','2'): #If the card is a 10 or a 2 only the card selected is played and removed from the player's hand
                 threes.played_cards.append(move[1])
                 for cards in Hands:
                     if move[1] in cards:
@@ -300,21 +295,22 @@ class threes(Game): #Threes Game Class
             else:
                 played_now = []
                 Hand = []
+                #Iterates through Hands to find which hand is being used
                 if threes.hands[player]:
                     Hand = threes.hands[player]
                 elif threes.top_hands[player]:
                     Hand = threes.top_hands[player]
                 else:
                     Hand = threes.bottom_hands[player]
-                for card in Hand[:]:
+                for card in Hand[:]: #Plays all cards with the same rank as the one selected and removes them from the players hand
                     if card[0] == played_rank:
                         Hand.remove(card)
                         threes.played_cards.append(card)
                         played_now.append(card)
-                if len(played_now) > 1:
+                if len(played_now) > 1: #Updates the history such that all played cards are reflected in it
                     threes.state['history'][-1] = (player,played_now,'play')
             four = False
-            if len(threes.played_cards) > 3:
+            if len(threes.played_cards) > 3: #Checks if four of the same rank has been placed
                 for i in range(1,5):
                     if i == 1:
                         rank = threes.played_cards[-i][0]
@@ -326,17 +322,17 @@ class threes(Game): #Threes Game Class
                         else:
                             four = False
                             break
-            if four == True or move[1][0] == '1':
+            if four == True or move[1][0] == '1': #If four of the same cards or a 10 is placed the cards in the middle are 'burnt' - put into the discard pile and the player gets another turn
                 threes.discard_pile += threes.played_cards
                 threes.played_cards = []
                 threes.another = True
-            if threes.shuffled_deck and threes.hands[player]:
-                while threes.shuffled_deck:
+            if threes.shuffled_deck and threes.hands[player]: #Adds cards to the player's hand such that they have at least three cards until the deck is gone.
                     while len(threes.hands[player]) < 3:
-                        card = threes.shuffled_deck.pop()
-                        threes.hands[player].append(card)
-                    break
-        elif move[2] == "pickup":
+                        while threes.shuffled_deck:
+                            card = threes.shuffled_deck.pop()
+                            threes.hands[player].append(card)
+                        break
+        elif move[2] == "pickup": #Gives all the cards that have been played to the player which needs to pick up
             if threes.played_cards:
                 for card in threes.played_cards:
                     if card not in threes.hands[player]:
@@ -357,16 +353,18 @@ class threes(Game): #Threes Game Class
         threes.state['difficulty'] = threes.difficulty
         threes.state['winner'] = threes.winner
 
-class rummy(Game):
+class rummy(Game): #Rummy Game Class
     def __init__(rummy, name, rank_order, state):
-        super().__init__(name, rank_order, state)
+        super().__init__(name, rank_order, state) #Sets all the attributes as done in the Parent Game Class
+        #Adds addtional neccessary attributes
         rummy.value_map = rank_order
 
     def distribute_cards(rummy):
         Start = 0 + rummy.turn
         End = 15 + rummy.turn
         Hands = rummy.hands
-        for i in range(Start,End):
+        for i in range(Start,End): #Ensures the starting player is dealt 8 cards and the other 7
+            #If i is divisable by 2 cards are dealt to first player, else they are dealt to the second player
             if (i % 2) == 0:
                 card = rummy.shuffled_deck.pop()
                 Hands[0].append(card)
@@ -376,29 +374,29 @@ class rummy(Game):
 
     def find_run(rummy,cards):
         runs = []
-        if len(cards) >= 3:
+        if len(cards) >= 3: #Checks cards are long enough to be a run
             previous_value = rummy.rank_order[cards[0][0]]
             run_length = 0
             starting_index = ''
-            for card in cards:
+            for card in cards: #Iterates through cards to find a run
                 value = rummy.rank_order[card[0]]
-                if run_length == 0:
-                        starting_index = cards.index(card)
-                if value == previous_value:
+                if run_length == 0: #Stores starting postion of the run
+                    starting_index = cards.index(card)
+                if value == previous_value: #Adds one to run length if card is the starting card
                     run_length += 1
-                elif value == (previous_value + 1):
+                elif value == (previous_value + 1): #Adds one to run length if card is exactly one above the previous
                     run_length += 1
                     previous_value = value
-                else:
+                else: #Resets run if not consecutive
                     run_length = 1
                     starting_index = cards.index(card)
                     previous_value = value
-                if run_length == 3:
+                if run_length == 3: #Stores run it reaches required length
                     runs.append((3,starting_index))
-                elif run_length == 4:
+                elif run_length == 4: #Stores run it increases in length
                     del runs[-1]
                     runs.append((4,starting_index))
-            if runs:
+            if runs: #Returns cards in the run if a run is present
                 run_cards = []
                 for run in runs:
                     run_cards += cards[run[1]:(run[0]+run[1])]
@@ -406,11 +404,11 @@ class rummy(Game):
         
     def find_set(rummy,cards):
         sets = []
-        if len(cards) >= 3:
+        if len(cards) >= 3: #Checks cards are long enough to be a set
             set_length = 0
             starting_index = 0
             previous_rank = cards[0][0]
-            for card in cards:
+            for card in cards: #Iterates through cards to find a set
                 if card[0] == previous_rank:
                     set_length += 1
                     previous_rank = card[0]
@@ -434,12 +432,12 @@ class rummy(Game):
         Runs = []
         Sets = []
         Temp_hand = rummy.hands[player][:]
-        Temp_hand.sort(key=(lambda a : rummy.rank_order[a[0]]))
+        Temp_hand.sort(key=(lambda a : rummy.rank_order[a[0]])) #Sorts cards in order of rank
         Hearts = []
         Clubs = []
         Spades = []
         Diamonds = []
-        for card in Temp_hand:
+        for card in Temp_hand: #Sorts cards into suits 
             if card.endswith('H'):
                Hearts.append(card)
             elif card.endswith('C'):
@@ -449,23 +447,20 @@ class rummy(Game):
             elif card.endswith('D'):
                Diamonds.append(card)
         Suits = [Hearts,Clubs,Spades,Diamonds]
-        for suit in Suits:
-            if rummy.find_run(suit):
+        for suit in Suits: #Iterates through each suit
+            if rummy.find_run(suit): #Adds the runs to the sorted hand one is found
                 Runs = rummy.find_run(suit)
                 Sorted_hand += Runs
-                print(Runs)
                 for card in Runs:
-                    print(card)
-                    print(Temp_hand)
                     Temp_hand.remove(card)
-        if rummy.find_set(Temp_hand):
+        if rummy.find_set(Temp_hand): #Adds the sets to the sorted hand one is found
             Sets = rummy.find_set(Temp_hand)
             Sorted_hand += Sets
             for card in Sets:
                 Temp_hand.remove(card)
-        if not Temp_hand:
+        if not Temp_hand: #If there is no cards left, it means the player has met the win requirements
             return "GameOver"
-        else:
+        else: #Returns the sorted hand
             Temp_hand.sort(key=(lambda a : rummy.rank_order[a[0]]))
             Sorted_hand += Temp_hand
             rummy.hands[player] = Sorted_hand
@@ -475,20 +470,22 @@ class rummy(Game):
         player = rummy.turn
         Moves = []
         Hand_len = len(rummy.hands[player])
-        if Hand_len == 7:
+        #Checks whether or not the player has 7 or 8 cards
+        if Hand_len == 7: #if 7 it returns draw moves
             if rummy.shuffled_deck:
                 Moves.append((player,"deck","draw"))
             if rummy.discard_pile:
                 Moves.append((player,rummy.discard_pile[-1],"draw"))
             return Moves
-        elif Hand_len == 8:
+        elif Hand_len == 8: # if 8 it returns discard moves
             for card in rummy.hands[player]:
                 Moves.append((player,card,"discard"))
             return Moves
-        else:
+        else: #Returns [] if player has invaild amount of cards
             return Moves
     
     def is_game_over(rummy):
+        #Checks if and which player that causes sort_cards returns 'GameOver' else returns False
         if rummy.sort_cards(1) == 'GameOver':
             rummy.winner = 1
             return True
@@ -499,12 +496,12 @@ class rummy(Game):
     
     def next_vaild_player(rummy,player):
         player = rummy.turn
-        print(rummy.is_game_over())
-        if rummy.is_game_over():
+        if rummy.is_game_over(): #Checks if the game is over
             return None
         else:
             if rummy.state['history']:
                 last_move = rummy.state['history'][-1]
+                #Switches turn if the last move was a discard otherwise they get another turn
                 if last_move[2] == "draw":
                     return player
                 elif last_move[2] == "discard":
@@ -512,43 +509,39 @@ class rummy(Game):
                         return 0
                     else:
                         return 1
-                else:
+                else: #Ensures swap of turn if last move was invalid
                     if player == 1:
                         return 0
                     else:
                         return 1
-            else:
+            else: #Ensures that the first player is swapped after their discard move
                 if player == 1:
                     return 0
                 else:
                     return 1
         
     def apply_move(rummy,move):
-        print("Turn:", rummy.turn)
-        print("HANDS BEFORE MOVE:", rummy.hands)
-        print("APPLY MOVE:", move)
         player = move[0]
-        if not move:
-            if rummy.is_game_over():
+        if not move: #Checks if the move exists 
+            if rummy.is_game_over(): #Checks if the game is over
                 rummy.end_game()
                 return
-            else:
+            else: #Changes turn to the next vaild player if no vaild move is possible
                 rummy.turn = rummy.next_vaild_player(player,'savedata')
                 return
-        rummy.state['history'].append(move)
-        if move[2] == "draw":
+        rummy.state['history'].append(move) #Adds move to history
+        if move[2] == "draw": #Adds card to the player's hand and removes it from the source of where they selected it
             if move[1] == "deck":
                 Top_card = rummy.shuffled_deck.pop()
                 rummy.hands[player].append(Top_card)
             else:
                 Top_card = rummy.discard_pile.pop()
                 rummy.hands[player].append(Top_card)
-        elif move[2] == "discard":
+        elif move[2] == "discard": #Removes card from player's hand and adds it to the discard pile
             rummy.discard_pile.append(move[1])
             rummy.hands[player].remove(move[1])
-        print("HANDS AFTER MOVE:", rummy.hands)
     
-    def update_game_state(rummy):
+    def update_game_state(rummy): #Updates the game state
         rummy.state['shuffled_deck'] = rummy.shuffled_deck
         rummy.state['hands'] = rummy.hands
         rummy.state['discard_pile'] = rummy.discard_pile
@@ -559,9 +552,10 @@ class rummy(Game):
         rummy.state['winner'] = rummy.winner
 
 
-class memory(Game):
+class memory(Game): #Memory Game Class
     def __init__(memory, name, rank_order, state):
-        super().__init__(name, rank_order, state)
+        super().__init__(name, rank_order, state) #Sets all the attributes as done in the Parent Game Class
+        #Adds addtional neccessary attributes
         memory.state = state
         memory.deck = ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH","BJ","RJ"]
         memory.first_selected_card = ('y','x','card')
@@ -569,7 +563,7 @@ class memory(Game):
         memory.selected_first_card = False
         memory.card_array = [[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None],[None,None,None,None,None,None]]
 
-    def distribute_cards(memory):
+    def distribute_cards(memory): #Iterates through the card array and assigns card to each spot in it
         for y in range(0,9):
             for x in range(0,6):
                 card = memory.shuffled_deck.pop()
@@ -578,24 +572,25 @@ class memory(Game):
     def get_valid_moves(memory):
         player = memory.turn
         Moves = []
-        for y, row in enumerate(memory.card_array):
+        for y, row in enumerate(memory.card_array): #Iterates through the card array
             for x, card in enumerate(row):
-                if card is not None and card != '':
-                    if memory.first_selected_card[2] != 'card':
+                if card is not None and card != '': #Checks if card exists 
+                    if memory.first_selected_card[2] != 'card': #Checks if a first card has been selected
                         if card == memory.first_selected_card[2]:
                             continue
                         else:
-                            Moves.append(("pick",player,(y,x,card)))
+                            Moves.append(("pick",player,(y,x,card))) #Adds move if card exists in array and is not the same card as first selected
                     else:
-                        Moves.append(("pick",player,(y,x,card)))
-        print("VALID MOVES:", Moves)
+                        Moves.append(("pick",player,(y,x,card))) #Adds move if card exists in array
         return Moves
     
     def is_game_over(memory):
+        #Iterates through card array to check it is empty
         for y,row in enumerate(memory.card_array):
             for x,card in enumerate(row):
-                if card:
+                if card: #If card array is not empty return False as game is not over
                     return False
+        #Sets the winner as the player with the most pairs
         if len(memory.hands[1]) > len(memory.hands[0]):
             memory.winner = 1
         else:
@@ -603,7 +598,7 @@ class memory(Game):
         return True
 
     def next_vaild_player(memory,player,app): #Write in NEA
-        if memory.is_game_over():
+        if memory.is_game_over(): #Checks if the game is over
             memory.end_game(app)
         else:
             if memory.state['history']:
@@ -663,7 +658,7 @@ class memory(Game):
             memory.second_selected_card = ('y','x','card')
             memory.turn = memory.next_vaild_player(player,app)
 
-    def update_game_state(memory):
+    def update_game_state(memory): #Updates the Game state
         memory.state['shuffled_deck'] = memory.shuffled_deck
         memory.state['hands'] = memory.hands
         memory.state['first_selected_card'] = memory.first_selected_card
