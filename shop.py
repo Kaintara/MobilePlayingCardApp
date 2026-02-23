@@ -1,7 +1,7 @@
 from ui import Shop_Dialog, Shop_Card
 
 class Theme:
-    def __init__(theme,name,cost,front,back,dictionary):
+    def __init__(theme,name,cost,front,back,dictionary): #Initialising attributes for theme objects
         theme.name = name
         theme.cost = cost
         theme.front_img = front
@@ -9,15 +9,16 @@ class Theme:
         theme.asset_dict = dictionary
 
 class Shop:
-    def __init__(shop):
+    def __init__(shop): #Initialising attributes for shop class
         shop.inventory = []
-        shop.equipped = 'Classic'
-        shop.unlocked_inventory = ['Classic']
+        shop.equipped = 'Classic' #Sets default theme
+        shop.unlocked_inventory = ['Classic'] #Sets default unlocked inventory
         shop.coin_count = 0
 
     def set_all_themes(shop):
         themeslst = ['Classic','Blue_Classic','Dark-Red','Light-Red','Faded']
         themes = shop.inventory
+        #Initialises all theme objects including mapping each image to the themes asset dictonary and adds it to the shop inventory
         themes.append(Theme(themeslst[0], 0, 'assets/img/theme1/king_of_clubs2.png', 'assets/img/theme1/card_back_red.png',{
     # Hearts
     "AH": "MobilePlayingCardApp/assets/img/theme1/ace_of_hearts.png",
@@ -84,7 +85,7 @@ class Shop:
     "BJ": "MobilePlayingCardApp/assets/img/theme1/black_joker.png",
 }))
         themes.append(Theme(themeslst[1], 50,'assets/img/theme2/Spades 13.png','assets/img/theme2/Back Blue 1.png',{
-    # Hearts (plural)
+    # Hearts
     "AH": "MobilePlayingCardApp/assets/img/theme2/Hearts 1.png",
     "2H": "MobilePlayingCardApp/assets/img/theme2/Hearts 2.png",
     "3H": "MobilePlayingCardApp/assets/img/theme2/Hearts 3.png",
@@ -99,7 +100,7 @@ class Shop:
     "QH": "MobilePlayingCardApp/assets/img/theme2/Hearts 12.png",
     "KH": "MobilePlayingCardApp/assets/img/theme2/Hearts 13.png",
 
-    # Diamond (singular — your requirement)
+    # Diamond
     "AD": "MobilePlayingCardApp/assets/img/theme2/Diamond 1.png",
     "2D": "MobilePlayingCardApp/assets/img/theme2/Diamond 2.png",
     "3D": "MobilePlayingCardApp/assets/img/theme2/Diamond 3.png",
@@ -114,7 +115,7 @@ class Shop:
     "QD": "MobilePlayingCardApp/assets/img/theme2/Diamond 12.png",
     "KD": "MobilePlayingCardApp/assets/img/theme2/Diamond 13.png",
 
-    # Clubs (plural)
+    # Club
     "AC": "MobilePlayingCardApp/assets/img/theme2/Clubs 1.png",
     "2C": "MobilePlayingCardApp/assets/img/theme2/Clubs 2.png",
     "3C": "MobilePlayingCardApp/assets/img/theme2/Clubs 3.png",
@@ -129,7 +130,7 @@ class Shop:
     "QC": "MobilePlayingCardApp/assets/img/theme2/Clubs 12.png",
     "KC": "MobilePlayingCardApp/assets/img/theme2/Clubs 13.png",
 
-    # Spades (plural)
+    # Spades
     "AS": "MobilePlayingCardApp/assets/img/theme2/Spades 1.png",
     "2S": "MobilePlayingCardApp/assets/img/theme2/Spades 2.png",
     "3S": "MobilePlayingCardApp/assets/img/theme2/Spades 3.png",
@@ -343,47 +344,35 @@ class Shop:
     "RJ": "MobilePlayingCardApp/assets/img/theme5/Hearts/Joker.png",
     "BJ": "MobilePlayingCardApp/assets/img/theme5/Clubs/Joker.png",  
         }))
-        print(shop.inventory[0].name,shop.inventory[1].name,shop.inventory[2].name,shop.inventory[3].name,shop.inventory[4].name)
+        
     def get_theme(shop,theme_name):
-        for theme in shop.inventory:
-            if theme_name == theme.name:
+        for theme in shop.inventory: #Iterates through all the themes available
+            if theme_name == theme.name: #Returns required theme once found
                 return theme
 
     def update(shop,app):
-        shop.filling_shop_inventory(app)
-        app.save.quick_save(app)
+        shop.filling_shop_inventory(app) #Updates the Shop UI
+        app.save.quick_save(app) #Saves the minor changes to the shop
 
     def equip_theme(shop,theme,app):
-        if theme in shop.unlocked_inventory:
-            shop.equipped = theme
-            shop.update(app)
+        if theme in shop.unlocked_inventory: #Checks the theme is in the player's inventory
+            shop.equipped = theme #Equips the chosen theme
+            shop.update(app) #Updates the shop UI and saves equipped theme
     
     def buy_theme(shop,theme_name,app):
-        theme = shop.get_theme(theme_name)
-        if theme_name not in shop.unlocked_inventory:
-            if theme.cost <= shop.coin_count:
-                shop.unlocked_inventory.append(theme.name)
-                shop.coin_count -= theme.cost
-                shop.update(app)
-            else:
+        theme = shop.get_theme(theme_name) #Returns the theme object
+        if theme_name not in shop.unlocked_inventory: #Checks if theme is not already in the player's inventory 
+            if theme.cost <= shop.coin_count: #Checks if the player has enough coins to buy the
+                shop.unlocked_inventory.append(theme.name) #Adds theme to player's inventory 
+                shop.coin_count -= theme.cost #Removes cost of the theme from the player's coin count
+                shop.update(app) #Updates the shop UI and saves equipped theme
+            else: #Displays a pop-up which tells the player how many coins they have versus the cost of the theme
                 Dialog = Shop_Dialog(theme.cost,shop.coin_count)
                 Dialog.open()
 
     def filling_shop_inventory(shop,app):
-        grid = app.get_widget("grid","MDShop")
-        grid.clear_widgets()
-        for theme_ in shop.inventory:
-            display = Shop_Card(theme_)
-            grid.add_widget(display)
-
-'''
-ShopTest = Shop()
-ShopTest.set_all_themes()
-print(ShopTest.inventory[0].name,ShopTest.inventory[1].name)
-ShopTest.equip_theme('Blue_Classic')
-print(ShopTest.equipped)
-ShopTest.equipped = 'Blue_Classic'
-ShopTest.equip_theme('Classic')
-print(ShopTest.equipped)
-print(ShopTest.get_theme('Classic').cost)
-'''
+        grid = app.get_widget("grid","MDShop") #Returns the grid within the shop display
+        grid.clear_widgets() #Clears the shop grid
+        for theme_ in shop.inventory: #Iterates through the shop inventory
+            display = Shop_Card(theme_) #Creates an UI object which displays the choosen theme and an interactable button to buy/equip the theme
+            grid.add_widget(display) #Adds UI object to the grid
