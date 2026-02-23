@@ -3,6 +3,7 @@ import json
 
 class SaveData():
     def __init__(save):
+        #Create a template for which all neccessary game data can be saved in
         save.alldata = {
             'Shop' : {'equipped' : 'Classic',
                      'unlocked_inventory' : ['Classic'],
@@ -197,30 +198,34 @@ class SaveData():
             }
         }
 
-    def calc_threes_stats(save):  #Format of previous games = {'winner': None,'history': [],'difficulty' : (-1,""), 'time':0}
-        Game = save.alldata['Games']['Previous_Games']['threes'][-1]
+    def calc_threes_stats(save):
+        Game = save.alldata['Games']['Previous_Games']['threes'][-1] #Returns the game data of the most recent Threes game
         difficulty = Game['difficulty'][1]
         Difficulty_Stats = save.alldata['Games']['Stats']['threes_Stats'][difficulty]
         All_Stats = save.alldata['Games']['Stats']['threes_Stats']['General_Stats']
+        #Adds one to the games played in the all time stats and the stats for that specfic difficulty 
         All_Stats["games_played"] += 1
         Difficulty_Stats["games_played"] += 1
-        if Game['winner'] == 0:
+        if Game['winner'] == 0: #Checks if the user won
+            #Adds one the user's wins in the all time stats and the stats for that specfic difficulty
             All_Stats["wins"] += 1
             Difficulty_Stats["wins"] += 1
             threes = [(0,"3D","play"),(0,"3H","play"),(0,"3S","play"),(0,"3C","play")]
-            if Game['history'][-1] in threes:
+            if Game['history'][-1] in threes: #Checks if the user won with a 3
+                #Adds won with a 3 to the game stats
                 All_Stats["won_with_3"] += 1
-        if All_Stats["games_played"] > 0:
-            All_Stats["win_lose_ratio"] = f"{round((All_Stats['wins']/All_Stats['games_played'])*100, 2)}%"
-        for move in Game['history']:
-            if move[2] == 'pickup' and move[0] == 0:
-                All_Stats["amount_of_pickups"] += 1
-        if Difficulty_Stats["best_time"] is None or Difficulty_Stats["best_time"] > Game['time']:
-            Difficulty_Stats["best_time"] = Game['time']
-            if All_Stats["best_time"] is None or All_Stats["best_time"] > Game['time']:
-                All_Stats["best_time"] = Game['time']
-        All_Stats['total_time'] += Game['time']
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        if All_Stats["games_played"] > 0: #Checks the user has played more than one game
+            All_Stats["win_lose_ratio"] = f"{round((All_Stats['wins']/All_Stats['games_played'])*100, 2)}%" #Calculates the user's win rate
+        for move in Game['history']: #Iterates through each move in the game
+            if move[2] == 'pickup' and move[0] == 0: #Checks if the move is a pickup and it was the user's move
+                All_Stats["amount_of_pickups"] += 1 #Increments the number of times the user picked up cards
+        if Difficulty_Stats["best_time"] is None or Difficulty_Stats["best_time"] > Game['time']: #Checks if the player has a best time or their most recent time is lower then their recorded best time for that particular difficulty
+            Difficulty_Stats["best_time"] = Game['time'] #Updates the best time
+            if All_Stats["best_time"] is None or All_Stats["best_time"] > Game['time']: #Checks if the player has a best time or their most recent time is lower then their recorded best time over all games
+                All_Stats["best_time"] = Game['time'] #Updates the best time
+        All_Stats['total_time'] += Game['time'] #Updates the overall time the player has spent
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S") #Gets the current time and formats it
+        #Adds the current time to the relevant stats last played section
         All_Stats["last_played"] = now
         Difficulty_Stats["last_played"] = now
 
