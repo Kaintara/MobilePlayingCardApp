@@ -599,64 +599,63 @@ class memory(Game): #Memory Game Class
 
     def next_vaild_player(memory,player,app): #Write in NEA
         if memory.is_game_over(): #Checks if the game is over
-            memory.end_game(app)
+            memory.end_game(app) #Ends game is game is over
         else:
-            if memory.state['history']:
-                if memory.state['history'][-1][0] == "Matched":
+            if memory.state['history']: #Checks if game has previous history
+                if memory.state['history'][-1][0] == "Matched": #Gives player another turn if they matched cards
                     return player
-                elif memory.state['history'][-1][0] == "Missed":
+                elif memory.state['history'][-1][0] == "Missed": #Changes turns if player did not successful match
                     if player == 1:
                         return 0
                     else:
                         return 1
-                elif memory.state['history'][-1][0] == "pick":
+                elif memory.state['history'][-1][0] == "pick": #Gives player another turn to pick a second card
                     return player
             else:
-                return player
+                return player #Assumes game has started due to no history so gives the player another turn
         
-    def apply_move(memory,move,app): #Write in NEA
+    def apply_move(memory,move,app):
         player = memory.turn
-        if not move:
-            if memory.is_game_over():
-                memory.end_game(app)
-                return
-            elif len(memory.hands[0]) + len(memory.hands[1]) == 52:
-                memory.end_game(app)
+        if not move: #Checks if a move exists
+            if memory.is_game_over() or len(memory.hands[0]) + len(memory.hands[1]) == 52: #Checks if the game is over
+                memory.end_game(app) #Ends the game
                 return
             else:
-                memory.turn = memory.next_vaild_player(player,app)
+                memory.turn = memory.next_vaild_player(player,app) #Changes turn to the next vaild player
                 return
-        memory.state["history"].append(move)
-        if memory.selected_first_card == False:
-            memory.first_selected_card = move[2]
-            memory.selected_first_card = True
+        memory.state["history"].append(move) #Adds move to history
+        if memory.selected_first_card == False: #Checks if the player has already selected a card
+            memory.first_selected_card = move[2] #Stores the first selected card
+            memory.selected_first_card = True #Sets selecting the first card to true
         else:
-            memory.second_selected_card = move[2]
-            memory.selected_first_card = False
+            memory.second_selected_card = move[2] #Stores the second selected card
+            memory.selected_first_card = False #Resets the player selecting their first card
             first = memory.first_selected_card
             second = memory.second_selected_card
-            is_joker_pair = (first[2] in ('BJ', 'RJ') and second[2] in ('BJ', 'RJ'))
-            if is_joker_pair or first[2][0] == second[2][0]:
-                if not is_joker_pair:
+            is_joker_pair = (first[2] in ('BJ', 'RJ') and second[2] in ('BJ', 'RJ')) #Sets conditon for matching the jokers
+            if is_joker_pair or first[2][0] == second[2][0]: #Checks if jokers have been paired or the ranks of selected cards are the same
+                if not is_joker_pair: #Checks if the cards are the joker pair
                     suit1 = first[2][1]
                     suit2 = second[2][1]
-                    same_color = (suit1 in ['D','H'] and suit2 in ['D','H']) or (suit1 in ['C','S'] and suit2 in ['C','S'])
-                    match_condition = same_color
+                    match_condition = (suit1 in ['D','H'] and suit2 in ['D','H']) or (suit1 in ['C','S'] and suit2 in ['C','S']) #Determines if cards have the same colour
                 else:
                     match_condition = True
-                if match_condition:
+                if match_condition: #Checks whether or not the cards have been matched
+                    #Removes matched cards from the card array
                     memory.card_array[first[0]][first[1]] = None
                     memory.card_array[second[0]][second[1]] = None
-                    memory.state["history"].append(("Matched",player,first,second))
+                    memory.state["history"].append(("Matched",player,first,second)) #Adds the matched move to play history
+                    #Adds matched cards to the player's hand
                     memory.hands[player].append(first[2])
                     memory.hands[player].append(second[2])
                 else:
-                    memory.state["history"].append(("Missed",player,first,second))
+                    memory.state["history"].append(("Missed",player,first,second)) #Adds the missed move to play history
             else:
-                memory.state["history"].append(("Missed",player,first,second))
+                memory.state["history"].append(("Missed",player,first,second)) #Adds the missed move to play history
+            #Resets the player's selected cards
             memory.first_selected_card = ('y','x','card')
             memory.second_selected_card = ('y','x','card')
-            memory.turn = memory.next_vaild_player(player,app)
+            memory.turn = memory.next_vaild_player(player,app) #Changes turns to the next player
 
     def update_game_state(memory): #Updates the Game state
         memory.state['shuffled_deck'] = memory.shuffled_deck
