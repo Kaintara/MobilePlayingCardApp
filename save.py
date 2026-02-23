@@ -230,57 +230,64 @@ class SaveData():
         Difficulty_Stats["last_played"] = now
 
     def calc_rummy_stats(save):
-        Game = save.alldata['Games']['Previous_Games']['rummy'][-1]
+        Game = save.alldata['Games']['Previous_Games']['rummy'][-1] #Returns the game data of the most recent rummy game
         difficulty = Game['difficulty'][1]
         Difficulty_Stats = save.alldata['Games']['Stats']['rummy_Stats'][difficulty]
         All_Stats = save.alldata['Games']['Stats']['rummy_Stats']['General_Stats']
+        #Adds one to the games played in the all time stats and the stats for that specfic difficulty 
         All_Stats["games_played"] += 1
         Difficulty_Stats["games_played"] += 1
-        if Game['winner'] == 0:
+        if Game['winner'] == 0: #Checks if the user won
+            #Adds one the user's wins in the all time stats and the stats for that specfic difficulty
             All_Stats["wins"] += 1
             Difficulty_Stats["wins"] += 1
-        if All_Stats["games_played"] > 0:
-            All_Stats["win_lose_ratio"] = f"{round((All_Stats['wins']/All_Stats['games_played'])*100, 2)}%"
-        if Difficulty_Stats["best_time"] is None or Difficulty_Stats["best_time"] > Game['time']:
-            Difficulty_Stats["best_time"] = Game['time']
-            if All_Stats["best_time"] is None or All_Stats["best_time"] > Game['time']:
-                All_Stats["best_time"] = Game['time']
-        All_Stats['total_time'] += Game['time']
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        if All_Stats["games_played"] > 0: #Checks the user has played more than one game
+            All_Stats["win_lose_ratio"] = f"{round((All_Stats['wins']/All_Stats['games_played'])*100, 2)}%" #Calculates user's win rate
+        if Difficulty_Stats["best_time"] is None or Difficulty_Stats["best_time"] > Game['time']: #Checks if the player has a best time or their most recent time is lower then their recorded best time for that particular difficulty
+            Difficulty_Stats["best_time"] = Game['time'] #Updates the best time
+            if All_Stats["best_time"] is None or All_Stats["best_time"] > Game['time']: #Checks if the player has a best time or their most recent time is lower then their recorded best time over all games
+                All_Stats["best_time"] = Game['time'] #Updates the best time
+        All_Stats['total_time'] += Game['time'] #Updates the overall time the player has spent
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S") #Gets the current time and formats it
+        #Adds the current time to the relevant stats last played section
         All_Stats["last_played"] = now
         Difficulty_Stats["last_played"] = now
 
     def calc_memory_stats(save):
-        Game = save.alldata['Games']['Previous_Games']['memory'][-1]
+        Game = save.alldata['Games']['Previous_Games']['memory'][-1] #Returns the game data of the most recent memory game
         difficulty = Game['difficulty'][1]
         Difficulty_Stats = save.alldata['Games']['Stats']['memory_Stats'][difficulty]
         All_Stats = save.alldata['Games']['Stats']['memory_Stats']['General_Stats']
+        #Adds one to the games played in the all time stats and the stats for that specfic difficulty 
         All_Stats["games_played"] += 1
         Difficulty_Stats["games_played"] += 1
-        if Game['winner'] == 0:
+        if Game['winner'] == 0: #Checks if the user has won
+            #Adds one the user's wins in the all time stats and the stats for that specfic difficulty
             All_Stats["wins"] += 1
             Difficulty_Stats["wins"] += 1
-        if All_Stats["games_played"] > 0:
-            All_Stats["win_lose_ratio"] = f"{round((All_Stats['wins']/All_Stats['games_played'])*100, 2)}%"
+        if All_Stats["games_played"] > 0: #Checks the user has played more than one game
+            All_Stats["win_lose_ratio"] = f"{round((All_Stats['wins']/All_Stats['games_played'])*100, 2)}%" #Calculates the user's win rate
         pair_count = 0
-        for move in Game['history']:
-            if move[1] == 0 and move[0] == "Matched":
-                pair_count += 1
-                All_Stats["all_pairs"] += 1
-        if Difficulty_Stats["most_pairs"] < pair_count:
-            Difficulty_Stats["most_pairs"] = pair_count
-            if All_Stats["most_pairs"] < pair_count:
-                All_Stats["most_pairs"] = pair_count
-        if Difficulty_Stats["best_time"] is None or Difficulty_Stats["best_time"] > Game['time']:
-            Difficulty_Stats["best_time"] = Game['time']
-            if All_Stats["best_time"] is None or All_Stats["best_time"] > Game['time']:
-                All_Stats["best_time"] = Game['time']
-        All_Stats['total_time'] += Game['time']
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        for move in Game['history']: #Iterates through each move in the game
+            if move[1] == 0 and move[0] == "Matched": #Checks if the move was a match and it was the user's move
+                pair_count += 1 #Increments the number of pair for that game
+                All_Stats["all_pairs"] += 1 #Increments the number of pairs over all games
+        if Difficulty_Stats["most_pairs"] < pair_count: #Checks if number pairs is greater than user's record for that difficulty
+            Difficulty_Stats["most_pairs"] = pair_count #Updates pair count
+            if All_Stats["most_pairs"] < pair_count: #Checks if number pairs is greater than user's record over all games
+                All_Stats["most_pairs"] = pair_count #Updates pair count
+        if Difficulty_Stats["best_time"] is None or Difficulty_Stats["best_time"] > Game['time']:  #Checks if the player has a best time or their most recent time is lower then their recorded best time for that particular difficulty
+            Difficulty_Stats["best_time"] = Game['time'] #Updates the best time
+            if All_Stats["best_time"] is None or All_Stats["best_time"] > Game['time']: #Checks if the player has a best time or their most recent time is lower then their recorded best time over all games
+                All_Stats["best_time"] = Game['time'] #Updates the best time
+        All_Stats['total_time'] += Game['time'] #Updates the overall time the player has spent
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S") #Gets the current time and formats it
+        #Adds the current time to the relevant stats last played section
         All_Stats["last_played"] = now
         Difficulty_Stats["last_played"] = now
 
     def savedata(save, app, threes, rummy, memory, shop):
+        #Updates all the major changes in different classes to the save data dictionary
         save.alldata['Shop']['equipped'] = shop.equipped
         save.alldata['Shop']['unlocked_inventory'] = shop.unlocked_inventory
         save.alldata['Shop']['coin_count'] = shop.coin_count
@@ -290,44 +297,46 @@ class SaveData():
         save.alldata['App']['timer'] = app.timer
         save.alldata['App']['score'] = app.score
         save.alldata['App']['unlocked_achievements'] = app.unlocked_achievements
-        if app.previous_games['threes']:
+        if app.previous_games['threes']: #Checks if a threes game was recently completed 
             last_game = app.previous_games['threes'][-1]
-            save.alldata['Games']['Previous_Games']['threes'].append(last_game) 
-            save.calc_threes_stats()
-        if app.previous_games['rummy']:
+            save.alldata['Games']['Previous_Games']['threes'].append(last_game) #Adds game to the save data
+            save.calc_threes_stats() #Updates the game stats based on this game
+        if app.previous_games['rummy']: #Checks if a rummy game was recently completed 
             last_game = app.previous_games['rummy'][-1]
-            save.alldata['Games']['Previous_Games']['rummy'].append(last_game) 
-            save.calc_rummy_stats()
-        if app.previous_games['memory']:
+            save.alldata['Games']['Previous_Games']['rummy'].append(last_game) #Adds game to the save data
+            save.calc_rummy_stats() #Updates the game stats based on this game
+        if app.previous_games['memory']: #Checks if a memory game was recently completed 
             last_game = app.previous_games['memory'][-1]
-            save.alldata['Games']['Previous_Games']['memory'].append(last_game) 
-            save.calc_memory_stats()
+            save.alldata['Games']['Previous_Games']['memory'].append(last_game) #Adds game to the save data
+            save.calc_memory_stats() #Updates the game stats based on this game
+        #Updates all the current game states in the savedata dictionary
         save.alldata['Games']['Current_Games']['threes'] = threes.state
         save.alldata['Games']['Current_Games']['rummy'] = rummy.state
         save.alldata['Games']['Current_Games']['memory'] = memory.state
-        with open(r"MobilePlayingCardApp\player_data.json", "w") as f:
-            json.dump(save.alldata, f, indent=4)
+        with open(r"MobilePlayingCardApp\player_data.json", "w") as f: #Opens player save file in write mode
+            json.dump(save.alldata, f, indent=4) #Writes the save data to the save file as a JSON object
 
     def load(save):
-        with open(r"MobilePlayingCardApp\player_data.json", "r") as f:
-            save.alldata = json.load(f)
+        with open(r"MobilePlayingCardApp\player_data.json", "r") as f: #Opens player save file in read mode
+            save.alldata = json.load(f) #Loads the save data and converts from a JSON object to a python dictionary
         return save.alldata
     
     def quick_save(save,app):
+        #Updates minor changes to the game into the player's save data
         save.alldata['Shop']['equipped'] = app.shop.equipped
         save.alldata['Shop']['unlocked_inventory'] = app.shop.unlocked_inventory
         save.alldata['Shop']['coin_count'] = app.shop.coin_count
         save.alldata['Games']['Current_Games']['threes'] = app.threes.state
         save.alldata['Games']['Current_Games']['rummy'] = app.rummy.state
         save.alldata['Games']['Current_Games']['memory'] = app.memory.state
-        with open(r"MobilePlayingCardApp\player_data.json", "w") as f:
-            json.dump(save.alldata, f, indent=4)
+        with open(r"MobilePlayingCardApp\player_data.json", "w") as f: #Opens player save file in write mode
+            json.dump(save.alldata, f, indent=4) #Writes the save data to the save file as a JSON object
 
     def load_game_states(save, app):
-        save.load()
+        save.load() #Loads the current save data
+        #Updates all relevant attributes to match the given game states
+        #Threes
         app.threes.state = save.alldata['Games']['Current_Games']['threes']
-        app.rummy.state = save.alldata['Games']['Current_Games']['rummy']
-        app.memory.state = save.alldata['Games']['Current_Games']['memory']
         app.threes.shuffled_deck = app.threes.state['shuffled_deck']
         app.threes.hands = app.threes.state['hands']
         app.threes.discard_pile = app.threes.state['discard_pile']
@@ -339,6 +348,8 @@ class SaveData():
         app.threes.turn = app.threes.state['turn']
         app.threes.time_elapsed = app.threes.state['time_elapsed']
         app.threes.difficulty = app.threes.state['difficulty']
+        #Rummy
+        app.rummy.state = save.alldata['Games']['Current_Games']['rummy']
         app.threes.winner = app.threes.state['winner']
         app.rummy.shuffled_deck = app.rummy.state['shuffled_deck']  
         app.rummy.hands = app.rummy.state['hands'] 
@@ -348,6 +359,8 @@ class SaveData():
         app.rummy.time_elapsed = app.rummy.state['time_elapsed']
         app.rummy.difficulty = app.rummy.state['difficulty']
         app.rummy.winner = app.rummy.state['winner']
+        #Memory
+        app.memory.state = save.alldata['Games']['Current_Games']['memory']
         app.memory.hands = app.memory.state['hands']
         app.memory.shuffled_deck = app.memory.state['shuffled_deck']
         app.memory.card_array = app.memory.state['card_array']
@@ -360,8 +373,9 @@ class SaveData():
         app.memory.winner = app.memory.state['winner']
     
     def update(save, app):
-        save.load()
+        save.load() #Loads the current save data
         shop = app.shop
+        #Updates all relevant attributes to match the given save data
         shop.equipped = save.alldata['Shop']['equipped']
         shop.unlocked_inventory = save.alldata['Shop']['unlocked_inventory']
         shop.coin_count = save.alldata['Shop']['coin_count']
@@ -374,6 +388,7 @@ class SaveData():
         app.threes.state = save.alldata['Games']['Current_Games']['threes']
         app.rummy.state = save.alldata['Games']['Current_Games']['rummy']
         app.memory.state = save.alldata['Games']['Current_Games']['memory']
+        #Updates all the current game states to match the save data
         save.load_game_states(app)
 
 
