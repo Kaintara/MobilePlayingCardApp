@@ -1,3 +1,4 @@
+#Imports
 from ui import * 
 from save import SaveData
 from game import *
@@ -9,11 +10,14 @@ from memoryMTCS import GameEnvironmentM
 
 class MobilePlayingCardApp(MDApp):
     def __init__(self, **kwargs):
-        self.sm_stack = []
-        self.sfx = True
+        #Loading sounds for card actions
         self.card_flip = SoundLoader.load('assets/sound/card_flip.mp3') 
         self.card_draw = SoundLoader.load('assets/sound/card_draw.mp3')
         self.card_place = SoundLoader.load('assets/sound/card_place.mp3')
+        #Initalising default settings
+        self.sm_stack = []
+        self.sfx = True
+        self.timer = True
         self.ai_difficulty = "Beginner"
         self.ai_difficulty_map = {
             "Beginner" : 0.15,
@@ -22,7 +26,6 @@ class MobilePlayingCardApp(MDApp):
             "Hard" : 0.35,
             "Expert" : 0.5
         }
-        self.timer = True
         self.all_achievements = [
             (0,'The memory of a goldfish','Play your first game of memory',lambda save : save.alldata['Games']['Stats']['memory_Stats']['General_Stats']["games_played"] >= 1),
             (1,'Only Three?','Play your first game of threes',lambda save : save.alldata['Games']['Stats']['threes_Stats']['General_Stats']["games_played"] >= 1),
@@ -40,22 +43,22 @@ class MobilePlayingCardApp(MDApp):
             'rummy' : [],
             'memory' : []
         }
-        AppShop = Shop()
-        self.shop = AppShop
+        self.shop = Shop()
         self.shop.set_all_themes()
-        AppSave = SaveData()
-        self.save = AppSave
+        self.save = SaveData()
         self.threes = None
         self.rummy = None
         self.memory = None
         super().__init__(**kwargs)
 
-    def build(self):
+    def build(self)
+        #Setting the main app theme
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Red"
         self.theme_cls.primary_hue = "900"
-        self.theme_cls.theme_style_switch_animation_duration = 0.4
+        #Setting the game icon
         Window.set_icon(("icon.png"))
+        #Setting the default font and font styles for the game
         LabelBase.register(
             name="cataway",
             fn_regular="assets/Catways.ttf",
@@ -92,7 +95,7 @@ class MobilePlayingCardApp(MDApp):
         return sm
     
     #Methods for UI
-    def get_widget(self, widget, screen):
+    def get_widget(self, widget, screen): #Returning the required
         return self.root.get_screen(screen).ids[widget]
 
     def back(self): #Back button Write in NEA
