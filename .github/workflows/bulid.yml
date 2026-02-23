@@ -29,6 +29,8 @@ jobs:
             unzip \
             openjdk-17-jdk \
             python3-pip \
+            libltdl-dev \
+            libsdl2-dev 
             libgl1-mesa-dev \
             libgles2-mesa-dev \
             liblzma-dev \
