@@ -1,7 +1,7 @@
 #:kivy 2.3.0
 
 <MainMenu>:
-    md_bg_color: self.theme_cls.surfaceColor
+    md_bg_color: self.theme_cls.surfaceColor #Sets the background colour of the screen
     MDFloatLayout:
         Image: #Main Game Icon
             source: "assets/img/Icon.png"
@@ -19,8 +19,8 @@
                 style: "tonal"
                 pos_hint: {"center_x": 0.5}
                 on_release: 
-                    app.sm_stacky("Menu")
-                    root.manager.current = "NewGame"
+                    app.sm_stacky("Menu") #Adds the Menu screen to the previous screen stack
+                    root.manager.current = "NewGame" #Changes the screen to the New Game section
                 MDButtonText:
                     text: app.resume_game_check()
                     font_style: "cataway"
@@ -29,9 +29,9 @@
                 style: "tonal"
                 pos_hint: {"center_x": 0.5}
                 on_release: 
-                    app.sm_stacky("Menu")
-                    app.set_up_shop()
-                    root.manager.current = "MDShop"
+                    app.sm_stacky("Menu") #Adds the Menu screen to the previous screen stack
+                    app.set_up_shop() #Intialises all required objects for the shop section to operate
+                    root.manager.current = "MDShop" #Changes the screen to the Shop section
                 MDButtonText:
                     text: "Shop"
                     font_style: "cataway"
@@ -40,8 +40,8 @@
                 style: "tonal"
                 pos_hint: {"center_x": 0.5}
                 on_release: 
-                    app.sm_stacky("Menu")
-                    root.manager.current = "Stats"
+                    app.sm_stacky("Menu") #Adds the Menu screen to the previous screen stack
+                    root.manager.current = "Stats" #Changes the screen to the Stats section
                 MDButtonText:
                     text: "Game Statistics"
                     font_style: "cataway"
@@ -49,7 +49,7 @@
             MDButton: #Quit Game Button
                 style: "tonal"
                 pos_hint: {"center_x": 0.5}
-                on_release: app.stop()
+                on_release: app.stop() #Closes the app
                 MDButtonText:
                     text: "Exit Game"
                     font_style: "cataway"
@@ -59,13 +59,13 @@
             size: dp(48), dp(48)
             icon: "menu"
             on_release: 
-                app.sm_stacky("Menu")
-                root.manager.current = "Settings"
+                app.sm_stacky("Menu") #Adds the Menu screen to the previous screen stack
+                root.manager.current = "Settings" #Changes the screen to the Settings section
 
 <NewGame>:
-    md_bg_color: self.theme_cls.surfaceColor
+    md_bg_color: self.theme_cls.surfaceColor #Sets the background colour of the screen
     MDFloatLayout:
-        MDLabel:
+        MDLabel: #Title
             text: "New Game!"
             font_style: "cataway"
             role: "large"
@@ -78,50 +78,50 @@
             size_hint: None, None
             size: "250dp", "250dp"
             fit_mode: "scale-down"
-        MDBoxLayout:
+        MDBoxLayout: #Layout for Game buttons
             orientation: 'vertical'
             pos_hint: {'center_x': .5, 'center_y': .4}
             adaptive_size: True
             spacing: dp(20)
-            MDButton:
+            MDButton: #Threes Game Button
                 style: "tonal"
                 pos_hint: {"center_x": 0.5}
                 on_release: 
-                    app.sm_stacky("NewGame")
-                    app.start_game("threes")
-                    root.manager.current = "MDThrees"
+                    app.sm_stacky("NewGame") #Adds the New Game screen to the previous screen stack
+                    app.start_game("threes") #Starts a threes game
+                    root.manager.current = "MDThrees" #Changes the screen to the Threes section
                 MDButtonText:
                     text: "Threes"
                     font_style: "cataway"
                     role: "small"
-            MDButton:
+            MDButton: #Rummy Game Button
                 style: "tonal"
                 pos_hint: {"center_x": 0.5}
                 on_release: 
-                    app.sm_stacky("NewGame")
-                    app.start_game("rummy")
-                    root.manager.current = "MDRummy"
+                    app.sm_stacky("NewGame") #Adds the New Game screen to the previous screen stack
+                    app.start_game("rummy") #Starts a rummy game
+                    root.manager.current = "MDRummy" #Changes the screen to the Rummy section
                 MDButtonText:
                     text: "Rummy"
                     font_style: "cataway"
                     role: "small"
-            MDButton:
+            MDButton: #Memory Game Button
                 style: "tonal"
                 pos_hint: {"center_x": 0.5}
                 on_release: 
-                    app.sm_stacky("NewGame")
-                    app.start_game("memory")
-                    root.manager.current = "MDMemory"
+                    app.sm_stacky("NewGame") #Adds the New Game screen to the previous screen stack
+                    app.start_game("memory") #Starts a memory game
+                    root.manager.current = "MDMemory" #Changes the screen to the memory section
                 MDButtonText:
                     text: "Memory"
                     font_style: "cataway"
                     role: "small"
-            MDButton:
+            MDButton: #Rules Button
                 style: "tonal"
                 pos_hint: {"center_x": 0.5}
                 on_release: 
-                    app.sm_stacky("NewGame")
-                    root.manager.current = "Rules"
+                    app.sm_stacky("NewGame") #Adds the New Game screen to the previous screen stack
+                    root.manager.current = "Rules" #Changes the screen to the rules section
                 MDButtonText:
                     text: "Rules"
                     font_style: "cataway"
@@ -132,16 +132,16 @@
             size: dp(48), dp(48)
             icon: "arrow-left"
             on_release: 
-                app.back()
+                app.back() #Changes screen to the previous one
         MDIconButton: #Settings Button
             pos_hint: {"right":0.98, "top": 0.98}
             size: dp(48), dp(48)
             icon: "menu"
             on_release: 
-                app.sm_stacky("NewGame")
-                root.manager.current = "Settings"
+                app.sm_stacky("NewGame") #Adds the New Game screen to the previous screen stack
+                root.manager.current = "Settings" #Changes the screen to the settings section
 <MDThrees>:
-    md_bg_color: self.theme_cls.surfaceColor
+    md_bg_color: self.theme_cls.surfaceColor #Sets the background colour of the screen
     MDFloatLayout:
         MDIconButton: #Pause Button
             pos_hint: {"left":0.98, "top": 0.98}
@@ -204,7 +204,7 @@
                 width: (self.parent.width - dp(100))
         
 <MDRummy>:
-    md_bg_color: self.theme_cls.surfaceColor
+    md_bg_color: self.theme_cls.surfaceColor #Sets the background colour of the screen
     MDFloatLayout:
         MDIconButton: #Pause Button
             pos_hint: {"left":0.98, "top": 0.98}
@@ -293,8 +293,8 @@
             id: hand8
             pos_hint: {"center_y":0.15, "center_x":0.6}
 
-<MDMemory>:
-    md_bg_color: self.theme_cls.surfaceColor
+<MDMemory>: 
+    md_bg_color: self.theme_cls.surfaceColor #Sets the background colour of the screen
     MDFloatLayout:
         MDIconButton: #Pause Button
             pos_hint: {"left":0.98, "top": 0.98}
@@ -621,7 +621,7 @@
     
 
 <Rules>:
-    md_bg_color: self.theme_cls.backgroundColor
+    md_bg_color: self.theme_cls.backgroundColor #Sets the background colour of the screen
     MDFloatLayout:
         MDLabel:
             text: "Rules"
@@ -971,7 +971,7 @@
             size: dp(48), dp(48)
             icon: "arrow-left"
             on_release: 
-                app.back()
+                app.back() #Changes screen to the previous one
         MDIconButton: #Settings Button\
             pos_hint: {"center_x":0.95, "center_y": 0.95}
             size: dp(48), dp(48)
@@ -981,7 +981,7 @@
                 root.manager.current = "Settings"
 
 <MDShop>:
-    md_bg_color: self.theme_cls.backgroundColor
+    md_bg_color: self.theme_cls.backgroundColor #Sets the background colour of the screen
     MDFloatLayout:
         MDBoxLayout:
             orientation: "horizontal"
@@ -1029,7 +1029,7 @@
             size: dp(48), dp(48)
             icon: "arrow-left"
             on_release: 
-                app.back()
+                app.back() #Changes screen to the previous one
         MDIconButton: #Settings Button
             pos_hint: {"right":0.98, "top": 0.98}
             size: dp(48), dp(48)
@@ -1039,7 +1039,7 @@
                 root.manager.current = "Settings"
 
 <Stats>:
-    md_bg_color: self.theme_cls.backgroundColor
+    md_bg_color: self.theme_cls.backgroundColor #Sets the background colour of the screen
     MDFloatLayout:
         MDLabel:
             text: "Game Stats!"
@@ -1142,7 +1142,7 @@
             size: dp(48), dp(48)
             icon: "arrow-left"
             on_release: 
-                app.back()
+                app.back() #Changes screen to the previous one
         MDIconButton: #Settings Button
             pos_hint: {"right":0.98, "top": 0.98}
             size: dp(48), dp(48)
@@ -1152,7 +1152,7 @@
                 root.manager.current = "Settings"
 
 <Settings>:
-    md_bg_color: self.theme_cls.backgroundColor
+    md_bg_color: self.theme_cls.backgroundColor #Sets the background colour of the screen
     MDFloatLayout:
         MDLabel:
             text: "Settings"
@@ -1301,5 +1301,5 @@
             pos_hint: {"right":0.98, "top": 0.98}
             size: dp(48), dp(48)
             icon: "backburger"
-            on_release: app.back()
+            on_release: app.back() #Changes screen to the previous one
 
