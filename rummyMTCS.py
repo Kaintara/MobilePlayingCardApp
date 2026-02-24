@@ -294,7 +294,7 @@ class GameEnvironmentR:
 
 genv = GameEnvironmentR()
 
-print(genv.card_helps_meld(['KC', '4C', '2D', '1S', '6C', '2C', '5C', 'KS'],'2D'))
+
 
 state = rummy_mid_game = {
     'name': 'rummy',
@@ -330,18 +330,21 @@ state = rummy_mid_game = {
         (0,'4C','draw'),
     ]
 }
+
 #print(genv.determinization(state))
 #print(genv.get_reward(genv.determinization(state)))
 
 #print(mtcs(state,genv,0.5))
 #print(genv.rollout_policy(genv.get_vaild_moves(state),state))
+'''
+lst = []
+for _ in range(100):
+    choice = m_mtcs(state,genv,0.5)
+    lst.append(choice)
+    print(choice)
+    print(genv.card_helps_meld(state['hands'][1],choice[1]))
 
-#lst = []
-#for _ in range(100):
-    #choice = mtcs(state,genv,0.2,True)
-    #lst.append(choice)
-    #print(choice)
-
-#counts = lst.count((1, '9H', 'discard'))
-#counts2 = lst.count((1, '3H', 'discard'))
-#print(f'Picks Best Move: {counts+counts2}%')
+counts = lst.count((1, '9H', 'discard'))
+counts2 = lst.count((1, '3H', 'discard'))
+print(f'Picks Best Move: {counts+counts2}%')
+'''

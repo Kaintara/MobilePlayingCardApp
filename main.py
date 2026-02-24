@@ -102,6 +102,7 @@ class MobilePlayingCardApp(MDApp):
         sfx.active = self.sfx
         self.adjust_sfx()
         self.determine_contents("All_Time Stats")
+        print("timer has been stopped")
         
 
     #Methods for UI
@@ -369,6 +370,7 @@ class MobilePlayingCardApp(MDApp):
                 timer.text = ''
 
     def update_game(self,game):
+        print("UI has been updated.")
         if game == "threes":
             for i in range(3):
                 Ai_hand = self.get_widget(f'ai_hand{i + 1}', 'MDThrees')
