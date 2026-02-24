@@ -186,7 +186,7 @@ class threes(Game): #Threes Game Class
                     card = threes.shuffled_deck.pop()
                     hand[1].append(card)
 
-    def sort_cards(threes): #Uses the rank_order dictionary as a key to sort the list of the player's main hand
+    def sort_cards(threes): #Uses the rank_order dictionary as a key to sort each players main hand
         threes.hands[0].sort(key=(lambda a : threes.rank_order[a[0]]))
         threes.hands[1].sort(key=(lambda a : threes.rank_order[a[0]]))
 
@@ -277,7 +277,7 @@ class threes(Game): #Threes Game Class
         if move[2] == "try":
             if Top_card[0] == '2':
                 threes.apply_move((player,move[1],"play"))
-            else: #Checks that the attempted card is higher then previously played card if not the player pickups
+            else: #Checks that the attempted card is higher then previously played card if not the player pickups otherwise the move is applied
                 Card_rank = threes.rank_order[move[1][0]]
                 if Card_rank >= threes.rank_order[Top_card[0]]:
                     threes.apply_move((player,move[1],"play"))

@@ -51,7 +51,7 @@ class MobilePlayingCardApp(MDApp):
         self.memory = None
         super().__init__(**kwargs)
 
-    def build(self)
+    def build(self):
         #Setting the main app theme
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Red"
@@ -94,6 +94,15 @@ class MobilePlayingCardApp(MDApp):
         sm.current = "Menu"
         return sm
     
+    def on_start(self):
+        self.save.update(self)
+        timer = self.get_widget('timer','Settings')
+        timer.active = self.timer
+        sfx = self.get_widget('sfx','Settings')
+        sfx.active = self.sfx
+        self.adjust_sfx()
+        self.determine_contents("All_Time Stats")
+
     #Methods for UI
     def get_widget(self, widget, screen): #Returning the required
         return self.root.get_screen(screen).ids[widget]
@@ -111,7 +120,6 @@ class MobilePlayingCardApp(MDApp):
             print("Restarted Timer")
             self.threes.start_timer()
         
-
     def sm_stacky(self,widget): #Stores order of screens visited for back button
         if widget in self.sm_stack:
             self.sm_stack.remove(widget)
@@ -134,7 +142,34 @@ class MobilePlayingCardApp(MDApp):
             if game['winner'] is None and game['history']:
                 return "Resume Game"
         return "New Game"
+
+    def left(self,Screen):
+        if Screen == "Con_Stats":
+            ID = 'conditionalcarou'
+            screen = "Stats"
+        else:
+            ID = "carou"
+            screen = Screen
+        Carou = self.get_widget(ID,screen)
+        Carou.load_previous()
+        if Screen == "Stats" or Screen == "Con_Stats":
+            content = Carou.previous_slide.text
+            self.determine_contents(content)
         
+    def right(self,Screen):
+        if Screen == "Con_Stats":
+            ID = 'conditionalcarou'
+            screen = "Stats"
+        else:
+            ID = "carou"
+            screen = Screen
+        Carou = self.get_widget(ID,screen)
+        Carou.load_next()
+        if Screen == "Stats" or Screen == "Con_Stats":
+            content = Carou.next_slide.text
+            self.determine_contents(content)
+
+    #Methods for Stats    
     def get_difficulty(self):
         Carou = self.get_widget("carou","Settings")
         difficulty = Carou.current_slide.text
@@ -283,36 +318,28 @@ class MobilePlayingCardApp(MDApp):
             content = self.get_widget('carou','Stats').current_slide.text
         self.fill_carou(content,extra)
 
-    def left(self,Screen):
-        if Screen == "Con_Stats":
-            ID = 'conditionalcarou'
-            screen = "Stats"
-        else:
-            ID = "carou"
-            screen = Screen
-        Carou = self.get_widget(ID,screen)
-        Carou.load_previous()
-        if Screen == "Stats" or Screen == "Con_Stats":
-            content = Carou.previous_slide.text
-            self.determine_contents(content)
-        
-    def right(self,Screen):
-        if Screen == "Con_Stats":
-            ID = 'conditionalcarou'
-            screen = "Stats"
-        else:
-            ID = "carou"
-            screen = Screen
-        Carou = self.get_widget(ID,screen)
-        Carou.load_next()
-        if Screen == "Stats" or Screen == "Con_Stats":
-            content = Carou.next_slide.text
-            self.determine_contents(content)
-
+    #Method for Shop
     def set_up_shop(self):
         self.shop.filling_shop_inventory(self)
         Grid = self.get_widget("grid",'MDShop')
 
+    #Methods for Settings
+    def toggle(self,widget,name):
+        if name == 'timer':
+            self.timer = widget.active
+            print(self.timer)
+        elif name == 'sfx':
+            self.sfx = widget.active
+            self.adjust_sfx()
+
+    def adjust_sfx(self):
+        for sound in self.all_sounds:
+            if self.sfx:
+                sound.volume = 1.0
+            else:
+                sound.volume = 0.0
+
+    #Methods for Games
     def s_to_mmss(self,total_seconds):
         minutes = int(total_seconds // 60)
         seconds = int(total_seconds % 60)
@@ -340,14 +367,6 @@ class MobilePlayingCardApp(MDApp):
                 timer = self.get_widget('timer','MDMemory')
                 timer.text = ''
 
-    def toggle(self,widget,name):
-        if name == 'timer':
-            self.timer = widget.active
-            print(self.timer)
-        elif name == 'sfx':
-            self.sfx = widget.active
-            self.adjust_sfx()
-    
     def update_game(self,game):
         if game == "threes":
             for i in range(3):
@@ -602,6 +621,7 @@ state = {'name' : "threes",
             self.memory.start_timer
         else:
             self.new_game(game)
+    
     def start_game(self,game):
         if self.resume_game_check() == "Resume Game":
             print(game)
@@ -612,22 +632,6 @@ state = {'name' : "threes",
             self.new_game("rummy")
         elif game == "memory":
             self.new_game("memory")
-
-    def adjust_sfx(self):
-        for sound in self.all_sounds:
-            if self.sfx:
-                sound.volume = 1.0
-            else:
-                sound.volume = 0.0
-
-    def on_start(self):
-        self.save.update(self)
-        timer = self.get_widget('timer','Settings')
-        timer.active = self.timer
-        sfx = self.get_widget('sfx','Settings')
-        sfx.active = self.sfx
-        self.adjust_sfx()
-        self.determine_contents("All_Time Stats")
 
 if __name__ == "__main__":
     MobilePlayingCardApp().run()

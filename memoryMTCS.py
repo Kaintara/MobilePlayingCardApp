@@ -7,23 +7,25 @@ class GameEnvironmentM:
     def __init__(env):
         pass
 
-    def softmax(env,xs, temp=0.7):
-        m = max(xs)
-        exps = [math.exp((x - m) / temp) for x in xs]
-        s = sum(exps)
-        return [e / s for e in exps]
+    def softmax(env,scores, temp=0.7):
+        maximum = max(scores) #Returns the highest score within the scores list
+        exps = []
+        for score in scores: #Iterates through each score
+            exps.append(math.exp(math.exp((score - maximum) / temp))) #Calculates exponential vaule for each score
+        total = sum(exps) #Sums all exponentials
+        return [e / total for e in exps] #Normalises the values into probabilites that sum to 1 
     
     def convert_move(env,move,state):
         y = int(move[2][0])
         x = int(move[2][1])
-        if move[2] != state['card_array'][y][x]:
-            vaild_move = ('pick',1,(y,x,state['card_array'][y][x]))
+        if move[2] != state['card_array'][y][x]: #Checks if the move is vaild
+            vaild_move = ('pick',1,(y,x,state['card_array'][y][x])) #Updates the choosen move so that the card is selected from the actual game state, such that it is vaild
             return vaild_move
         else:
             return move
 
     def determinization(env,state):
-        memory = copy.deepcopy(state)
+        memory = copy.deepcopy(state) #Makes a copy of the game state
         memory['deck'] = ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH","BJ","RJ"]
         memory['card_array'] = [['' for _ in range(6)] for _ in range(9)]
         for y, row in enumerate(state.get('card_array', [])):

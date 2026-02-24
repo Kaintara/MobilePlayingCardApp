@@ -7,14 +7,16 @@ class GameEnvironmentR:
     def __init__(env):
         pass
     
-    def softmax(env,xs, temp=0.7):
-        m = max(xs)
-        exps = [math.exp((x - m) / temp) for x in xs]
-        s = sum(exps)
-        return [e / s for e in exps]
+    def softmax(env,scores, temp=0.7):
+        maximum = max(scores) #Returns the highest score within the scores list
+        exps = []
+        for score in scores: #Iterates through each score
+            exps.append(math.exp(math.exp((score - maximum) / temp))) #Calculates exponential vaule for each score
+        total = sum(exps) #Sums all exponentials
+        return [e / total for e in exps] #Normalises the values into probabilites that sum to 1 
 
     def determinization(env,state):
-        rummy = copy.deepcopy(state)
+        rummy = copy.deepcopy(state) #Makes a copy of the game state
         public_cards = []
         if rummy['hands']:
             if rummy['hands'][1]:
