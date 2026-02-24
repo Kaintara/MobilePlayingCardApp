@@ -151,8 +151,8 @@ class Game: #Main Game Class
         game.time_elapsed += dt #Adds change of time to the time elapsed
         app = MDApp.get_running_app() #Returns the App class
         app.update_timer(game.name) #Updates the UI with the new time
-        print(game.time_elapsed)
-        print("time has been updated")
+        #print(game.time_elapsed)
+        #print("time has been updated")
         
     def start_timer(game):
         if not game.timer_event: #Checks that there is no current timer running already
@@ -327,11 +327,11 @@ class threes(Game): #Threes Game Class
                 threes.played_cards = []
                 threes.another = True
             if threes.shuffled_deck and threes.hands[player]: #Adds cards to the player's hand such that they have at least three cards until the deck is gone.
+                while threes.shuffled_deck:
                     while len(threes.hands[player]) < 3:
-                        while threes.shuffled_deck:
-                            card = threes.shuffled_deck.pop()
-                            threes.hands[player].append(card)
-                        break
+                        card = threes.shuffled_deck.pop()
+                        threes.hands[player].append(card)
+                    break
         elif move[2] == "pickup": #Gives all the cards that have been played to the player which needs to pick up
             if threes.played_cards:
                 for card in threes.played_cards:

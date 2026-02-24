@@ -1,6 +1,6 @@
 #Imports
 import copy
-from treesearch import mtcs
+from treesearch import m_mtcs
 import random
 import math
 

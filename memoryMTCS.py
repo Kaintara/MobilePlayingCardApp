@@ -1,6 +1,6 @@
 import copy
 import random
-from treesearch import mtcs
+from treesearch import m_mtcs
 import math
 
 class GameEnvironmentM:

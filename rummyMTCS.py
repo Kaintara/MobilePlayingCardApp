@@ -1,5 +1,5 @@
 import copy
-from treesearch import mtcs
+from treesearch import m_mtcs
 import random
 import math
 
@@ -121,7 +121,7 @@ class GameEnvironmentR:
                Spades.append(card)
             elif card.endswith('D'):
                Diamonds.append(card)
-        Suits = [Hearts,Clubs,Clubs,Diamonds]
+        Suits = [Hearts,Clubs,Spades,Diamonds]
         for suit in Suits:
             if env.find_run(suit):
                 Runs = env.find_run(suit)
@@ -189,17 +189,59 @@ class GameEnvironmentR:
             return 10 if state['winner'] == 1 else -10
         return 0
     
-    def card_helps_meld(env, hand, card):
+    def card_helps_meld(env, hand_, selected_card):
         rank_order = {'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 2}
-        rank = card[0]
-        suit = card[1]
-        value = rank_order[rank]
-        same_rank = sum(1 for c in hand if c[0] == rank)
-        if same_rank > 1:
+        Sorted_hand = []
+        Runs = []
+        Sets = []
+        hand = hand_[:]
+        hand.sort(key=(lambda a : rank_order[a[0]]))
+        Hearts = []
+        Clubs = []
+        Spades = []
+        Diamonds = []
+        for card in hand:
+            if card.endswith('H'):
+               Hearts.append(card)
+            elif card.endswith('C'):
+               Clubs.append(card)
+            elif card.endswith('S'):
+               Spades.append(card)
+            elif card.endswith('D'):
+               Diamonds.append(card)
+        Suits = [Hearts,Clubs,Spades,Diamonds]
+        for suit in Suits:
+            if env.find_run(suit):
+                Runs = env.find_run(suit)
+                Sorted_hand += Runs
+                for card in Runs:
+                    if card in hand:
+                        hand.remove(card)
+        if env.find_set(hand):
+            Sets = env.find_set(hand)
+            Sorted_hand += Sets
+            for card in Sets:
+                if card in hand:
+                        hand.remove(card)
+        if not Sorted_hand:
+            rank_order = {'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,'5': 5,'4': 4,'3': 3,'2': 2}
+            rank = selected_card[0]
+            suit = selected_card[1]
+            value = rank_order[rank]
+            same_rank = sum(1 for c in hand_ if c[0] == rank)
+            if same_rank > 1:
+                return True
+            suit_cards = [c for c in hand_ if c[1] == suit]
+            values = sorted(rank_order[c[0]] for c in suit_cards)
+            return (value - 1 in values) or (value + 1 in values)
+        elif not hand:
+            if selected_card == Sorted_hand[-1]:
+                return False
             return True
-        suit_cards = [c for c in hand if c[1] == suit]
-        values = sorted(rank_order[c[0]] for c in suit_cards)
-        return (value - 1 in values) or (value + 1 in values)
+        else:
+            if selected_card in Sorted_hand:
+                return True
+            return False
     
     def rollout_policy(env, moves, state):
         scored_moves = []
@@ -219,7 +261,7 @@ class GameEnvironmentR:
             scored_moves.append((score, move))
         scores = [s for s, _ in scored_moves]
         moves = [m for _, m in scored_moves]
-        probs = env.softmax(scores, temp=0.8)
+        probs = env.softmax(scores, temp=0.2)
         return random.choices(moves, probs)[0]
 
     def is_terminal(env,state):
@@ -251,6 +293,8 @@ class GameEnvironmentR:
                     return 1
 
 genv = GameEnvironmentR()
+
+print(genv.card_helps_meld(['KC', '4C', '2D', '1S', '6C', '2C', '5C', 'KS'],'2D'))
 
 state = rummy_mid_game = {
     'name': 'rummy',

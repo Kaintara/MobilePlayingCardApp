@@ -102,6 +102,7 @@ class MobilePlayingCardApp(MDApp):
         sfx.active = self.sfx
         self.adjust_sfx()
         self.determine_contents("All_Time Stats")
+        
 
     #Methods for UI
     def get_widget(self, widget, screen): #Returning the required
@@ -481,6 +482,8 @@ class MobilePlayingCardApp(MDApp):
             self.rummy.selected_card = "" 
             self.rummy.update_game_state()
             if self.rummy.turn == 1:
+                self.rummy.sort_cards(1)
+                print(f"Hand Before:{self.rummy.hands[1]}")
                 move = m_mtcs(self.rummy.state,GameEnvironmentR(),self.threes.difficulty[0])
                 print(f"Move: {move}")
                 if move[2] == 'draw':
@@ -491,6 +494,7 @@ class MobilePlayingCardApp(MDApp):
                 self.rummy.update_game_state()
                 self.rummy.turn = self.rummy.next_vaild_player(self.rummy.turn)
                 print(f"Turn: {self.rummy.turn}")
+                print(f"Hand After:{self.rummy.hands[1]}")
                 self.save.quick_save(self)
                 if self.rummy.turn is None:
                     print('Line 308 main.py reached')
