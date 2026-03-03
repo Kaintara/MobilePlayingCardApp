@@ -12,16 +12,16 @@ package.domain = org.ogcardgames.app
 source.dir = .
 
 # (list) Source files to include
-source.include_exts = py,kv,ttf,png,jpg,txt,atlas,json,mp3
+source.include_exts = py,kv,ttf,png,jpg,txt,atlas,json,ogg
 
 # (str) Application version
 version = 1.0
 
 # (list) Application requirements
-requirements = setuptools<70, cython>=3.1.0, python3, kivy==2.3.1, pillow==9.0.0, materialyoucolor, exceptiongroup, asyncgui, asynckivy,ffpyplayer==4.5.1, https://github.com/kivymd/KivyMD/archive/master.zip
+requirements = python3==3.10, kivy==2.3.1, pillow==9.0.0, materialyoucolor, exceptiongroup, asyncgui, asynckivy, https://github.com/kivymd/KivyMD/archive/master.zip
 
 # (str) Icon of the application
-icon.filename = Icon.png
+icon.filename = assets/img/theme3/BackGrey1.png
 
 # (list) Supported orientations
 orientation = portrait
@@ -29,7 +29,7 @@ orientation = portrait
 # (int) Target Android API
 android.api = 31
 
-android.ndk = 27b
+android.ndk = 25b
 
 # (int) Minimum API your APK supports
 android.minapi = 28
@@ -42,7 +42,7 @@ android.private_storage = True
 
 # (str) Android SDK/NDK paths
 
-# (bool) Skip SDK/NDK updates (we preinstalled them)
+# (bool) Skip SDK/NDK updates
 #android.skip_update = True
 
 # (bool) Automatically accept SDK licenses
@@ -51,8 +51,6 @@ android.accept_sdk_license = True
 # (str) Format used to package the app for debug
 android.debug_artifact = apk
 
-p4a.url = https://github.com/kivy/python-for-android.git
-p4a.branch = develop
 p4a.python_version = 3.10
 
 [buildozer]
