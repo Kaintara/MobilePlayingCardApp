@@ -11,9 +11,9 @@ from memoryMTCS import GameEnvironmentM
 class MobilePlayingCardApp(MDApp):
     def __init__(self, **kwargs):
         #Loading sounds for card actions
-        self.card_flip = SoundLoader.load('assets/sound/card_flip.mp3') 
-        self.card_draw = SoundLoader.load('assets/sound/card_draw.mp3')
-        self.card_place = SoundLoader.load('assets/sound/card_place.mp3')
+        self.card_flip = SoundLoader.load('assets/sound/card_flip.ogg') 
+        self.card_draw = SoundLoader.load('assets/sound/card_draw.ogg')
+        self.card_place = SoundLoader.load('assets/sound/card_place.ogg')
         #Initalising default settings
         self.sm_stack = []
         self.sfx = True
@@ -95,6 +95,9 @@ class MobilePlayingCardApp(MDApp):
         return sm
     
     def on_start(self):
+        Test = Game("Test",{"test":"this is test data"},{"test":"test_state"})
+        Test.start_timer()
+
         self.save.update(self)
         timer = self.get_widget('timer','Settings')
         timer.active = self.timer
@@ -246,32 +249,32 @@ class MobilePlayingCardApp(MDApp):
                 scroll_box.add_widget(Text(text=f"Times Won With a 3: {stats["won_with_3"]}"))
                 scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
                 scroll_box.add_widget(Text(text=f"Total Amount of Pickups: {stats["amount_of_pickups"]}"))
-                scroll_box.add_widget(Text(text=f"Best Time ~ {stats["best_time"]}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats["best_time"])}"))
                 scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
                 scroll_box.add_widget(Text(text=f"W/L Ratio: {stats["win_lose_ratio"]}"))
-                scroll_box.add_widget(Text(text=f"Total Time ~ {stats["total_time"]}"))
+                scroll_box.add_widget(Text(text=f"Total Time ~ {self.s_to_mmss(stats["total_time"])}"))
                 scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
             else:
                 stats = self.save.alldata["Games"]["Stats"]["threes_Stats"][extra_content]
                 scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
                 scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
-                scroll_box.add_widget(Text(text=f"Best Time ~ {stats["best_time"]}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats["best_time"])}"))
                 scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
         elif content == "Rummy":
             self.save.load()
             if extra_content == "Overview":
                 stats = self.save.alldata["Games"]["Stats"]["rummy_Stats"]["General_Stats"]
                 scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
-                scroll_box.add_widget(Text(text=f"Best Time ~ {stats["best_time"]}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats["best_time"])}"))
                 scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
                 scroll_box.add_widget(Text(text=f"W/L Ratio: {stats["win_lose_ratio"]}"))
-                scroll_box.add_widget(Text(text=f"Total Time ~ {stats["total_time"]}"))
+                scroll_box.add_widget(Text(text=f"Total Time ~ {self.s_to_mmss(stats["total_time"])}"))
                 scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
             else:
                 stats = self.save.alldata["Games"]["Stats"]["rummy_Stats"][extra_content]
                 scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
                 scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
-                scroll_box.add_widget(Text(text=f"Best Time ~ {stats["best_time"]}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats["best_time"])}"))
                 scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
         elif content == "Memory":
             self.save.load()
@@ -280,17 +283,17 @@ class MobilePlayingCardApp(MDApp):
                 scroll_box.add_widget(Text(text=f"Most Pairs: {stats["most_pairs"]}"))
                 scroll_box.add_widget(Text(text=f"Total Pairs: {stats["all_pairs"]}"))
                 scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
-                scroll_box.add_widget(Text(text=f"Best Time ~ {stats["best_time"]}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats["best_time"])}"))
                 scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
                 scroll_box.add_widget(Text(text=f"W/L Ratio: {stats["win_lose_ratio"]}"))
-                scroll_box.add_widget(Text(text=f"Total Time ~ {stats["total_time"]}"))
+                scroll_box.add_widget(Text(text=f"Total Time ~ {self.s_to_mmss(stats["total_time"])}"))
                 scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
             else:
                 stats = self.save.alldata["Games"]["Stats"]["memory_Stats"][extra_content]
                 scroll_box.add_widget(Text(text=f"Most Pairs: {stats["most_pairs"]}"))
                 scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
                 scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
-                scroll_box.add_widget(Text(text=f"Best Time ~ {stats["best_time"]}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats["best_time"])}"))
                 scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
 
     def determine_contents(self,content):
@@ -343,9 +346,12 @@ class MobilePlayingCardApp(MDApp):
 
     #Methods for Games
     def s_to_mmss(self,total_seconds):
-        minutes = int(total_seconds // 60)
-        seconds = int(total_seconds % 60)
-        return f"{minutes:02d}:{seconds:02d}"
+        if total_seconds and int(total_seconds) != 0:
+            minutes = int(total_seconds // 60)
+            seconds = int(total_seconds % 60)
+            return f"{minutes:02d}:{seconds:02d}"
+        else:
+            return "00:00"
 
     def update_timer(self,game):
         if self.timer:
@@ -372,6 +378,8 @@ class MobilePlayingCardApp(MDApp):
     def update_game(self,game):
         print("UI has been updated.")
         if game == "threes":
+            if not self.threes.timer_event:
+                self.threes.start_timer()
             for i in range(3):
                 Ai_hand = self.get_widget(f'ai_hand{i + 1}', 'MDThrees')
                 Ai_hand.clear_widgets()
@@ -408,8 +416,8 @@ class MobilePlayingCardApp(MDApp):
             for card in self.threes.hands[0]:
                 hand.add_widget(Playing_Card(card,'threes','front'))
         elif game == "rummy":
-            timer = self.get_widget('timer','MDRummy')
-            timer.text = self.s_to_mmss(self.rummy.time_elapsed)
+            if not self.rummy.timer_event:
+                self.rummy.start_timer()
             for i in range(8):
                 Ai_hand = self.get_widget(f'ai_hand{i + 1}', 'MDRummy')
                 Ai_hand.clear_widgets()
@@ -430,8 +438,8 @@ class MobilePlayingCardApp(MDApp):
                 hand = self.get_widget(f'hand{i + 1}', 'MDRummy')
                 hand.add_widget(Playing_Card(self.rummy.hands[0][i], 'rummy','front'))
         elif game == "memory":
-            timer = self.get_widget('timer','MDMemory')
-            timer.text = self.s_to_mmss(self.memory.time_elapsed)
+            if not self.rummy.timer_event:
+                self.rummy.start_timer()
             hand = self.get_widget('hand', 'MDMemory')
             hand.clear_widgets()
             for card in self.memory.hands[0]:
@@ -508,7 +516,10 @@ class MobilePlayingCardApp(MDApp):
             self.memory.update_game_state()
             print("Turn: ",self.memory.turn)
             if self.memory.turn == 1:
-                move = m_mtcs(self.memory.state,GameEnvironmentM(),self.memory.difficulty[0])
+                memory_env = GameEnvironmentM()
+                unvaildated_move = m_mtcs(self.memory.state,memory_env,self.memory.difficulty[0])
+                print(unvaildated_move)
+                move = memory_env.convert_move(unvaildated_move,self.memory.state)
                 self.card_flip.play()
                 print("Move: ",move)
                 self.memory.apply_move(move,self)
@@ -518,8 +529,9 @@ class MobilePlayingCardApp(MDApp):
                         y = self.memory.state['history'][-1][3][0]
                         x = self.memory.state['history'][-1][3][1]
                         card_container = self.get_widget(f'hand{y}{x}','MDMemory')
-                        card = card_container.children[0]
-                        card.img.source = self.shop.get_theme(self.shop.equipped).asset_dict[card.suit_rank]
+                        if card_container.children:
+                            card = card_container.children[0]
+                            card.img.source = self.shop.get_theme(self.shop.equipped).asset_dict[card.suit_rank]
                 self.save.quick_save(self)
                 if self.memory.is_game_over():
                     print('Game OVERRE')
@@ -624,7 +636,7 @@ state = {'name' : "threes",
                 self.memory.end_game(self)
             if self.memory.turn == 1:
                 Clock.schedule_once(lambda dt: self.next_turn('memory'), 0.5)
-            self.memory.start_timer
+            self.memory.start_timer()
         else:
             self.new_game(game)
     

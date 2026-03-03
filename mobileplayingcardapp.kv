@@ -304,7 +304,7 @@
             icon: "pause"
             on_release: 
                 app.sm_stacky("MDMemory") #Adds the memory screen to the previous screen stack
-                app.rummy.stop_timer() #Stops the memory timer
+                app.memory.stop_timer() #Stops the memory timer
                 root.manager.current = "Settings" #Changes screen to the setting section
         MDLabel: #Timer
             id: timer
@@ -1204,7 +1204,7 @@
                     halign: "center"
                     valign: "center"
                 MDLabel:
-                    text: "Medium"
+                    text: "Normal"
                     font_style: "cataway"
                     role: "medium"
                     halign: "center"

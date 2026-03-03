@@ -18,9 +18,9 @@ class Game: #Main Game Class
         game.winner = None
         game.timer_event = None
         #Loads in sounds that to be accessed later
-        game.win_noise = SoundLoader.load('assets/sound/win_noise.mp3') 
-        game.lose_noise = SoundLoader.load('assets/sound/lose_noise.mp3')
-        game.achievement_noise = SoundLoader.load('assets/sound/iykyk.mp3')
+        game.win_noise = SoundLoader.load('assets/sound/win_noise.ogg') 
+        game.lose_noise = SoundLoader.load('assets/sound/lose_noise.ogg')
+        game.achievement_noise = SoundLoader.load('assets/sound/iykyk.ogg')
 
     def shuffle_cards(game):
         shuffled_deck = game.deck[:] #Makes a copy of the deck
@@ -156,14 +156,14 @@ class Game: #Main Game Class
         
     def start_timer(game):
         if not game.timer_event: #Checks that there is no current timer running already
-            print("started timer")
+            #print("started timer")
             game.timer_event = Clock.schedule_interval(lambda dt: game.update_timer(dt),1) #Schedules an repeat-event which calls game.update_timer every second
 
     def stop_timer(game):
         if game.timer_event: #Checks there is a timer currently running
             game.timer_event.cancel() #Cancels the clock schedule interval event
             game.timer_event = None #Removes the timer event so that start_timer acknowledges there is no timer running
-        print("timer has been stopped")
+        #print("timer has been stopped")
 
 class threes(Game): #Threes Game Class
     def __init__(threes, name, rank_order, state):
@@ -352,6 +352,8 @@ class threes(Game): #Threes Game Class
         threes.state['time_elapsed'] = threes.time_elapsed
         threes.state['difficulty'] = threes.difficulty
         threes.state['winner'] = threes.winner
+
+
 
 class rummy(Game): #Rummy Game Class
     def __init__(rummy, name, rank_order, state):
@@ -668,4 +670,6 @@ class memory(Game): #Memory Game Class
         memory.state['time_elapsed'] = memory.time_elapsed
         memory.state['difficulty'] = memory.difficulty
         memory.state['winner'] = memory.winner
+
+
 

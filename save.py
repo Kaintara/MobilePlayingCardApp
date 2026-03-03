@@ -392,4 +392,5 @@ class SaveData():
         save.load_game_states(app)
 
 
-
+test_save = SaveData() #Initialises a save data object
+print("SaveData class initialised:",test_save,"\nSave data template:",test_save.alldata)

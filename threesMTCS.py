@@ -254,6 +254,8 @@ class GameEnvironmentT:
         return False
     
     def next_valid_player(env,state):
+
+
         if env.is_terminal(state): #Checks if the game is over
             return
         else:

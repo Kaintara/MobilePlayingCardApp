@@ -18,11 +18,16 @@ class GameEnvironmentM:
     def convert_move(env,move,state):
         y = int(move[2][0])
         x = int(move[2][1])
-        if move[2] != state['card_array'][y][x]: #Checks if the move is vaild
-            vaild_move = ('pick',1,(y,x,state['card_array'][y][x])) #Updates the choosen move so that the card is selected from the actual game state, such that it is vaild
-            return vaild_move
+        card = state['card_array'][y][x]
+        print(state['card_array'][y][x])
+        if not card:
+            return random.choice(env.get_vaild_moves(state))
         else:
-            return move
+            if move[2] != state['card_array'][y][x]: #Checks if the move is vaild
+                vaild_move = ('pick',1,(y,x,state['card_array'][y][x])) #Updates the choosen move so that the card is selected from the actual game state, such that it is vaild
+                return vaild_move
+            else:
+                return move
 
     def determinization(env,state):
         memory = copy.deepcopy(state) #Makes a copy of the game state
@@ -246,9 +251,11 @@ state = memory_early_game = {
     ]
 }
 
-#genv = GameEnvironmentM()
 
-#print(genv.determinization(state))
+#genv = GameEnvironmentM()
+#move = genv.rollout_policy(genv.get_vaild_moves(genv.determinization(state)),genv.determinization(state))
+#print(genv.convert_move(move,state))
+#print(genv.determinization(state)
 #print(genv.get_reward(genv.determinization(state)))
 #print(genv.convert_move(((0,2,'4H')),state))
 
@@ -258,3 +265,5 @@ state = memory_early_game = {
 #print(state)
 #move1= mtcs(state,genv,1,True)
 #print(move1)
+
+
