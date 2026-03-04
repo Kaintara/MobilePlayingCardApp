@@ -18,9 +18,8 @@ class GameEnvironmentM:
     def convert_move(env,move,state):
         y = int(move[2][0])
         x = int(move[2][1])
-        card = state['card_array'][y][x]
-        print(state['card_array'][y][x])
-        if not card:
+        card = state['card_array'][y][x] #Returns the card at the position of the move from the game state
+        if not card: #Checks if the card exists, if not returns a random vaild move to avoid errors
             return random.choice(env.get_vaild_moves(state))
         else:
             if move[2] != state['card_array'][y][x]: #Checks if the move is vaild
@@ -34,18 +33,21 @@ class GameEnvironmentM:
     def determinization(env,state):
         memory = copy.deepcopy(state) #Makes a copy of the game state
         memory['deck'] = ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH","BJ","RJ"]
-        memory['card_array'] = [['' for _ in range(6)] for _ in range(9)]
+        memory['card_array'] = [['' for _ in range(6)] for _ in range(9)] #Makes an empty card array to fill in with the known cards from the game state and history
+        #Iterates through the card array in the game state and fills cards already removed from card array with "Empty_Space" 
         for y, row in enumerate(state.get('card_array', [])):
            for x, card in enumerate(row):
               if not card:
                     memory['card_array'][y][x] = 'Empty_Space'
-        if memory['history']:
-            for move in memory['history']:
+        if memory['history']: #Checks if there is any history to iterate through
+            for move in memory['history']: #Interates through the history and fills in the card array with any cards that have been revealed and not removed from the game
                 if move[0] == 'Missed':
                     first = move[2]
                     second = move[3]
+                    #Add revealed cards back into card array
                     memory['card_array'][first[0]][first[1]] = first[2]
                     memory['card_array'][second[0]][second[1]] = second[2]
+                    # Remove from deck
                     if first[2] in memory['deck']:
                         memory['deck'].remove(first[2])
                     if second[2] in memory['deck']:
@@ -62,7 +64,7 @@ class GameEnvironmentM:
                     if second[2] in memory['deck']:
                        memory['deck'].remove(second[2])
         random.shuffle(memory['deck'])
-        for _ in range(5):
+        for _ in range(5): #Randomly fills in some of the unknown spaces in the card array with cards from the deck to allow for some exploration using MCTS
             x = random.randint(0,5)
             y = random.randint(0,8)
             if not memory['card_array'][y][x] or memory['card_array'][y][x] == 'Empty_Space':
@@ -194,78 +196,11 @@ class GameEnvironmentM:
             state['winner'] = 0
         return True
     
-    def next_valid_player(env,state):
+    def next_valid_player(env,state): #Determines the next player to play
         player = state['turn'] 
-        if env.is_terminal(state):
+        if env.is_terminal(state): #Checks if the game is over
             return
         else:
             return 1 - player
-
-
-
-state = memory_early_game = {
-    'name': "memory",
-    
-    'deck': [
-        "AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD",
-        "AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS",
-        "AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC",
-        "AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"
-    ],
-    
-    'shuffled_deck': [],
-    
-    'hands': [
-        ["8H", "9C"],     # Player 0 has 2 cards (1 match)
-        ["7D", "JS"]      # Player 1 has 2 cards (1 match)
-    ],
-    
-    'first_selected_card': ('y','x','card'),
-    'second_selected_card': ('y','x','card'),
-    'selected_first_card': False,
-    
-    # 9×6 board - Player 1 can see two matching cards (7H and 7C)
-    'card_array': [
-        ['',    '',    '9H',  '9C',  '',    'KS'],
-        ['1D',  'QS',  '6H',  '',    'KD',  'JC'],
-        ['3S',  '7S',  '',    'AD',  '8C',  '9S'],
-        ['5S',  '1H',  'AS',  'RJ',  '8S',  ''],
-        ['BJ',  '4H',  '',    'QH',  '3D',  'AC'],
-        ['JD',  '',    '7H',  '4D',  'KC',  ''],
-        ['QC',  '',    'AH',  '5H',  '5D',  ''],
-        ['6S',  'JH',  '3C',  '7D',  '',    '6D'],
-        ['6C',  '4C',  '2C',  '',    '9D',  '7C']  # 7C at (8,5)
-    ],
-    
-    'turn': 1,
-    'time_elapsed': 0,
-    'difficulty': (-1, ""),
-    'winner': None,
-    
-    'history': [
-        # Player 0 revealed two non-matching cards
-        ('pick', 1, (8,4,'9D')),
-        ('pick', 1, (8,4,'9D')),
-        ('Missed', 1, (0,2,'9H'), (2,5,'9S')),
-        ('pick', 0, (0,2,'9H')),
-        ('pick', 0, (0,3,'9C')),
-        ('Missed', 0, (0,2,'9H'), (0,3,'9C'))     
-    ]
-}
-
-
-#genv = GameEnvironmentM()
-#move = genv.rollout_policy(genv.get_vaild_moves(genv.determinization(state)),genv.determinization(state))
-#print(genv.convert_move(move,state))
-#print(genv.determinization(state)
-#print(genv.get_reward(genv.determinization(state)))
-#print(genv.convert_move(((0,2,'4H')),state))
-
-#move1= mtcs(state,genv,5,True)
-#print(move1)
-#state = genv.apply_moves(state,genv.convert_move(move1,state))
-#print(state)
-#move1= mtcs(state,genv,1,True)
-#print(move1)
 
 

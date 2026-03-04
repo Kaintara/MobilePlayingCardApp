@@ -56,10 +56,10 @@ def m_mtcs(root_state,game_env,time_limit):
     #Sets roots node turn to the AI's turn
     det_root['turn'] = 1
     root_node = Node(det_root,None,None) #Creates root node object
-    root_node.untried_moves = game_env.get_vaild_moves(root_node.state) #
+    root_node.untried_moves = game_env.get_vaild_moves(root_node.state) #Returns vaild moves for the root node
+    #Starts timer for the MTCS time limit
     time_elapsed = time.time()
     start_time = time.time()
-    iterations = 0
     while not is_time_over(time_limit,time_elapsed) or root_node.untried_moves: #Loops through code until all moves have been tried or the time limit has been met
         node = root_node
         path = [root_node]
@@ -71,31 +71,31 @@ def m_mtcs(root_state,game_env,time_limit):
             path.append(node)        
         # If selection returned None (no children), skip this iteration
         if node is None:
-            #iterations += 1
             continue
         #Expansion
-        if node.depth < 2:
-            if node.untried_moves is None:
+        if node.depth < 2: #checks that the node depth is less than 2 to avoid expanding too far down the tree
+            if node.untried_moves is None: #Checks if the node's untried moves have been generated yet, if not generates them
                 node.untried_moves = game_env.get_vaild_moves(node.state)
-            if node.untried_moves:
+            if node.untried_moves: #Checks that there are untried moves available to expand
+                #Randomly selects a move from the node's untried moves and creates a child node based on that move
                 move = node.untried_moves.pop(random.randrange(len(node.untried_moves)))
                 child_state = game_env.apply_moves(node.state, move)
                 child_node = Node(child_state, node, move)
+                #Adds the child node to the current node's children and adds it to the path
                 node.children.append(child_node)
                 node = child_node
                 path.append(node)
         #Simulation
             sim_state = copy.deepcopy(node.state)
-            final_state = node.simulations(sim_state,game_env,20) 
+            final_state = node.simulations(sim_state,game_env,100) #Simulates a game from the current node's state and returns the final state of the simulation
         #Backpropagation
-            if final_state is None:
+            if final_state is None: #Checks that the final state is not None to avoid errors
                 reward = 0
             else:
-                reward = game_env.get_reward(final_state)
-            for nodes in path:
+                reward = game_env.get_reward(final_state) #Calculates the reward for the final state of the simulation
+            for nodes in path: #Iterates through the nodes in the path and updates their visit count and value based on the reward from the simulation
                 nodes.visits += 1
                 nodes.value += reward
-        #iterations += 1
 
     total_time = time.time() - start_time #Calculates total time elapsed
     
@@ -117,7 +117,7 @@ def m_mtcs(root_state,game_env,time_limit):
                 print(f"  {m} -> visits={v}, avg={a}")
     '''
 
-    best = root_node.best_child(1.4)
+    best = root_node.best_child(1.4) #Selects the best child of the root node based on the highest UCT value
     if best is None: #Checks if there is a best move selected if not just picks a random move
         moves = game_env.get_vaild_moves(root_state)
         random_move = random.choice(moves)
