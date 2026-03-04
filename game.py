@@ -151,19 +151,15 @@ class Game: #Main Game Class
         game.time_elapsed += dt #Adds change of time to the time elapsed
         app = MDApp.get_running_app() #Returns the App class
         app.update_timer(game.name) #Updates the UI with the new time
-        #print(game.time_elapsed)
-        #print("time has been updated")
-        
+
     def start_timer(game):
         if not game.timer_event: #Checks that there is no current timer running already
-            #print("started timer")
             game.timer_event = Clock.schedule_interval(lambda dt: game.update_timer(dt),1) #Schedules an repeat-event which calls game.update_timer every second
 
     def stop_timer(game):
         if game.timer_event: #Checks there is a timer currently running
             game.timer_event.cancel() #Cancels the clock schedule interval event
             game.timer_event = None #Removes the timer event so that start_timer acknowledges there is no timer running
-        #print("timer has been stopped")
 
 class threes(Game): #Threes Game Class
     def __init__(threes, name, rank_order, state):

@@ -1,587 +1,194 @@
 {
-    "Shop": {
-        "equipped": "Blue_Classic",
-        "unlocked_inventory": [
-            "Classic",
-            "Blue_Classic"
-        ],
-        "coin_count": 0
-    },
-    "App": {
-        "sm_stack": [],
-        "sfx": false,
-        "ai_difficulty": "Beginner",
-        "timer": false,
-        "score": true,
-        "unlocked_achievements": []
-    },
-    "Games": {
-        "Stats": {
-            "threes_Stats": {
-                "General_Stats": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "win_lose_ratio": 0,
-                    "won_with_3": 0,
-                    "amount_of_pickups": 0,
-                    "best_time": null,
-                    "total_time": 0,
-                    "last_played": null
+            "Shop" : {"equipped" : "Classic",
+                     "unlocked_inventory" : ["Classic"],
+                     "coin_count" : 0
+                       },
+            "App" : {"sm_stack" : [],
+                     "sfx": true,
+                     "ai_difficulty" : "Beginner",
+                     "timer": true,
+                     "score" : true,
+                     "unlocked_achievements" : []
+                     },
+            "Games" : {
+                "Stats" : {
+                    "threes_Stats" : {
+                        "General_Stats" : {
+                        "games_played": 0,
+                        "wins": 0,
+                        "win_lose_ratio": 0,
+                        "won_with_3": 0,
+                        "amount_of_pickups": 0,
+                        "best_time": null,
+                        "total_time": 0,
+                        "last_played": null
+                        },  
+                        "Beginner" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "best_time": null,
+                            "last_played": null
+                        },
+                        "Easy" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "best_time": null,
+                            "last_played": null
+                        },
+                        "Normal" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "best_time": null,
+                            "last_played": null
+                        },
+                        "Hard" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "best_time": null,
+                            "last_played": null
+                        },
+                        "Expert" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "best_time": null,
+                            "last_played": null
+                        }
+                    },
+                    "rummy_Stats" : {
+                        "General_Stats" : {
+                        "games_played": 0,
+                        "wins": 0,
+                        "win_lose_ratio": 0,
+                        "best_time": null,
+                        "total_time": 0,
+                        "last_played": null
+                        },
+                        "Beginner" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "best_time": null,
+                            "last_played": null
+                        },
+                        "Easy" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "best_time": null,
+                            "last_played": null
+                        },
+                        "Normal" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "best_time": null,
+                            "last_played": null
+                        },
+                        "Hard" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "best_time": null,
+                            "last_played": null
+                        },
+                        "Expert" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "best_time": null,
+                            "last_played": null
+                        }
+                    },
+                    "memory_Stats" : {
+                        "General_Stats" : {
+                        "games_played": 0,
+                        "wins": 0,
+                        "win_lose_ratio": 0,
+                        "most_pairs": 0,
+                        "all_pairs": 0,
+                        "best_time": null,
+                        "total_time": 0,
+                        "last_played": null
+                    },
+                        "Beginner" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "most_pairs": 0,
+                            "best_time": null,
+                            "last_played": null
+                        },
+                        "Easy" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "most_pairs": 0,
+                            "best_time": null,
+                            "last_played": null
+                        },
+                        "Normal" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "most_pairs": 0,
+                            "best_time": null,
+                            "last_played": null
+                        },
+                        "Hard" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "most_pairs": 0,
+                            "best_time": null,
+                            "last_played": null
+                        },
+                        "Expert" : {
+                            "games_played": 0,
+                            "wins": 0,
+                            "most_pairs": 0,
+                            "best_time": null,
+                            "last_played": null
+                        }
+                    }
                 },
-                "Beginner": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "best_time": null,
-                    "last_played": null
+                "Previous_Games" : { 
+                    "threes" : [],
+                    "rummy" : [],
+                    "memory" : []
                 },
-                "Easy": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "best_time": null,
-                    "last_played": null
-                },
-                "Normal": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "best_time": null,
-                    "last_played": null
-                },
-                "Hard": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "best_time": null,
-                    "last_played": null
-                },
-                "Expert": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "best_time": null,
-                    "last_played": null
-                }
-            },
-            "rummy_Stats": {
-                "General_Stats": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "win_lose_ratio": 0,
-                    "best_time": null,
-                    "total_time": 0,
-                    "last_played": null
-                },
-                "Beginner": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "best_time": null,
-                    "last_played": null
-                },
-                "Easy": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "best_time": null,
-                    "last_played": null
-                },
-                "Normal": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "best_time": null,
-                    "last_played": null
-                },
-                "Hard": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "best_time": null,
-                    "last_played": null
-                },
-                "Expert": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "best_time": null,
-                    "last_played": null
-                }
-            },
-            "memory_Stats": {
-                "General_Stats": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "win_lose_ratio": 0,
-                    "most_pairs": 0,
-                    "all_pairs": 0,
-                    "best_time": null,
-                    "total_time": 0,
-                    "last_played": null
-                },
-                "Beginner": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "most_pairs": 0,
-                    "best_time": null,
-                    "last_played": null
-                },
-                "Easy": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "most_pairs": 0,
-                    "best_time": null,
-                    "last_played": null
-                },
-                "Normal": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "most_pairs": 0,
-                    "best_time": null,
-                    "last_played": null
-                },
-                "Hard": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "most_pairs": 0,
-                    "best_time": null,
-                    "last_played": null
-                },
-                "Expert": {
-                    "games_played": 0,
-                    "wins": 0,
-                    "most_pairs": 0,
-                    "best_time": null,
-                    "last_played": null
-                }
-            }
-        },
-        "Previous_Games": {
-            "threes": [],
-            "rummy": [],
-            "memory": []
-        },
-        "Current_Games": {
-            "threes": {
-                "name": "threes",
-                "deck": [
-                    "AD",
-                    "2D",
-                    "3D",
-                    "4D",
-                    "5D",
-                    "6D",
-                    "7D",
-                    "8D",
-                    "9D",
-                    "1D",
-                    "JD",
-                    "QD",
-                    "KD",
-                    "AS",
-                    "2S",
-                    "3S",
-                    "4S",
-                    "5S",
-                    "6S",
-                    "7S",
-                    "8S",
-                    "9S",
-                    "1S",
-                    "JS",
-                    "QS",
-                    "KS",
-                    "AC",
-                    "2C",
-                    "3C",
-                    "4C",
-                    "5C",
-                    "6C",
-                    "7C",
-                    "8C",
-                    "9C",
-                    "1C",
-                    "JC",
-                    "QC",
-                    "KC",
-                    "AH",
-                    "2H",
-                    "3H",
-                    "4H",
-                    "5H",
-                    "6H",
-                    "7H",
-                    "8H",
-                    "9H",
-                    "1H",
-                    "JH",
-                    "QH",
-                    "KH"
-                ],
-                "shuffled_deck": [
-                    "4D",
-                    "5S",
-                    "3S",
-                    "KD",
-                    "7D",
-                    "9C",
-                    "QD",
-                    "9D",
-                    "AC",
-                    "8S",
-                    "2S",
-                    "QS",
-                    "8H",
-                    "4H",
-                    "6S",
-                    "9S",
-                    "QH",
-                    "QC",
-                    "6C",
-                    "1D",
-                    "1H",
-                    "5C",
-                    "8C",
-                    "4C",
-                    "JC",
-                    "JS",
-                    "6H",
-                    "8D",
-                    "AS",
-                    "JD"
-                ],
-                "rank_order": {
-                    "A": 14,
-                    "K": 13,
-                    "Q": 12,
-                    "J": 11,
-                    "1": 16,
-                    "9": 9,
-                    "8": 8,
-                    "7": 7,
-                    "6": 6,
-                    "5": 5,
-                    "4": 4,
-                    "3": 3,
-                    "2": 15
-                },
-                "hands": [
-                    [
-                        "1C",
-                        "7C",
-                        "6D",
-                        "5D",
-                        "5H",
-                        "4S"
-                    ],
-                    [
-                        "2D",
-                        "9H",
-                        "AD"
-                    ]
-                ],
-                "discard_pile": [],
-                "selected_card": "",
-                "turn": 1,
-                "time_elapsed": 4.016609500045888,
-                "difficulty": [
-                    0.25,
-                    "Medium"
-                ],
-                "winner": null,
-                "bottom_hands": [
-                    [
-                        "3C",
-                        "1S",
-                        "2H"
-                    ],
-                    [
-                        "KS",
-                        "7H",
-                        "3D"
-                    ]
-                ],
-                "top_hands": [
-                    [
-                        "7S",
-                        "JH",
-                        "AH"
-                    ],
-                    [
-                        "KH",
-                        "3H",
-                        "KC"
-                    ]
-                ],
-                "another": false,
-                "played_cards": [
-                    "2C"
-                ],
-                "history": [
-                    [
-                        0,
-                        "4S",
-                        "play"
-                    ],
-                    [
-                        1,
-                        "5H",
-                        "play"
-                    ],
-                    [
-                        1,
-                        "7C",
-                        "play"
-                    ],
-                    [
-                        0,
-                        [
-                            "4S",
-                            "5H",
-                            "7C"
-                        ],
-                        "pickup"
-                    ],
-                    [
-                        1,
-                        "2C",
-                        "play"
-                    ]
-                ]
-            },
-            "rummy": {
-                "name": "rummy",
-                "deck": [
-                    "AD",
-                    "2D",
-                    "3D",
-                    "4D",
-                    "5D",
-                    "6D",
-                    "7D",
-                    "8D",
-                    "9D",
-                    "1D",
-                    "JD",
-                    "QD",
-                    "KD",
-                    "AS",
-                    "2S",
-                    "3S",
-                    "4S",
-                    "5S",
-                    "6S",
-                    "7S",
-                    "8S",
-                    "9S",
-                    "1S",
-                    "JS",
-                    "QS",
-                    "KS",
-                    "AC",
-                    "2C",
-                    "3C",
-                    "4C",
-                    "5C",
-                    "6C",
-                    "7C",
-                    "8C",
-                    "9C",
-                    "1C",
-                    "JC",
-                    "QC",
-                    "KC",
-                    "AH",
-                    "2H",
-                    "3H",
-                    "4H",
-                    "5H",
-                    "6H",
-                    "7H",
-                    "8H",
-                    "9H",
-                    "1H",
-                    "JH",
-                    "QH",
-                    "KH"
-                ],
-                "shuffled_deck": [],
-                "value_map": {
-                    "A": 1,
-                    "K": 13,
-                    "Q": 12,
-                    "J": 11,
-                    "1": 10,
-                    "9": 9,
-                    "8": 8,
-                    "7": 7,
-                    "6": 6,
-                    "5": 5,
-                    "4": 4,
-                    "3": 3,
-                    "2": 2
-                },
-                "hands": [
-                    [],
-                    []
-                ],
-                "discard_pile": [],
-                "selected_card": "",
-                "turn": 0,
-                "time_elapsed": 0,
-                "difficulty": [
-                    -1,
-                    ""
-                ],
-                "winner": null,
-                "history": []
-            },
-            "memory": {
-                "name": "memory",
-                "deck": [
-                    "AD",
-                    "2D",
-                    "3D",
-                    "4D",
-                    "5D",
-                    "6D",
-                    "7D",
-                    "8D",
-                    "9D",
-                    "1D",
-                    "JD",
-                    "QD",
-                    "KD",
-                    "AS",
-                    "2S",
-                    "3S",
-                    "4S",
-                    "5S",
-                    "6S",
-                    "7S",
-                    "8S",
-                    "9S",
-                    "1S",
-                    "JS",
-                    "QS",
-                    "KS",
-                    "AC",
-                    "2C",
-                    "3C",
-                    "4C",
-                    "5C",
-                    "6C",
-                    "7C",
-                    "8C",
-                    "9C",
-                    "1C",
-                    "JC",
-                    "QC",
-                    "KC",
-                    "AH",
-                    "2H",
-                    "3H",
-                    "4H",
-                    "5H",
-                    "6H",
-                    "7H",
-                    "8H",
-                    "9H",
-                    "1H",
-                    "JH",
-                    "QH",
-                    "KH"
-                ],
-                "shuffled_deck": [],
-                "hands": [
-                    [],
-                    []
-                ],
-                "first_selected_card": [
-                    "y",
-                    "x",
-                    "card"
-                ],
-                "second_selected_card": [
-                    "y",
-                    "x",
-                    "card"
-                ],
-                "selected_first_card": false,
-                "card_array": [
-                    [
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    [
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    [
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    [
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    [
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    [
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    [
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    [
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    [
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ]
-                ],
-                "turn": 0,
-                "time_elapsed": 0,
-                "difficulty": [
-                    -1,
-                    ""
-                ],
-                "winner": null,
-                "history": []
+                "Current_Games" :
+                {"threes": {"name" : "threes",
+                            "deck" : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
+                            "shuffled_deck" : [],
+                            "rank_order" : {"A": 14,"K": 13,"Q": 12,"J": 11,"1": 16,"9": 9,"8": 8,"7": 7,"6": 6,"5": 5,"4": 4,"3": 3,"2": 15},
+                            "hands" : [[],[]],
+                            "discard_pile" : [],
+                            "selected_card" : "",
+                            "turn" : 0,
+                            "time_elapsed" : 0,
+                            "difficulty" : [-1,""],
+                            "winner" : null,
+                            "bottom_hands" : [[],[]],
+                            "top_hands" : [[],[]],
+                            "another" : false,
+                            "played_cards" : [],
+                            "history": []},
+                 "rummy": {"name" : "rummy",
+                            "deck" : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
+                            "shuffled_deck" : [],
+                            "value_map" : {"A": 1,"K": 13,"Q": 12,"J": 11,"1": 10,"9": 9,"8": 8,"7": 7,"6": 6,"5": 5,"4": 4,"3": 3,"2": 2},
+                            "hands" : [[],[]],
+                            "discard_pile" : [],
+                            "selected_card" : "",
+                            "turn" : 0,
+                            "time_elapsed" : 0,
+                            "difficulty" : [-1,""],
+                            "winner" : null,
+                            "history": []},
+                 "memory": {"name" : "memory",
+                            "deck" : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
+                            "shuffled_deck" : [],
+                            "hands" : [[],[]],
+                            "first_selected_card" : ["y","x","card"],
+                            "second_selected_card" : ["y","x","card"],
+                            "selected_first_card" : false,
+                            "card_array" : [["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""],["","","","","",""]],
+                            "turn" : 0,
+                            "time_elapsed" : 0,
+                            "difficulty" : [-1,""],
+                            "winner" : null,
+                            "history": []}}
             }
         }
-    }
-}
+

@@ -249,55 +249,55 @@ class MobilePlayingCardApp(MDApp):
             self.save.load()
             if extra_content == "Overview":
                 stats = self.save.alldata["Games"]["Stats"]["threes_Stats"]["General_Stats"]
-                scroll_box.add_widget(Text(text=f"Times Won With a 3: {stats["won_with_3"]}"))
-                scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
-                scroll_box.add_widget(Text(text=f"Total Amount of Pickups: {stats["amount_of_pickups"]}"))
-                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats["best_time"])}"))
-                scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
-                scroll_box.add_widget(Text(text=f"W/L Ratio: {stats["win_lose_ratio"]}"))
-                scroll_box.add_widget(Text(text=f"Total Time ~ {self.s_to_mmss(stats["total_time"])}"))
-                scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
+                scroll_box.add_widget(Text(text=f"Times Won With a 3: {stats['won_with_3']}"))
+                scroll_box.add_widget(Text(text=f"Games Played: {stats['games_played']}"))
+                scroll_box.add_widget(Text(text=f"Total Amount of Pickups: {stats['amount_of_pickups']}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats['best_time'])}"))
+                scroll_box.add_widget(Text(text=f"Wins: {stats['wins']}"))
+                scroll_box.add_widget(Text(text=f"W/L Ratio: {stats['win_lose_ratio']}"))
+                scroll_box.add_widget(Text(text=f"Total Time ~ {self.s_to_mmss(stats['total_time'])}"))
+                scroll_box.add_widget(Text(text=f"Last Played: {stats['last_played']}"))
             else:
                 stats = self.save.alldata["Games"]["Stats"]["threes_Stats"][extra_content]
-                scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
-                scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
-                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats["best_time"])}"))
-                scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
+                scroll_box.add_widget(Text(text=f"Games Played: {stats['games_played']}"))
+                scroll_box.add_widget(Text(text=f"Wins: {stats['wins']}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats['best_time'])}"))
+                scroll_box.add_widget(Text(text=f"Last Played: {stats['last_played']}"))
         elif content == "Rummy":
             self.save.load()
             if extra_content == "Overview":
                 stats = self.save.alldata["Games"]["Stats"]["rummy_Stats"]["General_Stats"]
-                scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
-                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats["best_time"])}"))
-                scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
-                scroll_box.add_widget(Text(text=f"W/L Ratio: {stats["win_lose_ratio"]}"))
-                scroll_box.add_widget(Text(text=f"Total Time ~ {self.s_to_mmss(stats["total_time"])}"))
-                scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
+                scroll_box.add_widget(Text(text=f"Games Played: {stats['games_played']}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats['best_time'])}"))
+                scroll_box.add_widget(Text(text=f"Wins: {stats['wins']}"))
+                scroll_box.add_widget(Text(text=f"W/L Ratio: {stats['win_lose_ratio']}"))
+                scroll_box.add_widget(Text(text=f"Total Time ~ {self.s_to_mmss(stats['total_time'])}"))
+                scroll_box.add_widget(Text(text=f"Last Played: {stats['last_played']}"))
             else:
                 stats = self.save.alldata["Games"]["Stats"]["rummy_Stats"][extra_content]
-                scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
-                scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
-                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats["best_time"])}"))
-                scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
+                scroll_box.add_widget(Text(text=f"Games Played: {stats['games_played']}"))
+                scroll_box.add_widget(Text(text=f"Wins: {stats['wins']}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats['best_time'])}"))
+                scroll_box.add_widget(Text(text=f"Last Played: {stats['last_played']}"))
         elif content == "Memory":
             self.save.load()
             if extra_content == "Overview":
                 stats = self.save.alldata["Games"]["Stats"]["memory_Stats"]["General_Stats"]
-                scroll_box.add_widget(Text(text=f"Most Pairs: {stats["most_pairs"]}"))
-                scroll_box.add_widget(Text(text=f"Total Pairs: {stats["all_pairs"]}"))
-                scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
-                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats["best_time"])}"))
-                scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
-                scroll_box.add_widget(Text(text=f"W/L Ratio: {stats["win_lose_ratio"]}"))
-                scroll_box.add_widget(Text(text=f"Total Time ~ {self.s_to_mmss(stats["total_time"])}"))
-                scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
+                scroll_box.add_widget(Text(text=f"Most Pairs: {stats['most_pairs']}"))
+                scroll_box.add_widget(Text(text=f"Total Pairs: {stats['all_pairs']}"))
+                scroll_box.add_widget(Text(text=f"Games Played: {stats['games_played']}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats['best_time'])}"))
+                scroll_box.add_widget(Text(text=f"Wins: {stats['wins']}"))
+                scroll_box.add_widget(Text(text=f"W/L Ratio: {stats['win_lose_ratio']}"))
+                scroll_box.add_widget(Text(text=f"Total Time ~ {self.s_to_mmss(stats['total_time'])}"))
+                scroll_box.add_widget(Text(text=f"Last Played: {stats['last_played']}"))
             else:
                 stats = self.save.alldata["Games"]["Stats"]["memory_Stats"][extra_content]
-                scroll_box.add_widget(Text(text=f"Most Pairs: {stats["most_pairs"]}"))
-                scroll_box.add_widget(Text(text=f"Games Played: {stats["games_played"]}"))
-                scroll_box.add_widget(Text(text=f"Wins: {stats["wins"]}"))
-                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats["best_time"])}"))
-                scroll_box.add_widget(Text(text=f"Last Played: {stats["last_played"]}"))
+                scroll_box.add_widget(Text(text=f"Most Pairs: {stats['most_pairs']}"))
+                scroll_box.add_widget(Text(text=f"Games Played: {stats['games_played']}"))
+                scroll_box.add_widget(Text(text=f"Wins: {stats['wins']}"))
+                scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats['best_time'])}"))
+                scroll_box.add_widget(Text(text=f"Last Played: {stats['last_played']}"))
 
     def determine_contents(self,content):
         extra = "Overview"

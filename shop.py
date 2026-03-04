@@ -376,8 +376,3 @@ class Shop:
         for theme_ in shop.inventory: #Iterates through the shop inventory
             display = Shop_Card(theme_) #Creates an UI object which displays the choosen theme and an interactable button to buy/equip the theme
             grid.add_widget(display) #Adds UI object to the grid
-
-test_shop = Shop() #Initialises a shop object
-print("Shop class initialised:",test_shop,"\nShop inventory:",test_shop.inventory,"\nShop equipped theme:",test_shop.equipped,"\nShop unlocked inventory:",test_shop.unlocked_inventory,"\nShop coin count:",test_shop.coin_count)
-test_theme = Theme("Test", 100, "assets/img/theme1/king_of_clubs2.png", "assets/img/theme1/card_back_red.png",{"AH": "MobilePlayingCardApp/assets/img/theme1/ace_of_hearts.png"}) #Initialises a theme object
-print("Theme class initialised:",test_theme,"\nTheme name:",test_theme.name,"\nTheme cost:",test_theme.cost,"\nTheme front image:",test_theme.front_img,"\nTheme back image:",test_theme.back_img,"\nTheme asset dictionary:",test_theme.asset_dict)

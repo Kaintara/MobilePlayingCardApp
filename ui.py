@@ -253,7 +253,6 @@ class Playing_Card(MDCard):
                             else:
                                 game.selected_card = ''
                                 game.turn = game.next_vaild_player(game.turn,app.save)
-                                print(game.turn)
                                 if game.turn is not None:
                                     game.apply_move(move)
                                     if move[2] == 'pickup':
@@ -264,7 +263,6 @@ class Playing_Card(MDCard):
                                     app.save.quick_save(app)
                                     Clock.schedule_once(lambda dt: app.next_turn('threes'), 0.5)
                                 else:
-                                    print('Ending game from Playing_Card on_touch_down')
                                     game.end_game(app)
                             break
             elif self.game == 'rummy':
@@ -291,7 +289,6 @@ class Playing_Card(MDCard):
                                     app.save.quick_save(app)
                                     Clock.schedule_once(lambda dt: app.next_turn('rummy'), 0.5)
                                 else:
-                                    print('Ending game from Playing_Card on_touch_down')
                                     game.end_game(app)
                             break
             elif self.game == 'memory':
@@ -308,7 +305,6 @@ class Playing_Card(MDCard):
                             else:
                                 game.selected_card = ''
                                 self.highlight.opacity = 0
-                                print(move)
                                 app.card_flip.play()
                                 game.apply_move(move,app)
                                 game.update_game_state()
@@ -363,17 +359,12 @@ class Shop_Button(MDButton):
         )
     
     def on_touch_down(self, touch):
-        print('pressed shop button', self.theme_name, self.unlocked,self.equipped)
         if self.collide_point(*touch.pos):
             app = MDApp.get_running_app()
-            print(app.shop.unlocked_inventory)
-            print(app.shop.equipped)
             if not self.unlocked:
                 app.shop.buy_theme(self.theme_name,app)
-                print("Attempting to buy theme:", self.theme_name)
             else:
                 app.shop.equip_theme(self.theme_name,app)
-                print("Attempting to equip theme:", self.theme_name)
         return super().on_touch_down(touch)
 
 class Shop_Card(MDCard):
