@@ -20,6 +20,7 @@ class MobilePlayingCardApp(MDApp):
         self.sfx = True
         self.timer = True
         self.ai_difficulty = "Beginner"
+        #Difficulty mapping for MTCS algorithm, sets the amount of time the AI has to make a decision, higher difficulties have more time and thus can make better decisions
         self.ai_difficulty_map = {
             "Beginner" : 0.15,
             "Easy" : 0.2,
@@ -27,6 +28,7 @@ class MobilePlayingCardApp(MDApp):
             "Hard" : 0.35,
             "Expert" : 0.5
         }
+        #List of achievements, each achievement is a tuple containing an ID, name, description and a lambda function that takes in the save data and returns true if the achievement has been unlocked
         self.all_achievements = [
             (0,'The memory of a goldfish','Play your first game of memory',lambda save : save.alldata['Games']['Stats']['memory_Stats']['General_Stats']["games_played"] >= 1),
             (1,'Only Three?','Play your first game of threes',lambda save : save.alldata['Games']['Stats']['threes_Stats']['General_Stats']["games_played"] >= 1),
@@ -38,12 +40,14 @@ class MobilePlayingCardApp(MDApp):
             (7,'Uno Player','Win your first game of Three',lambda save : bool(save.alldata['Games']["Previous_Games"]['threes']) and save.alldata['Games']["Previous_Games"]['threes'][-1]['winner'] == 0),
             (8,'The memory of an elephant','Win your first game of memory',lambda save : bool(save.alldata['Games']["Previous_Games"]['memory']) and save.alldata['Games']["Previous_Games"]['memory'][-1]['winner'] == 0),
         ]
+        #Buffer for unlocked achievements and previous games before being added to save data
         self.unlocked_achievements = []
         self.previous_games = {
             'threes' : [],
             'rummy' : [],
             'memory' : []
         }
+        #Initialising all main classes
         self.shop = Shop()
         self.shop.set_all_themes()
         self.save = SaveData()
@@ -95,23 +99,22 @@ class MobilePlayingCardApp(MDApp):
         sm.current = "Menu"
         return sm
     
-    def on_start(self):
-        self.save.update(self)
+    def on_start(self): #Method that runs when the app starts
+        self.save.update(self) #Updates all classes with the previous save data
+        #Initialises settings toggles based on saved settings
         timer = self.get_widget('timer','Settings')
         timer.active = self.timer
         sfx = self.get_widget('sfx','Settings')
         sfx.active = self.sfx
-        self.adjust_sfx()
-        self.determine_contents("All_Time Stats")
-        print("timer has been stopped")
-        
+        self.adjust_sfx() #Initialises sound effects based on saved settings
+        self.determine_contents("All_Time Stats") #initalises stats screen with all time stats
 
     #Methods for UI
     def get_widget(self, widget, screen): #Returning the required
         return self.root.get_screen(screen).ids[widget]
 
-    def back(self): #Back button Write in NEA
-        sm = self.root
+    def back(self): #Back button
+        sm = self.root #Gets the screen manager
         if self.sm_stack[0] == sm.current:
             self.sm_stack.remove(sm.current)
             sm.current = self.sm_stack[0]
@@ -120,7 +123,6 @@ class MobilePlayingCardApp(MDApp):
         else:
             sm.current = "Menu"
         if sm.current == "MDThrees":
-            print("Restarted Timer")
             self.threes.start_timer()
         
     def sm_stacky(self,widget): #Stores order of screens visited for back button
@@ -130,51 +132,54 @@ class MobilePlayingCardApp(MDApp):
         else:
             self.sm_stack.insert(0, widget)
     
-    def resume_game_check(self): # Write in NEA
-        savedata = self.save.load()
+    def resume_game_check(self): #Checks if there are any games in progress that can be resumed
+        savedata = self.save.load() #Loads save data to check for current games
         G1 = savedata['Games']['Current_Games']['threes']
         G2 = savedata['Games']['Current_Games']['rummy']
         G3 = savedata['Games']['Current_Games']['memory']
+        #Updating game classes with current game data
         self.threes = threes('threes',G1["rank_order"],G1)
         self.rummy = rummy('rummy',G2['value_map'],G2)
         self.memory = memory('memory',G1["rank_order"],G3)
+        #loading all sounds into a list for easy volume adjustment in settings
         self.all_sounds = [self.card_flip,self.card_draw,self.card_place,self.threes.win_noise,self.threes.lose_noise,self.threes.achievement_noise,self.rummy.win_noise,self.rummy.lose_noise,self.rummy.achievement_noise,self.memory.win_noise,self.memory.lose_noise,self.memory.achievement_noise]
         Games = [G1,G2,G3]
-        for game in Games:
-            print(game['winner'],game['history'][-1] if game['history'] else "No History")
+        for game in Games: #returning "Resume Game" if there is a game in progress and "New Game" if there isn't to use in the UI main menu button
             if game['winner'] is None and game['history']:
                 return "Resume Game"
         return "New Game"
 
-    def left(self,Screen):
-        if Screen == "Con_Stats":
+    def left(self,Screen): #Left button for screen carousels
+        if Screen == "Con_Stats": #Checking if the current screen is the conditional stats carousel instead
+            #Changing the ID and screen to access the correct carousel
             ID = 'conditionalcarou'
             screen = "Stats"
         else:
             ID = "carou"
             screen = Screen
-        Carou = self.get_widget(ID,screen)
-        Carou.load_previous()
-        if Screen == "Stats" or Screen == "Con_Stats":
+        Carou = self.get_widget(ID,screen) #Getting the carousel widget based on the screen and ID
+        Carou.load_previous() #Loading the previous slide in the carousel
+        if Screen == "Stats" or Screen == "Con_Stats": #If the screen is the stats screen, determine the contents to update the stats based on the current slide text
             content = Carou.previous_slide.text
             self.determine_contents(content)
         
-    def right(self,Screen):
-        if Screen == "Con_Stats":
+    def right(self,Screen): #Right button for screen carousels
+        if Screen == "Con_Stats": #Checking if the current screen is the conditional stats carousel instead
+            #Changing the ID and screen to access the correct carousel
             ID = 'conditionalcarou'
             screen = "Stats"
         else:
             ID = "carou"
             screen = Screen
-        Carou = self.get_widget(ID,screen)
-        Carou.load_next()
-        if Screen == "Stats" or Screen == "Con_Stats":
+        Carou = self.get_widget(ID,screen) #Getting the carousel widget based on the screen and ID
+        Carou.load_next() #Loading the previous slide in the carousel
+        if Screen == "Stats" or Screen == "Con_Stats": #If the screen is the stats screen, determine the contents to update the stats based on the current slide text
             content = Carou.next_slide.text
             self.determine_contents(content)
 
     #Methods for Stats    
-    def get_difficulty(self):
-        Carou = self.get_widget("carou","Settings")
+    def get_difficulty(self): #Getting the current difficulty from the settings screen carousel to use in the MTCS algorithm for AI decision making
+        Carou = self.get_widget("carou","Settings") #Getting the carousel widget based on the screen and ID
         difficulty = Carou.current_slide.text
         if difficulty == "Beginner":
             return "Beginner"
@@ -188,7 +193,7 @@ class MobilePlayingCardApp(MDApp):
             return "Expert"
 
     def calc_all_time_stats(self):
-        self.save.load()
+        self.save.load() 
         stats = self.save.alldata["Games"]["Stats"]
         fav_game = None
         fav_game_count = 0
@@ -375,28 +380,28 @@ class MobilePlayingCardApp(MDApp):
                 timer.text = ''
 
     def update_game(self,game):
-        print("UI has been updated.")
         if game == "threes":
-            if not self.threes.timer_event:
-                self.threes.start_timer()
-            for i in range(3):
+            if not self.threes.timer_event: #checking if the timer is already running to avoid multiple timers running at once 
+                self.threes.start_timer() #Stating the game timer
+            for i in range(3): #Updating AI main hand widgets by clearing them and then adding the correct cards based on the current game state
                 Ai_hand = self.get_widget(f'ai_hand{i + 1}', 'MDThrees')
                 Ai_hand.clear_widgets()
                 hand = self.get_widget(f'hand{i + 1}', 'MDThrees')
                 hand.clear_widgets()
-            for i in range(len(self.threes.bottom_hands[1])):
+            for i in range(len(self.threes.bottom_hands[1])): #Updating AI bottom hand widgets
                 Ai_hand = self.get_widget(f'ai_hand{i + 1}', 'MDThrees')
                 Ai_hand.add_widget(Display_Card(self.threes.bottom_hands[1][i], 'back'))
-            for i in range(len(self.threes.top_hands[1])):
+            for i in range(len(self.threes.top_hands[1])): #Updating AI top hand widgets
                 Ai_hand = self.get_widget(f'ai_hand{i + 1}', 'MDThrees')
                 card = Display_Card(self.threes.top_hands[1][i], 'front')
                 card.pos_hint = {"center_x": 0.6, "center_y": 0.5}
                 Ai_hand.add_widget(card)
             deck = self.get_widget('deck', 'MDThrees')
             deck.clear_widgets()
-            if self.threes.played_cards:
-                deck.add_widget(Playing_Card(self.threes.played_cards[-1],'threes','front'))
-            if self.threes.shuffled_deck:
+            if self.threes.played_cards: #Checking if there are any cards to display in the middle next to the deck
+                deck.add_widget(Playing_Card(self.threes.played_cards[-1],'threes','front')) #Updates UI with most recent played card
+            if self.threes.shuffled_deck: #Checking if there are any cards left in the deck to display
+                #Diplaying the back of the card for the deck
                 card = Display_Card(self.threes.shuffled_deck[-1],'back')
                 card.pos_hint = {"center_x": 1.5, "center_y": 0.5}
                 deck.add_widget(card)
@@ -410,7 +415,7 @@ class MobilePlayingCardApp(MDApp):
                 hand.add_widget(card)
             hand = self.get_widget('hand', 'MDThrees')
             hand.clear_widgets()
-            if self.threes.hands[0]:
+            if self.threes.hands[0]: #Updating the player's main hand widgets by clearing them and then adding the correct cards based on the current game state
                 self.threes.hands[0].sort(key=lambda card: self.threes.rank_order[card[:-1]], reverse=True)
             for card in self.threes.hands[0]:
                 hand.add_widget(Playing_Card(card,'threes','front'))
@@ -460,88 +465,81 @@ class MobilePlayingCardApp(MDApp):
                         else:
                             hand.add_widget(Playing_Card(self.memory.card_array[y][x],'memory','back'))
 
-    def next_turn(self,game):
-        self.update_game(game)
+    def next_turn(self,game): #Method which maintains the game loop
+        self.update_game(game) #Updates the UI to reflect the current game state
         if game == 'threes':
-            print("Game Difficulty: ",self.threes.difficulty[1])
+            #Updating the game state and selected card
             self.threes.selected_card = "" 
-            self.threes.update_game_state()
-            if self.threes.turn == 1:
-                move = m_mtcs(self.threes.state,GameEnvironmentT(),self.threes.difficulty[0])
-                moves = self.threes.get_valid_moves()
-                if all(m[2] == 'try' for m in moves):
+            self.threes.update_game_state() 
+            if self.threes.turn == 1: #Check if it's the AI's turn
+                move = m_mtcs(self.threes.state,GameEnvironmentT(),self.threes.difficulty[0]) #Calling the MTCS algorithm to determine the best move
+                moves = self.threes.get_valid_moves() #Returning vaild moves
+                if all(m[2] == 'try' for m in moves): #Randomly selecting a move if all moves are "try" moves to add some variety to the AI's behaviour, as MTCS isn't very good at determining which "try" move is best as it is simply luck
                     move = random.choice(moves)
-                print(f"Move{move}")
-                if move[2] == 'pickup':
+                if move[2] == 'pickup': #Play sound effect based on the type of move the AI is making
                     self.card_draw.play()
                 else:
                     self.card_place.play()
-                print(self.threes.hands[1])
+                #Applying the move, updating the game state and determining the next turn
                 self.threes.apply_move(move)
                 self.threes.update_game_state()
                 self.threes.turn = self.threes.next_vaild_player(self.threes.turn,self.save)
-                print(f"Turn: {self.threes.turn}")
-                self.save.quick_save(self)
-                if self.threes.turn is None:
-                    print('Line 351 main.py reached')
+                self.save.quick_save(self) #Quick saving the game
+                if self.threes.turn is None: #Checking if the game is over
                     self.threes.end_game(self)
-                elif self.threes.turn == 1:
+                elif self.threes.turn == 1: #Check if the next turn is the AI's turn again, if so call the next_turn method again to continue the game loop
                     Clock.schedule_once(lambda dt: self.next_turn('threes'), 0.5)
-                self.update_game(game)
+                self.update_game(game) #Update the UI
         elif game == 'rummy':
-            print("Game Difficulty: ",self.rummy.difficulty[1])
+            #Updating the game state and selected card
             self.rummy.selected_card = "" 
             self.rummy.update_game_state()
-            if self.rummy.turn == 1:
+            if self.rummy.turn == 1: #Check if it's the AI's turn
                 self.rummy.sort_cards(1)
-                print(f"Hand Before:{self.rummy.hands[1]}")
-                move = m_mtcs(self.rummy.state,GameEnvironmentR(),self.threes.difficulty[0])
-                print(f"Move: {move}")
-                if move[2] == 'draw':
+                move = m_mtcs(self.rummy.state,GameEnvironmentR(),self.threes.difficulty[0]) #Calling the MTCS algorithm to determine the best move
+                if move[2] == 'draw': #Play sound effect based on the type of move the AI is making
                     self.card_draw.play()
                 else:
                     self.card_place.play()
+                #Applying the move, updating the game state and determining the next turn
                 self.rummy.apply_move(move)
                 self.rummy.update_game_state()
                 self.rummy.turn = self.rummy.next_vaild_player(self.rummy.turn)
-                print(f"Turn: {self.rummy.turn}")
-                print(f"Hand After:{self.rummy.hands[1]}")
-                self.save.quick_save(self)
-                if self.rummy.turn is None:
-                    print('Line 308 main.py reached')
+                self.save.quick_save(self) #Quick saving the game
+                if self.rummy.turn is None: #Checking if the game is over
                     self.rummy.end_game(self)
                 else:
                     Clock.schedule_once(lambda dt: self.next_turn('rummy'), 0.5)
         elif game == 'memory':
-            print("Game Difficulty: ",self.memory.difficulty[1])
+            #Updating the game state and selected card
             self.memory.selected_card = "" 
             self.memory.update_game_state()
-            print("Turn: ",self.memory.turn)
-            if self.memory.turn == 1:
+            if self.memory.turn == 1: #Check if it's the AI's turn
                 memory_env = GameEnvironmentM()
-                unvaildated_move = m_mtcs(self.memory.state,memory_env,self.memory.difficulty[0])
-                print(unvaildated_move)
-                move = memory_env.convert_move(unvaildated_move,self.memory.state)
-                self.card_flip.play()
-                print("Move: ",move)
+                unvaildated_move = m_mtcs(self.memory.state,memory_env,self.memory.difficulty[0]) #Calling the MTCS algorithm to determine the best move, as the memory game has a more complex game state than the other games, the move returned by MTCS is unvaildated, meaning it may not be a valid move in the current game state, thus it needs to be converted to a vaild move using the convert_move method in the GameEnvironmentM class before it can be applied to the game state
+                move = memory_env.convert_move(unvaildated_move,self.memory.state) #Converting the unvaildated move returned by MTCS to a vaildated move that can be applied to the game state without causing errors
+                self.card_flip.play() #Playing the card flip sound effect as the AI is flipping a card over
+                #Applying the move, updating the game state
                 self.memory.apply_move(move,self)
                 self.memory.update_game_state()
                 if self.memory.state['history']:
-                    if self.memory.state['history'][-1][0] == "Missed" or self.memory.state['history'][-1][0] == "Matched":
+                    if self.memory.state['history'][-1][0] == "Missed" or self.memory.state['history'][-1][0] == "Matched": #Checking if the last move in the game history was a "Missed" or "Matched" move
+                        #Return index of the card that was flipped over in the last move to flip it over in the UI
                         y = self.memory.state['history'][-1][3][0]
                         x = self.memory.state['history'][-1][3][1]
                         card_container = self.get_widget(f'hand{y}{x}','MDMemory')
-                        if card_container.children:
+                        if card_container.children: #Checking that checking that the card container isn't empty to avoid errors
                             card = card_container.children[0]
-                            card.img.source = self.shop.get_theme(self.shop.equipped).asset_dict[card.suit_rank]
+                            card.img.source = self.shop.get_theme(self.shop.equipped).asset_dict[card.suit_rank] #Flipping the card over in the UI by changing the image source to the front of the card
                 self.save.quick_save(self)
-                if self.memory.is_game_over():
+                if self.memory.is_game_over(): #Checking if the game is over
                     print('Game OVERRE')
                 else:
                     Clock.schedule_once(lambda dt: self.next_turn('memory'), 2.0)
 
-    def new_game(self,game):
+    def new_game(self,game): #Starts a new game based on the selected game, initalises the game class with the default settings and updates the UI to reflect the new game state
         if game == "threes":
+            #Resetting the game state to the default settings
             self.threes = threes("threes",rank_order = {'A': 14,'K': 13,'Q': 12,'J': 11,'1': 16,'9': 9,'8': 8,'7': 7,'6': 6,
 '5': 5,'4': 4,'3': 3,'2': 15},
 state = {'name' : "threes",
@@ -561,16 +559,17 @@ state = {'name' : "threes",
         'another' : False,
         'played_cards' : [],
         'history': []})
-            self.threes.difficulty = (self.ai_difficulty_map[self.get_difficulty()],self.get_difficulty())
+            self.threes.difficulty = (self.ai_difficulty_map[self.get_difficulty()],self.get_difficulty())#Set the game difficulty based on the settings screen carousel selection
+            #Shuffling, distributing cards, dictating the first turn, starting the game timer and updating the UI and game state before starting the game loop
             self.threes.shuffle_cards()
             self.threes.distribute_cards()
             self.threes.update_game_state()
             self.update_game(game)
-            print(f"Threes State: {self.threes.state}")
             self.threes.turn = random.randint(0,1)
             self.threes.start_timer()
             self.next_turn(game)
         elif game == "rummy":
+            #Resetting the game state to the default settings
             self.rummy = rummy('rummy',{'A': 1,'K': 13,'Q': 12,'J': 11,'1': 10,'9': 9,'8': 8,'7': 7,'6': 6,
 '5': 5,'4': 4,'3': 3,'2': 2},{'name' : "rummy",
         'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
@@ -585,16 +584,17 @@ state = {'name' : "threes",
         'difficulty' : (-1,""),
         'winner' : None,
         'history': []})
-            self.rummy.difficulty = (self.ai_difficulty_map[self.get_difficulty()],self.get_difficulty())
+            self.rummy.difficulty = (self.ai_difficulty_map[self.get_difficulty()],self.get_difficulty()) #Set the game difficulty based on the settings screen carousel selection
+            #Shuffling, distributing cards, dictating the first turn, starting the game timer and updating the UI and game state before starting the game loop
             self.rummy.shuffle_cards()
             self.rummy.turn = random.randint(0,1)
             self.rummy.distribute_cards()
             self.rummy.update_game_state()
-            print(f"Rummy State: {self.rummy.state}")
             self.update_game(game)
             self.rummy.start_timer()
             self.next_turn(game)
         elif game == "memory":
+            #Resetting the game state to the default settings
             self.memory = memory("memory",'rank',{'name' : "memory",
         'deck' : ["AD","2D","3D","4D","5D","6D","7D","8D","9D","1D","JD","QD","KD","AS","2S","3S","4S","5S","6S","7S","8S","9S","1S","JS","QS","KS","AC","2C","3C","4C","5C","6C","7C","8C","9C","1C","JC","QC","KC","AH","2H","3H","4H","5H","6H","7H","8H","9H","1H","JH","QH","KH"],
         'shuffled_deck' : [],
@@ -608,44 +608,44 @@ state = {'name' : "threes",
         'difficulty' : (-1,""),
         'winner' : None,
         'history': []})
-            self.memory.difficulty = (self.ai_difficulty_map[self.get_difficulty()],self.get_difficulty())
+            self.memory.difficulty = (self.ai_difficulty_map[self.get_difficulty()],self.get_difficulty()) #Set the game difficulty based on the settings screen carousel selection
+            #Shuffling, distributing cards, dictating the first turn, starting the game timer and updating the UI and game state before starting the game loop
             self.memory.shuffle_cards()
             self.memory.distribute_cards()
             self.memory.update_game_state()
             self.update_game(game)
             self.memory.turn = random.randint(0,1)
-            print(f"Memory State: {self.memory.state}")
             self.memory.start_timer()
             self.next_turn(game)
     
     def resume_game(self,game):
-        self.save.update(self)
-        self.update_game(game)
+        self.save.update(self) #Updating all classes with the previous save data to resume the game from where the player left off
+        self.update_game(game) #Updating the UI to reflect the resumed game state
         if game == "threes" and self.threes.state['history'] and self.threes.winner is None:
-            if self.threes.is_game_over():
+            if self.threes.is_game_over(): #Checking if the resumed game is already over to end the game immediately if it is
                 self.threes.end_game(self)
-            if self.threes.turn == 1:
+            if self.threes.turn == 1: #Start game loop if it's the AI's turn to play when resuming the game
                 Clock.schedule_once(lambda dt: self.next_turn('threes'), 0.5)
-            self.threes.start_timer()
+            self.threes.start_timer() #Starting game timer
         elif game == "rummy" and self.rummy.state['history'] and self.rummy.winner is None:
-            if self.rummy.is_game_over():
+            if self.rummy.is_game_over(): #Checking if the resumed game is already over to end the game immediately if it is
                 self.rummy.end_game(self)
-            if self.rummy.turn == 1:
+            if self.rummy.turn == 1: #Start game loop if it's the AI's turn to play when resuming the game
                 Clock.schedule_once(lambda dt: self.next_turn('rummy'), 0.5)
-            self.rummy.start_timer()
+            self.rummy.start_timer() #Starting game timer
         elif game == "memory" and self.memory.state['history'] and self.memory.winner is None:
-            if self.memory.is_game_over():
+            if self.memory.is_game_over(): 
                 self.memory.end_game(self)
-            if self.memory.turn == 1:
+            if self.memory.turn == 1: #Start game loop if it's the AI's turn to play when resuming the game
                 Clock.schedule_once(lambda dt: self.next_turn('memory'), 0.5)
-            self.memory.start_timer()
-        else:
+            self.memory.start_timer() #Starting game timer
+        else: #Failing all checks for a resumable game, start a new game instead
             self.new_game(game)
     
-    def start_game(self,game):
-        if self.resume_game_check() == "Resume Game":
-            print(game)
+    def start_game(self,game): #Starting a new game or resuming a current game
+        if self.resume_game_check() == "Resume Game": #Checking if there is a game in progress that can be resumed
             self.resume_game(game)
+        #Starting a new game of threes, rummy or memory based on the button pressed in the UI
         elif game == "threes":
             self.new_game("threes")
         elif game == "rummy":
