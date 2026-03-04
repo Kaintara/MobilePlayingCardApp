@@ -1,6 +1,6 @@
 #Imports
 import copy
-from treesearch import m_mtcs
+from treesearch import m_mtcs, Node
 import random
 import math
 
@@ -167,7 +167,6 @@ class GameEnvironmentT:
                     Hand = state['bottom_hands'][player]
                 else:
                     Hand = []
-
                 for card in Hand[:]: #Plays all cards with the same rank as the one selected and removes them from the players hand
                     if card[0] == played_rank:
                         Hand.remove(card)
@@ -254,8 +253,6 @@ class GameEnvironmentT:
         return False
     
     def next_valid_player(env,state):
-
-
         if env.is_terminal(state): #Checks if the game is over
             return
         else:
@@ -266,3 +263,4 @@ class GameEnvironmentT:
                 return 0
             else:
                 return 1
+            

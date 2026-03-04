@@ -31,7 +31,7 @@ class Node:
             return None
         return self.children[choices.index(max(choices))] #Returns the index of the child which returned the highest UCT
     
-    def simulations(self,state,game_env,max_depth=50):
+    def simulations(self,state,game_env,max_depth=100):
         s = copy.deepcopy(state) #Makes a copy of the given game state
         depth = 0
         while not game_env.is_terminal(s) and depth < max_depth: #Creates a loop which will end once the state of the game reaches terminal or the max-depth is reached

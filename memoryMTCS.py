@@ -25,6 +25,8 @@ class GameEnvironmentM:
         else:
             if move[2] != state['card_array'][y][x]: #Checks if the move is vaild
                 vaild_move = ('pick',1,(y,x,state['card_array'][y][x])) #Updates the choosen move so that the card is selected from the actual game state, such that it is vaild
+                if vaild_move not in env.get_vaild_moves(state): #Checks that the move is vaild, if not returns a random vaild move
+                    return random.choice(env.get_vaild_moves(state))
                 return vaild_move
             else:
                 return move

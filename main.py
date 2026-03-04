@@ -16,6 +16,7 @@ class MobilePlayingCardApp(MDApp):
         self.card_place = SoundLoader.load('assets/sound/card_place.ogg')
         #Initalising default settings
         self.sm_stack = []
+        self.score = True
         self.sfx = True
         self.timer = True
         self.ai_difficulty = "Beginner"
@@ -332,9 +333,10 @@ class MobilePlayingCardApp(MDApp):
     def toggle(self,widget,name):
         if name == 'timer':
             self.timer = widget.active
-            print(self.timer)
+            print("Timer Status",self.timer)
         elif name == 'sfx':
             self.sfx = widget.active
+            print("Sfx Status",self.sfx)
             self.adjust_sfx()
 
     def adjust_sfx(self):
