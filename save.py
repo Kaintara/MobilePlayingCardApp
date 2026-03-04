@@ -323,6 +323,8 @@ class SaveData():
     
     def quick_save(save,app):
         #Updates minor changes to the game into the player's save data
+        save.alldata['App']['timer'] = app.timer
+        save.alldata['App']['sfx'] = app.sfx
         save.alldata['Shop']['equipped'] = app.shop.equipped
         save.alldata['Shop']['unlocked_inventory'] = app.shop.unlocked_inventory
         save.alldata['Shop']['coin_count'] = app.shop.coin_count

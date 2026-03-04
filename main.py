@@ -96,9 +96,6 @@ class MobilePlayingCardApp(MDApp):
         return sm
     
     def on_start(self):
-        Test = Game("Test",{"test":"this is test data"},{"test":"test_state"})
-        Test.start_timer()
-
         self.save.update(self)
         timer = self.get_widget('timer','Settings')
         timer.active = self.timer
@@ -233,12 +230,12 @@ class MobilePlayingCardApp(MDApp):
         scroll_box.clear_widgets()
         if content == "All_Time Stats":
             stats = self.calc_all_time_stats()
-            scroll_box.add_widget(Text(text=f"Favourite Game: {stats["Fav_Game"]}"))
-            scroll_box.add_widget(Text(text=f"Best Time ~ {stats["Best_Time"]}"))
-            scroll_box.add_widget(Text(text=f"Wins: {stats["Wins"]}"))
-            scroll_box.add_widget(Text(text=f"W/L Ratio: {stats["WLRatio"]}"))
-            scroll_box.add_widget(Text(text=f"Total Time ~ {stats["Total_Time"]}"))
-            scroll_box.add_widget(Text(text=f"Total Games: {stats["Total_Games"]}"))
+            scroll_box.add_widget(Text(text=f"Favourite Game: {stats['Fav_Game']}"))
+            scroll_box.add_widget(Text(text=f"Best Time ~ {stats['Best_Time']}"))
+            scroll_box.add_widget(Text(text=f"Wins: {stats['Wins']}"))
+            scroll_box.add_widget(Text(text=f"W/L Ratio: {stats['WLRatio']}"))
+            scroll_box.add_widget(Text(text=f"Total Time ~ {stats['Total_Time']}"))
+            scroll_box.add_widget(Text(text=f"Total Games: {stats['Total_Games']}"))
         elif content == "Achievements":
             scroll_box.padding = sp(100)
             for x in self.all_achievements:
@@ -333,10 +330,10 @@ class MobilePlayingCardApp(MDApp):
     def toggle(self,widget,name):
         if name == 'timer':
             self.timer = widget.active
-            print("Timer Status",self.timer)
+            self.save.quick_save(self)
         elif name == 'sfx':
             self.sfx = widget.active
-            print("Sfx Status",self.sfx)
+            self.save.quick_save(self)
             self.adjust_sfx()
 
     def adjust_sfx(self):
@@ -463,9 +460,10 @@ class MobilePlayingCardApp(MDApp):
                         else:
                             hand.add_widget(Playing_Card(self.memory.card_array[y][x],'memory','back'))
 
-    def next_turn(self,game): #Write in NEA
+    def next_turn(self,game):
         self.update_game(game)
         if game == 'threes':
+            print("Game Difficulty: ",self.threes.difficulty[1])
             self.threes.selected_card = "" 
             self.threes.update_game_state()
             if self.threes.turn == 1:
@@ -491,6 +489,7 @@ class MobilePlayingCardApp(MDApp):
                     Clock.schedule_once(lambda dt: self.next_turn('threes'), 0.5)
                 self.update_game(game)
         elif game == 'rummy':
+            print("Game Difficulty: ",self.rummy.difficulty[1])
             self.rummy.selected_card = "" 
             self.rummy.update_game_state()
             if self.rummy.turn == 1:
@@ -514,6 +513,7 @@ class MobilePlayingCardApp(MDApp):
                 else:
                     Clock.schedule_once(lambda dt: self.next_turn('rummy'), 0.5)
         elif game == 'memory':
+            print("Game Difficulty: ",self.memory.difficulty[1])
             self.memory.selected_card = "" 
             self.memory.update_game_state()
             print("Turn: ",self.memory.turn)
