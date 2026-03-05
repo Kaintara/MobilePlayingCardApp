@@ -18,7 +18,7 @@ source.include_exts = py,kv,ttf,png,jpg,txt,atlas,json,ogg
 version = 1.0
 
 # (list) Application requirements
-requirements = python3, kivy==2.3.1, pillow==9.0.0, materialyoucolor, exceptiongroup, asyncgui, asynckivy, https://github.com/kivymd/KivyMD/archive/master.zip
+requirements = python3,filetype, kivy==2.3.1, pillow==9.0.0, materialyoucolor, exceptiongroup, asyncgui, asynckivy, https://github.com/kivymd/KivyMD/archive/master.zip
 
 # (str) Icon of the application
 icon.filename = assets/img/theme3/BackGrey1.png
