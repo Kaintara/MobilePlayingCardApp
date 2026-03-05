@@ -1,5 +1,4 @@
 #Imports from Kivy Module
-
 from kivy.core.window import Window
 from kivy.core.text import LabelBase
 from kivy.metrics import sp
@@ -13,7 +12,6 @@ from kivy.uix.image import Image
 from kivy.core.audio import SoundLoader
 
 #Imports from KivyMD Module
-
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.screen import MDScreen
@@ -144,21 +142,27 @@ class MobilePlayingCardApp(MDApp):
 
     def back(self): #Back button
         sm = self.root #Gets the screen manager
-        if self.sm_stack[0] == sm.current:
-            self.sm_stack.remove(sm.current)
+        if self.sm_stack[0] == sm.current: #Checks if the current screen is the same as the most recent screen in the stack
+            self.sm_stack.remove(sm.current) #Remove it from the stack
             sm.current = self.sm_stack[0]
-        elif sm.previous:
+        elif sm.previous: #Checks if there is a previous screen to go back to
             sm.current = self.sm_stack[0]
-        else:
+        else: #Defaults to the main menu if there is no previous screen
             sm.current = "Menu"
+        #Restart game timers if the user goes back to a game screen
         if sm.current == "MDThrees":
             self.threes.start_timer()
+        elif sm.current == "MDRummy":
+            self.rummy.start_timer()
+        elif sm.current == "MDMemory":
+            self.memory.start_timer()
         
     def sm_stacky(self,widget): #Stores order of screens visited for back button
-        if widget in self.sm_stack:
+        if widget in self.sm_stack: #Checks if the screen is already in the stack
+            #Removes screen from stack to avoid duplicates and then adds it to the front of the stack
             self.sm_stack.remove(widget)
             self.sm_stack.insert(0, widget)
-        else:
+        else: #Adds screen to the front of the stack
             self.sm_stack.insert(0, widget)
     
     def resume_game_check(self): #Checks if there are any games in progress that can be resumed
@@ -221,34 +225,40 @@ class MobilePlayingCardApp(MDApp):
         elif difficulty == "Expert":
             return "Expert"
 
-    def calc_all_time_stats(self):
-        self.save.load() 
+    def calc_all_time_stats(self): #Calculates game stats for all time stats screen
+        self.save.load() #Loading save data to access game stats
         stats = self.save.alldata["Games"]["Stats"]
+        #Initialising variables to calculate stats
         fav_game = None
         fav_game_count = 0
         total_time = 0
         total_wins = 0
         total_games = 0
         best_time = None
-        for game, game_stats in stats.items():
+        for game, game_stats in stats.items(): #Iterates through each game's stats
             gen = game_stats["General_Stats"]
-            if gen["games_played"] > fav_game_count:
+            if gen["games_played"] > fav_game_count: #Determining favourite game based on the amount of games played for each game
                 fav_game = game
             total_games += gen["games_played"]
-            if gen['best_time']:
-                if best_time is None or gen["best_time"] < best_time:
+            if gen['best_time']: #Determining best time across all games by comparing the best time for each game and taking the lowest one
+                if best_time is None or gen["best_time"] < best_time: #Ensure best time is not None to avoid errors
                     best_time = gen["best_time"]
+            #Incrementing total time and wins across all games
             total_time += gen["total_time"]
             total_wins += gen["wins"]
+        #Converting game IDs to user friendly names for the stats screen
         if fav_game == "rummy_Stats":
             fav_game = "Rummy"
         elif fav_game == "threes_Stats":
             fav_game = "Threes"
         elif fav_game == "memory_Stats":
             fav_game = "Memory"
+        #Calculating win/loss ratio
         wl_ratio = round(total_wins / total_games, 2) if total_games else 0
+        #Ensuring that if there is no best time, it is set to 0 to avoid errors in the stats screen
         if not best_time:
             best_time = 0
+        #Returning stats in the intended format to be used in the stats screen
         return {
             "Fav_Game": fav_game or "-",
             "Wins" : total_wins,
@@ -258,11 +268,11 @@ class MobilePlayingCardApp(MDApp):
             "Total_Games": total_games
         }
     
-    def fill_carou(self,content,extra_content):
-        scroll_box = self.get_widget('stats',"Stats")
+    def fill_carou(self,content,extra_content): #Fills the stats screen carousel with the correct stats based on the current slide text
+        scroll_box = self.get_widget('stats',"Stats") #Returns the scroll box widget to add the stats to
         scroll_box.padding = sp(30)
         scroll_box.clear_widgets()
-        if content == "All_Time Stats":
+        if content == "All_Time Stats": #If content is all time stats, calculate all time stats and add them to the scroll box in the intended format
             stats = self.calc_all_time_stats()
             scroll_box.add_widget(Text(text=f"Favourite Game: {stats['Fav_Game']}"))
             scroll_box.add_widget(Text(text=f"Best Time ~ {stats['Best_Time']}"))
@@ -270,13 +280,13 @@ class MobilePlayingCardApp(MDApp):
             scroll_box.add_widget(Text(text=f"W/L Ratio: {stats['WLRatio']}"))
             scroll_box.add_widget(Text(text=f"Total Time ~ {stats['Total_Time']}"))
             scroll_box.add_widget(Text(text=f"Total Games: {stats['Total_Games']}"))
-        elif content == "Achievements":
+        elif content == "Achievements": #If content is achievements, display all achievements
             scroll_box.padding = sp(100)
-            for x in self.all_achievements:
+            for x in self.all_achievements: #Iterates through each achievement and creates a achievement container widget for each one
                 scroll_box.add_widget(Achievement_Container(x))
-        elif content == "Threes":
-            self.save.load()
-            if extra_content == "Overview":
+        elif content == "Threes": #If content is threes, load the threes stats based on the extra content
+            self.save.load() #Loading save data to access threes stats
+            if extra_content == "Overview": #If extra content is overview, display general stats for threes in intended format
                 stats = self.save.alldata["Games"]["Stats"]["threes_Stats"]["General_Stats"]
                 scroll_box.add_widget(Text(text=f"Times Won With a 3: {stats['won_with_3']}"))
                 scroll_box.add_widget(Text(text=f"Games Played: {stats['games_played']}"))
@@ -286,15 +296,15 @@ class MobilePlayingCardApp(MDApp):
                 scroll_box.add_widget(Text(text=f"W/L Ratio: {stats['win_lose_ratio']}"))
                 scroll_box.add_widget(Text(text=f"Total Time ~ {self.s_to_mmss(stats['total_time'])}"))
                 scroll_box.add_widget(Text(text=f"Last Played: {stats['last_played']}"))
-            else:
+            else: #If extra content is not overview, display stats for the specific difficulty in the intended format
                 stats = self.save.alldata["Games"]["Stats"]["threes_Stats"][extra_content]
                 scroll_box.add_widget(Text(text=f"Games Played: {stats['games_played']}"))
                 scroll_box.add_widget(Text(text=f"Wins: {stats['wins']}"))
                 scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats['best_time'])}"))
                 scroll_box.add_widget(Text(text=f"Last Played: {stats['last_played']}"))
-        elif content == "Rummy":
-            self.save.load()
-            if extra_content == "Overview":
+        elif content == "Rummy": #If content is rummy, load the rummy stats based on the extra content
+            self.save.load() #Loading save data to access rummy stats
+            if extra_content == "Overview": #If extra content is overview, display general stats for rummy in intended format
                 stats = self.save.alldata["Games"]["Stats"]["rummy_Stats"]["General_Stats"]
                 scroll_box.add_widget(Text(text=f"Games Played: {stats['games_played']}"))
                 scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats['best_time'])}"))
@@ -302,15 +312,15 @@ class MobilePlayingCardApp(MDApp):
                 scroll_box.add_widget(Text(text=f"W/L Ratio: {stats['win_lose_ratio']}"))
                 scroll_box.add_widget(Text(text=f"Total Time ~ {self.s_to_mmss(stats['total_time'])}"))
                 scroll_box.add_widget(Text(text=f"Last Played: {stats['last_played']}"))
-            else:
+            else: #If extra content is not overview, display stats for the specific difficulty in the intended format
                 stats = self.save.alldata["Games"]["Stats"]["rummy_Stats"][extra_content]
                 scroll_box.add_widget(Text(text=f"Games Played: {stats['games_played']}"))
                 scroll_box.add_widget(Text(text=f"Wins: {stats['wins']}"))
                 scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats['best_time'])}"))
                 scroll_box.add_widget(Text(text=f"Last Played: {stats['last_played']}"))
-        elif content == "Memory":
-            self.save.load()
-            if extra_content == "Overview":
+        elif content == "Memory": #If content is memory, load the memory stats based on the extra content
+            self.save.load() #Loading save data to access memory stats
+            if extra_content == "Overview": #If extra content is overview, display general stats for memory in intended format
                 stats = self.save.alldata["Games"]["Stats"]["memory_Stats"]["General_Stats"]
                 scroll_box.add_widget(Text(text=f"Most Pairs: {stats['most_pairs']}"))
                 scroll_box.add_widget(Text(text=f"Total Pairs: {stats['all_pairs']}"))
@@ -320,7 +330,7 @@ class MobilePlayingCardApp(MDApp):
                 scroll_box.add_widget(Text(text=f"W/L Ratio: {stats['win_lose_ratio']}"))
                 scroll_box.add_widget(Text(text=f"Total Time ~ {self.s_to_mmss(stats['total_time'])}"))
                 scroll_box.add_widget(Text(text=f"Last Played: {stats['last_played']}"))
-            else:
+            else: #If extra content is not overview, display stats for the specific difficulty in the intended format
                 stats = self.save.alldata["Games"]["Stats"]["memory_Stats"][extra_content]
                 scroll_box.add_widget(Text(text=f"Most Pairs: {stats['most_pairs']}"))
                 scroll_box.add_widget(Text(text=f"Games Played: {stats['games_played']}"))
@@ -328,17 +338,17 @@ class MobilePlayingCardApp(MDApp):
                 scroll_box.add_widget(Text(text=f"Best Time ~ {self.s_to_mmss(stats['best_time'])}"))
                 scroll_box.add_widget(Text(text=f"Last Played: {stats['last_played']}"))
 
-    def determine_contents(self,content):
-        extra = "Overview"
-        conditionalcarou = self.get_widget("conditionalcarou","Stats")
-        if content == "All_Time Stats" or content == "Achievements":
+    def determine_contents(self,content): #Determines the contents to display in the stats screen based on the current slide text
+        if content == "All_Time Stats" or content == "Achievements": #Checks if content is all time stats or achievements
+            #Clear the conditional carousel and disable the left and right buttons as they are not needed for these slides
             conditionalcarou.clear_widgets()
             conditionalcarou.add_widget(Text(text="N/A"))
             bl = self.get_widget("bottom_left","Stats")
             br = self.get_widget("bottom_right","Stats")
             bl.disabled = True
             br.disabled = True
-        elif content == "Threes" or content == "Rummy" or content == "Memory":
+        elif content == "Threes" or content == "Rummy" or content == "Memory": #Check if content is one of the games
+            #Initialise the conditional carousel with the difficulties and overview for the selected game
             conditionalcarou.clear_widgets()
             conditionalcarou.add_widget(Text(text="Overview"))
             conditionalcarou.add_widget(Text(text="Beginner"))
@@ -346,65 +356,67 @@ class MobilePlayingCardApp(MDApp):
             conditionalcarou.add_widget(Text(text="Normal"))
             conditionalcarou.add_widget(Text(text="Hard"))
             conditionalcarou.add_widget(Text(text="Expert"))
+            #Enable the left and right buttons to allow the user to navigate through the difficulties and overview
             bl = self.get_widget("bottom_left","Stats")
             br = self.get_widget("bottom_right","Stats")
             bl.disabled = False
             br.disabled = False
-        elif content in ["Beginner","Easy","Normal","Hard","Expert","Overview"]:
-            extra = content
-            content = self.get_widget('carou','Stats').current_slide.text
-        self.fill_carou(content,extra)
+        elif content in ["Beginner","Easy","Normal","Hard","Expert","Overview"]: #Check if the content is one of the difficulties or overview
+            extra = content #
+            content = self.get_widget('carou','Stats').current_slide.text #Get the current game from the main carousel to determine which game's stats to display
+        self.fill_carou(content,extra) #Fill the carousel with the correct stats based on the current game and difficulty/overview
 
     #Method for Shop
     def set_up_shop(self):
-        self.shop.filling_shop_inventory(self)
-        Grid = self.get_widget("grid",'MDShop')
+        self.shop.filling_shop_inventory(self) #Fills the shop inventory with all card themes
+        Grid = self.get_widget("grid",'MDShop') #Gets the grid widget from the shop screen to add the card themes to
 
     #Methods for Settings
-    def toggle(self,widget,name):
-        if name == 'timer':
-            self.timer = widget.active
-            self.save.quick_save(self)
-        elif name == 'sfx':
-            self.sfx = widget.active
-            self.save.quick_save(self)
-            self.adjust_sfx()
+    def toggle(self,widget,name): #Toggles settings from toggle buttons
+        if name == 'timer': #Checks if it is the timer toggle being toggled
+            self.timer = widget.active #Updates the setting based on the toggle button state
+            self.save.quick_save(self) #Saves the settings to the save data
+        elif name == 'sfx': #Checks if it is the sfx toggle being toggled
+            self.sfx = widget.active #Updates the setting based on the toggle button state
+            self.save.quick_save(self) #Saves the settings to the save data
+            self.adjust_sfx() #Adjusts the sound effects based on the new setting
 
-    def adjust_sfx(self):
-        for sound in self.all_sounds:
-            if self.sfx:
+    def adjust_sfx(self): #Changes the volume of all sound effects based on the sfx setting
+        for sound in self.all_sounds: #Iterates through all sounds
+        #If sfx is enabled, set volume to 1, otherwise set it to 0 which mutes the sound
+            if self.sfx: 
                 sound.volume = 1.0
             else:
                 sound.volume = 0.0
 
     #Methods for Games
-    def s_to_mmss(self,total_seconds):
-        if total_seconds and int(total_seconds) != 0:
-            minutes = int(total_seconds // 60)
-            seconds = int(total_seconds % 60)
-            return f"{minutes:02d}:{seconds:02d}"
-        else:
+    def s_to_mmss(self,total_seconds): #Formats time from seconds to MM:SS format
+        if total_seconds and int(total_seconds) != 0: #Checks if total seconds is not None and not 0 to avoid errors
+            minutes = int(total_seconds // 60) #Calculates the minutes by dividing total seconds by 60
+            seconds = int(total_seconds % 60) #Calculates the remaining seconds by taking the modulus of total seconds by 60
+            return f"{minutes:02d}:{seconds:02d}" #Formats the minutes and seconds have be 2 digits
+        else: #Returns 00:00 if total seconds is None or 0 to avoid errors
             return "00:00"
 
-    def update_timer(self,game):
-        if self.timer:
-            if game == "threes":
+    def update_timer(self,game): #Updates the timer display for the current game 
+        if self.timer: #Checks if the timer setting is enabled
+            if game == "threes": #Checks if the current game is threes and updates the timer display with the time elapsed for threes in MM:SS format
                 timer = self.get_widget('timer','MDThrees')
                 timer.text = self.s_to_mmss(self.threes.time_elapsed)
-            elif game == "rummy":
+            elif game == "rummy": #Checks if the current game is rummy and updates the timer display with the time elapsed for rummy in MM:SS format
                 timer = self.get_widget('timer','MDRummy')
                 timer.text = self.s_to_mmss(self.rummy.time_elapsed)
-            elif game == "memory":
+            elif game == "memory": #Checks if the current game is memory and updates the timer display with the time elapsed for memory in MM:SS format
                 timer = self.get_widget('timer','MDMemory')
                 timer.text = self.s_to_mmss(self.memory.time_elapsed)
         else:
-            if game == "threes":
+            if game == "threes": #Checks if the current game is threes and clears the timer display as the timer setting is disabled
                 timer = self.get_widget('timer','MDThrees')
                 timer.text = ''
-            elif game == "rummy":
+            elif game == "rummy": #Checks if the current game is rummy and clears the timer display as the timer setting is disabled
                 timer = self.get_widget('timer','MDRummy')
                 timer.text = ''
-            elif game == "memory":
+            elif game == "memory": #Checks if the current game is memory and clears the timer display as the timer setting is disabled
                 timer = self.get_widget('timer','MDMemory')
                 timer.text = ''
 

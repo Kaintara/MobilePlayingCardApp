@@ -75,57 +75,61 @@ class GameEnvironmentM:
     def get_vaild_moves(env,state):
         player = state['turn']
         Moves = []
-        for y, row in enumerate(state['card_array']):
+        for y, row in enumerate(state['card_array']): #Iterates through the card array in the game state 
             for x, card in enumerate(row):
-                if card and card != 'Empty_Space':
-                    if card == state.get('first_selected_card')[2]:
+                if card and card != 'Empty_Space': #Checks if there is a card at the position and that it is not an empty space
+                    if card == state.get('first_selected_card')[2]: #Checks if the card hasn't already been selected as the first card and is not vaild
                             continue
                     else:
-                        Moves.append(("pick",player,(y,x,card)))
+                        Moves.append(("pick",player,(y,x,card))) #Adds the move to pick the card at the position to the list of vaild moves
         return Moves
     
     def apply_moves(env,og_state,move):
-        state = copy.deepcopy(og_state)
-        if not move:
-            if env.is_terminal(state):
+        state = copy.deepcopy(og_state) #Makes a copy of the game state to apply the move to prevent modifying the original game state
+        if not move: #Checks if there is a move to apply to prevent errors
+            if env.is_terminal(state): #Checks if the game is over
                 return state
-            state['turn'] = env.next_valid_player(state)
+            state['turn'] = env.next_valid_player(state) #If there is no move, simply pass the turn to the next player and return the updated game state
             return state
         player = state['turn']
-        state['history'].append(move)
-        if state['selected_first_card'] == False:
+        state['history'].append(move) #Adds the move to the game history
+        if state['selected_first_card'] == False: #Checks if the first card has already been selected, if not selects the card from the move as the first card
             state['first_selected_card'] = move[2]
             state['selected_first_card'] = True
         else:
+            #Sets card from move as second selected card and checks if the two selected cards are a match
             state['second_selected_card'] = move[2]
             state['selected_first_card'] = False
             first = state['first_selected_card']
             second = state['second_selected_card']
-            if first[2][0] == second[2][0]:
+            if first[2][0] == second[2][0]: #Checks if the two selected cards have the same rank
                 suit1 = first[2][1]
                 suit2 = second[2][1]
                 is_joker_pair = (first[2] in ('BJ','RJ') and second[2] in ('BJ','RJ'))
-                same_color = (suit1 in ['D','H'] and suit2 in ['D','H']) or (suit1 in ['C','S'] and suit2 in ['C','S'])
-                if is_joker_pair or same_color:
+                same_color = (suit1 in ['D','H'] and suit2 in ['D','H']) or (suit1 in ['C','S'] and suit2 in ['C','S']) #Checks if the two selected cards have the same color
+                if is_joker_pair or same_color: #Checks if cards are a match
+                    #Remove matched cards from card array
                     state['card_array'][first[0]][first[1]] = None
                     state['card_array'][second[0]][second[1]] = None
+                    #Adds matched cards to the player's hand and updates the game history
                     state["history"].append(("Matched",player,first,second))
                     state['hands'][player].append(first[2])
                     state['hands'][player].append(second[2])
-                else:
+                else: #Adds the missed move to play history and update player turn
                     state["history"].append(("Missed",player,first,second))
                     state['turn'] = 1 - state['turn']
-            else:
-                    state["history"].append(("Missed",player,first,second))
-                    state['turn'] = 1 - state['turn']
+            else: #Adds the missed move to play history and update player turn
+                 state["history"].append(("Missed",player,first,second))
+                 state['turn'] = 1 - state['turn']
+            #Resets the selected cards
             state['first_selected_card'] = ('y','x','card')
             state['second_selected_card'] = ('y','x','card')
         return state
     
     def get_reward(env,state):
-        if env.is_terminal(state):
+        if env.is_terminal(state): #Checks if the game is over and returns a reward of 10 for winning and -10 for losing
             return 10 if state['winner'] == 1 else -10
-        reward = len(state['hands'][1]) * 0.5
+        reward = len(state['hands'][1]) * 0.5 #Adds a small reward for each card in the player's hand to encourage collecting cards
         return reward
     
     def rollout_policy(env,moves,state):
@@ -186,11 +190,11 @@ class GameEnvironmentM:
         return count/2
 
     def is_terminal(env,state):
-        for y,row in enumerate(state['card_array']):
+        for y,row in enumerate(state['card_array']): #Iterates through the card array in the game state to check if there are any cards left
             for x,card in enumerate(row):
                 if card:
                     return False
-        if len(state['hands'][1]) > len(state['hands'][0]):
+        if len(state['hands'][1]) > len(state['hands'][0]): #Selects the winner based on who has more cards in their hand at the end of the game
             state['winner'] = 1
         else:
             state['winner'] = 0
